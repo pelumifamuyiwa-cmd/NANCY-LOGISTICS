@@ -8,166 +8,54 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <style>
   :root {
-    --bg: #f5f6fa;
-    --bg2: #eef0f7;
-    --white: #ffffff;
-    --border: #e2e5ef;
-    --text: #1a1d2e;
-    --text2: #5a6070;
-    --text3: #9aa0b0;
-    --red: #E8000D;
-    --red-light: #fff0f0;
-    --red-dim: rgba(232,0,13,0.1);
-    --green: #16a34a;
-    --green-light: #f0fdf4;
-    --orange: #ea580c;
-    --orange-light: #fff7ed;
+    --bg: #f5f6fa; --bg2: #eef0f7; --white: #ffffff; --border: #e2e5ef;
+    --text: #1a1d2e; --text2: #5a6070; --text3: #9aa0b0;
+    --red: #E8000D; --red-light: #fff0f0; --red-dim: rgba(232,0,13,0.1);
+    --green: #16a34a; --green-light: #f0fdf4;
+    --orange: #ea580c; --orange-light: #fff7ed;
     --blue: #2563eb;
-    --blue-light: #eff6ff;
     --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
     --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
   }
   *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
   body { font-family:'Inter', sans-serif; background:var(--bg); color:var(--text); min-height:100vh; -webkit-font-smoothing:antialiased; }
-
-  /* LOGIN */
-  #login-screen {
-    position:fixed; inset:0;
-    background:var(--bg);
-    display:flex; align-items:center; justify-content:center;
-    z-index:9999;
-  }
-  .login-card {
-    background:var(--white);
-    border:1px solid var(--border);
-    border-radius:20px;
-    padding:48px 40px;
-    width:100%;
-    max-width:400px;
-    box-shadow:var(--shadow-md);
-  }
-  .login-logo {
-    display:flex; align-items:center; gap:12px;
-    margin-bottom:32px;
-  }
-  .login-logo-icon {
-    width:44px; height:44px;
-    background:var(--red);
-    border-radius:12px;
-    display:flex; align-items:center; justify-content:center;
-    font-size:20px;
-    flex-shrink:0;
-  }
-  .login-logo-name { font-size:1.1rem; font-weight:700; color:var(--text); }
+  #login-screen { position:fixed; inset:0; background:var(--bg); display:flex; align-items:center; justify-content:center; z-index:9999; }
+  .login-card { background:var(--white); border:1px solid var(--border); border-radius:20px; padding:48px 40px; width:100%; max-width:400px; box-shadow:var(--shadow-md); }
+  .login-logo { display:flex; align-items:center; gap:12px; margin-bottom:32px; }
+  .login-logo-icon { width:44px; height:44px; background:var(--red); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px; }
+  .login-logo-name { font-size:1.1rem; font-weight:700; }
   .login-logo-sub { font-size:0.72rem; color:var(--text3); margin-top:2px; }
   .login-title { font-size:1.4rem; font-weight:700; margin-bottom:6px; }
   .login-sub { font-size:0.88rem; color:var(--text2); margin-bottom:28px; }
-  .login-label { font-size:0.78rem; font-weight:600; color:var(--text2); display:block; margin-bottom:8px; letter-spacing:0.3px; }
-  .login-input {
-    width:100%;
-    border:1px solid var(--border);
-    border-radius:10px;
-    padding:12px 16px;
-    font-size:0.95rem;
-    font-family:'Inter', sans-serif;
-    outline:none;
-    transition:border-color 0.2s, box-shadow 0.2s;
-    margin-bottom:20px;
-  }
+  .login-label { font-size:0.78rem; font-weight:600; color:var(--text2); display:block; margin-bottom:8px; }
+  .login-input { width:100%; border:1px solid var(--border); border-radius:10px; padding:12px 16px; font-size:0.95rem; font-family:'Inter',sans-serif; outline:none; transition:border-color 0.2s,box-shadow 0.2s; margin-bottom:20px; }
   .login-input:focus { border-color:var(--red); box-shadow:0 0 0 3px var(--red-dim); }
-  .login-btn {
-    width:100%;
-    background:var(--red);
-    color:#fff;
-    border:none;
-    border-radius:10px;
-    padding:13px;
-    font-size:0.95rem;
-    font-weight:700;
-    cursor:pointer;
-    transition:opacity 0.2s, transform 0.2s;
-  }
+  .login-btn { width:100%; background:var(--red); color:#fff; border:none; border-radius:10px; padding:13px; font-size:0.95rem; font-weight:700; cursor:pointer; transition:opacity 0.2s,transform 0.2s; }
   .login-btn:hover { opacity:0.9; transform:translateY(-1px); }
   .login-error { color:var(--red); font-size:0.8rem; margin-top:10px; text-align:center; display:none; }
-
-  /* LAYOUT */
   #app { display:none; }
-  .sidebar {
-    position:fixed; left:0; top:0; bottom:0;
-    width:240px;
-    background:var(--white);
-    border-right:1px solid var(--border);
-    padding:24px 0;
-    display:flex; flex-direction:column;
-    z-index:100;
-  }
-  .sidebar-logo {
-    display:flex; align-items:center; gap:12px;
-    padding:0 20px 24px;
-    border-bottom:1px solid var(--border);
-    margin-bottom:20px;
-  }
-  .sidebar-logo-icon {
-    width:38px; height:38px;
-    background:var(--red);
-    border-radius:10px;
-    display:flex; align-items:center; justify-content:center;
-    font-size:18px; flex-shrink:0;
-  }
+  .sidebar { position:fixed; left:0; top:0; bottom:0; width:240px; background:var(--white); border-right:1px solid var(--border); padding:24px 0; display:flex; flex-direction:column; z-index:100; }
+  .sidebar-logo { display:flex; align-items:center; gap:12px; padding:0 20px 24px; border-bottom:1px solid var(--border); margin-bottom:20px; }
+  .sidebar-logo-icon { width:38px; height:38px; background:var(--red); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; }
   .sidebar-logo-name { font-size:0.95rem; font-weight:700; }
   .sidebar-logo-sub { font-size:0.65rem; color:var(--text3); }
   .nav-section { padding:0 12px; margin-bottom:8px; }
   .nav-label { font-size:0.62rem; font-weight:600; color:var(--text3); letter-spacing:1.5px; text-transform:uppercase; padding:0 8px; margin-bottom:6px; }
-  .nav-item {
-    display:flex; align-items:center; gap:10px;
-    padding:9px 12px;
-    border-radius:10px;
-    cursor:pointer;
-    font-size:0.88rem;
-    font-weight:500;
-    color:var(--text2);
-    transition:all 0.15s;
-    margin-bottom:2px;
-  }
+  .nav-item { display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:10px; cursor:pointer; font-size:0.88rem; font-weight:500; color:var(--text2); transition:all 0.15s; margin-bottom:2px; }
   .nav-item:hover { background:var(--bg); color:var(--text); }
   .nav-item.active { background:var(--red-dim); color:var(--red); font-weight:600; }
   .nav-icon { font-size:1rem; width:20px; text-align:center; }
-  .sidebar-bottom {
-    margin-top:auto;
-    padding:16px 20px 0;
-    border-top:1px solid var(--border);
-  }
-  .logout-btn {
-    display:flex; align-items:center; gap:8px;
-    font-size:0.85rem; color:var(--text3);
-    cursor:pointer;
-    padding:8px 0;
-    transition:color 0.2s;
-  }
+  .sidebar-bottom { margin-top:auto; padding:16px 20px 0; border-top:1px solid var(--border); }
+  .logout-btn { display:flex; align-items:center; gap:8px; font-size:0.85rem; color:var(--text3); cursor:pointer; padding:8px 0; transition:color 0.2s; }
   .logout-btn:hover { color:var(--red); }
-
-  /* MAIN */
   .main { margin-left:240px; padding:32px; min-height:100vh; }
   .page { display:none; }
   .page.active { display:block; }
   .page-header { margin-bottom:28px; }
   .page-title { font-size:1.5rem; font-weight:700; margin-bottom:4px; }
   .page-sub { font-size:0.88rem; color:var(--text2); }
-
-  /* STAT CARDS */
-  .stats-grid {
-    display:grid;
-    grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));
-    gap:16px;
-    margin-bottom:28px;
-  }
-  .stat-card {
-    background:var(--white);
-    border:1px solid var(--border);
-    border-radius:16px;
-    padding:20px 24px;
-    box-shadow:var(--shadow);
-  }
+  .stats-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr)); gap:16px; margin-bottom:28px; }
+  .stat-card { background:var(--white); border:1px solid var(--border); border-radius:16px; padding:20px 24px; box-shadow:var(--shadow); }
   .stat-label { font-size:0.75rem; font-weight:600; color:var(--text3); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:10px; }
   .stat-val { font-size:1.75rem; font-weight:700; margin-bottom:4px; }
   .stat-sub { font-size:0.78rem; color:var(--text3); }
@@ -176,116 +64,33 @@
   .stat-card.green .stat-val { color:var(--green); }
   .stat-card.orange .stat-val { color:var(--orange); }
   .stat-card.blue .stat-val { color:var(--blue); }
-
-  /* CHARTS */
-  .charts-grid {
-    display:grid;
-    grid-template-columns:2fr 1fr;
-    gap:20px;
-    margin-bottom:28px;
-  }
-  .chart-card {
-    background:var(--white);
-    border:1px solid var(--border);
-    border-radius:16px;
-    padding:24px;
-    box-shadow:var(--shadow);
-  }
+  .charts-grid { display:grid; grid-template-columns:2fr 1fr; gap:20px; margin-bottom:28px; }
+  .chart-card { background:var(--white); border:1px solid var(--border); border-radius:16px; padding:24px; box-shadow:var(--shadow); }
   .chart-title { font-size:0.95rem; font-weight:700; margin-bottom:4px; }
   .chart-sub { font-size:0.78rem; color:var(--text3); margin-bottom:20px; }
   .chart-wrap { position:relative; height:200px; }
-
-  /* TABLE */
-  .table-card {
-    background:var(--white);
-    border:1px solid var(--border);
-    border-radius:16px;
-    box-shadow:var(--shadow);
-    overflow:hidden;
-  }
-  .table-header {
-    display:flex; align-items:center; justify-content:space-between;
-    padding:20px 24px;
-    border-bottom:1px solid var(--border);
-    flex-wrap:wrap; gap:12px;
-  }
+  .table-card { background:var(--white); border:1px solid var(--border); border-radius:16px; box-shadow:var(--shadow); overflow:hidden; }
+  .table-header { display:flex; align-items:center; justify-content:space-between; padding:20px 24px; border-bottom:1px solid var(--border); flex-wrap:wrap; gap:12px; }
   .table-title { font-size:0.95rem; font-weight:700; }
   .table-actions { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
-  .search-input {
-    border:1px solid var(--border);
-    border-radius:8px;
-    padding:8px 14px;
-    font-size:0.85rem;
-    font-family:'Inter', sans-serif;
-    outline:none;
-    width:220px;
-    transition:border-color 0.2s;
-  }
+  .search-input { border:1px solid var(--border); border-radius:8px; padding:8px 14px; font-size:0.85rem; font-family:'Inter',sans-serif; outline:none; width:220px; transition:border-color 0.2s; }
   .search-input:focus { border-color:var(--red); }
-  .filter-select {
-    border:1px solid var(--border);
-    border-radius:8px;
-    padding:8px 12px;
-    font-size:0.85rem;
-    font-family:'Inter', sans-serif;
-    outline:none;
-    background:var(--white);
-    cursor:pointer;
-  }
-  .btn {
-    padding:9px 18px;
-    border-radius:8px;
-    font-size:0.85rem;
-    font-weight:600;
-    cursor:pointer;
-    border:none;
-    transition:all 0.15s;
-    font-family:'Inter', sans-serif;
-  }
+  .filter-select { border:1px solid var(--border); border-radius:8px; padding:8px 12px; font-size:0.85rem; font-family:'Inter',sans-serif; outline:none; background:var(--white); cursor:pointer; }
+  .btn { padding:9px 18px; border-radius:8px; font-size:0.85rem; font-weight:600; cursor:pointer; border:none; transition:all 0.15s; font-family:'Inter',sans-serif; }
   .btn-red { background:var(--red); color:#fff; }
   .btn-red:hover { opacity:0.88; transform:translateY(-1px); }
   .btn-outline { background:var(--white); color:var(--text); border:1px solid var(--border); }
   .btn-outline:hover { background:var(--bg); }
   .btn-sm { padding:6px 12px; font-size:0.78rem; }
-  .btn-green { background:var(--green); color:#fff; }
-  .btn-green:hover { opacity:0.88; }
-
   table { width:100%; border-collapse:collapse; }
-  th {
-    text-align:left;
-    font-size:0.72rem;
-    font-weight:600;
-    color:var(--text3);
-    text-transform:uppercase;
-    letter-spacing:0.5px;
-    padding:12px 16px;
-    background:var(--bg);
-    border-bottom:1px solid var(--border);
-  }
-  td {
-    padding:14px 16px;
-    font-size:0.85rem;
-    border-bottom:1px solid var(--border);
-    color:var(--text);
-    vertical-align:middle;
-  }
+  th { text-align:left; font-size:0.72rem; font-weight:600; color:var(--text3); text-transform:uppercase; letter-spacing:0.5px; padding:12px 16px; background:var(--bg); border-bottom:1px solid var(--border); }
+  td { padding:14px 16px; font-size:0.85rem; border-bottom:1px solid var(--border); color:var(--text); vertical-align:middle; }
   tr:last-child td { border-bottom:none; }
   tr:hover td { background:var(--bg); }
   .td-name { font-weight:600; }
-  .td-phone { font-family:'IBM Plex Mono', monospace; font-size:0.82rem; color:var(--text2); }
+  .td-phone { font-family:'IBM Plex Mono',monospace; font-size:0.82rem; color:var(--text2); }
   .td-amount { font-weight:600; }
-
-  /* BADGES */
-  .badge {
-    display:inline-flex; align-items:center; gap:5px;
-    padding:4px 10px;
-    border-radius:20px;
-    font-size:0.72rem;
-    font-weight:600;
-    text-transform:uppercase;
-    letter-spacing:0.3px;
-    white-space:nowrap;
-  }
+  .badge { display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:20px; font-size:0.72rem; font-weight:600; text-transform:uppercase; letter-spacing:0.3px; white-space:nowrap; }
   .badge::before { content:''; width:5px; height:5px; border-radius:50%; background:currentColor; }
   .badge-delivered { background:var(--green-light); color:var(--green); }
   .badge-pending { background:var(--red-light); color:var(--red); }
@@ -293,31 +98,10 @@
   .badge-cancelled { background:var(--bg2); color:var(--text3); }
   .badge-paid { background:var(--green-light); color:var(--green); }
   .badge-unpaid { background:var(--red-light); color:var(--red); }
-
-  /* ROW ACTIONS */
   .row-actions { display:flex; gap:6px; }
-
-  /* MODAL */
-  .modal-overlay {
-    position:fixed; inset:0;
-    background:rgba(0,0,0,0.4);
-    display:flex; align-items:center; justify-content:center;
-    z-index:1000;
-    padding:20px;
-    display:none;
-  }
+  .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center; z-index:1000; padding:20px; display:none; }
   .modal-overlay.open { display:flex; }
-  .modal {
-    background:var(--white);
-    border-radius:20px;
-    padding:32px;
-    width:100%;
-    max-width:540px;
-    max-height:90vh;
-    overflow-y:auto;
-    box-shadow:0 20px 60px rgba(0,0,0,0.15);
-    animation:modalIn 0.2s ease;
-  }
+  .modal { background:var(--white); border-radius:20px; padding:32px; width:100%; max-width:540px; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,0.15); animation:modalIn 0.2s ease; }
   @keyframes modalIn { from { opacity:0; transform:scale(0.96) translateY(10px); } to { opacity:1; transform:scale(1) translateY(0); } }
   .modal-title { font-size:1.2rem; font-weight:700; margin-bottom:4px; }
   .modal-sub { font-size:0.85rem; color:var(--text2); margin-bottom:24px; }
@@ -325,89 +109,28 @@
   .form-group { margin-bottom:0; }
   .form-group.full { grid-column:1/-1; }
   .form-label { font-size:0.78rem; font-weight:600; color:var(--text2); display:block; margin-bottom:6px; }
-  .form-input, .form-select {
-    width:100%;
-    border:1px solid var(--border);
-    border-radius:8px;
-    padding:10px 14px;
-    font-size:0.9rem;
-    font-family:'Inter', sans-serif;
-    outline:none;
-    transition:border-color 0.2s, box-shadow 0.2s;
-    background:var(--white);
-  }
+  .form-input, .form-select { width:100%; border:1px solid var(--border); border-radius:8px; padding:10px 14px; font-size:0.9rem; font-family:'Inter',sans-serif; outline:none; transition:border-color 0.2s,box-shadow 0.2s; background:var(--white); }
   .form-input:focus, .form-select:focus { border-color:var(--red); box-shadow:0 0 0 3px var(--red-dim); }
   .modal-footer { display:flex; gap:10px; justify-content:flex-end; margin-top:24px; padding-top:20px; border-top:1px solid var(--border); }
-
-  /* LOADING */
   .table-loading { text-align:center; padding:48px; color:var(--text3); font-size:0.88rem; }
-  .mini-spinner {
-    width:24px; height:24px;
-    border:2px solid var(--border);
-    border-top-color:var(--red);
-    border-radius:50%;
-    animation:spin 0.6s linear infinite;
-    margin:0 auto 12px;
-  }
+  .mini-spinner { width:24px; height:24px; border:2px solid var(--border); border-top-color:var(--red); border-radius:50%; animation:spin 0.6s linear infinite; margin:0 auto 12px; }
   @keyframes spin { to { transform:rotate(360deg); } }
-
-  /* TOAST */
-  .toast {
-    position:fixed; bottom:24px; right:24px;
-    background:var(--text);
-    color:#fff;
-    padding:12px 20px;
-    border-radius:10px;
-    font-size:0.88rem;
-    font-weight:500;
-    z-index:9999;
-    transform:translateY(80px);
-    opacity:0;
-    transition:all 0.3s;
-    max-width:320px;
-  }
+  .toast { position:fixed; bottom:24px; right:24px; background:var(--text); color:#fff; padding:12px 20px; border-radius:10px; font-size:0.88rem; font-weight:500; z-index:9999; transform:translateY(80px); opacity:0; transition:all 0.3s; max-width:320px; }
   .toast.show { transform:translateY(0); opacity:1; }
   .toast.success { background:var(--green); }
   .toast.error { background:var(--red); }
-
-  /* PERIOD TABS */
   .period-tabs { display:flex; gap:6px; margin-bottom:20px; }
-  .period-tab {
-    padding:7px 16px;
-    border-radius:8px;
-    font-size:0.82rem;
-    font-weight:600;
-    cursor:pointer;
-    border:1px solid var(--border);
-    background:var(--white);
-    color:var(--text2);
-    transition:all 0.15s;
-  }
+  .period-tab { padding:7px 16px; border-radius:8px; font-size:0.82rem; font-weight:600; cursor:pointer; border:1px solid var(--border); background:var(--white); color:var(--text2); transition:all 0.15s; }
   .period-tab.active { background:var(--red); color:#fff; border-color:var(--red); }
-
-  /* SUMMARY SECTION */
   .summary-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:28px; }
-  .summary-item {
-    background:var(--white);
-    border:1px solid var(--border);
-    border-radius:12px;
-    padding:16px 20px;
-  }
+  .summary-item { background:var(--white); border:1px solid var(--border); border-radius:12px; padding:16px 20px; }
   .summary-item-label { font-size:0.75rem; color:var(--text3); margin-bottom:6px; font-weight:500; }
   .summary-item-val { font-size:1.2rem; font-weight:700; }
-
-  @media (max-width:768px) {
-    .sidebar { display:none; }
-    .main { margin-left:0; padding:16px; }
-    .charts-grid { grid-template-columns:1fr; }
-    .form-grid { grid-template-columns:1fr; }
-    .summary-grid { grid-template-columns:1fr 1fr; }
-  }
+  @media (max-width:768px) { .sidebar{display:none;} .main{margin-left:0;padding:16px;} .charts-grid{grid-template-columns:1fr;} .form-grid{grid-template-columns:1fr;} .summary-grid{grid-template-columns:1fr 1fr;} }
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
 <div id="login-screen">
   <div class="login-card">
     <div class="login-logo">
@@ -426,9 +149,7 @@
   </div>
 </div>
 
-<!-- APP -->
 <div id="app">
-  <!-- SIDEBAR -->
   <div class="sidebar">
     <div class="sidebar-logo">
       <div class="sidebar-logo-icon">🛵</div>
@@ -439,28 +160,25 @@
     </div>
     <div class="nav-section">
       <div class="nav-label">Main</div>
-      <div class="nav-item active" onclick="showPage('dashboard')"><span class="nav-icon">📊</span> Dashboard</div>
-      <div class="nav-item" onclick="showPage('orders')"><span class="nav-icon">📦</span> Orders</div>
+      <div class="nav-item active" onclick="showPage('dashboard',this)"><span class="nav-icon">📊</span> Dashboard</div>
+      <div class="nav-item" onclick="showPage('orders',this)"><span class="nav-icon">📦</span> Orders</div>
     </div>
     <div class="nav-section">
       <div class="nav-label">Reports</div>
-      <div class="nav-item" onclick="showPage('reports')"><span class="nav-icon">📈</span> Reports</div>
+      <div class="nav-item" onclick="showPage('reports',this)"><span class="nav-icon">📈</span> Reports</div>
     </div>
     <div class="sidebar-bottom">
       <div class="logout-btn" onclick="logout()">🚪 Sign out</div>
     </div>
   </div>
 
-  <!-- MAIN -->
   <div class="main">
-
-    <!-- DASHBOARD PAGE -->
     <div class="page active" id="page-dashboard">
       <div class="page-header">
         <div class="page-title">Dashboard</div>
         <div class="page-sub" id="dash-date">Loading...</div>
       </div>
-      <div class="stats-grid" id="stats-grid">
+      <div class="stats-grid">
         <div class="stat-card blue"><div class="stat-icon">📦</div><div class="stat-label">Total Orders</div><div class="stat-val" id="s-total">—</div><div class="stat-sub">All time</div></div>
         <div class="stat-card green"><div class="stat-icon">✅</div><div class="stat-label">Delivered</div><div class="stat-val" id="s-delivered">—</div><div class="stat-sub">Completed</div></div>
         <div class="stat-card orange"><div class="stat-icon">🔄</div><div class="stat-label">In Progress</div><div class="stat-val" id="s-progress">—</div><div class="stat-sub">Processing + Pending</div></div>
@@ -480,19 +198,15 @@
           <div class="chart-wrap"><canvas id="statusChart"></canvas></div>
         </div>
       </div>
-      <!-- Recent Orders -->
       <div class="table-card">
         <div class="table-header">
           <div class="table-title">Recent Orders</div>
-          <button class="btn btn-red" onclick="showPage('orders')">View All →</button>
+          <button class="btn btn-red" onclick="showPage('orders',null)">View All →</button>
         </div>
-        <div id="recent-orders-body">
-          <div class="table-loading"><div class="mini-spinner"></div>Loading...</div>
-        </div>
+        <div id="recent-orders-body"><div class="table-loading"><div class="mini-spinner"></div>Loading...</div></div>
       </div>
     </div>
 
-    <!-- ORDERS PAGE -->
     <div class="page" id="page-orders">
       <div class="page-header">
         <div class="page-title">Orders</div>
@@ -513,25 +227,22 @@
             <button class="btn btn-red" onclick="openAddModal()">+ Add Order</button>
           </div>
         </div>
-        <div id="orders-table-body">
-          <div class="table-loading"><div class="mini-spinner"></div>Loading...</div>
-        </div>
+        <div id="orders-table-body"><div class="table-loading"><div class="mini-spinner"></div>Loading...</div></div>
       </div>
     </div>
 
-    <!-- REPORTS PAGE -->
     <div class="page" id="page-reports">
       <div class="page-header">
         <div class="page-title">Reports</div>
         <div class="page-sub">Business performance overview</div>
       </div>
       <div class="period-tabs">
-        <div class="period-tab active" onclick="setReportPeriod('daily', this)">Today</div>
-        <div class="period-tab" onclick="setReportPeriod('weekly', this)">This Week</div>
-        <div class="period-tab" onclick="setReportPeriod('monthly', this)">This Month</div>
-        <div class="period-tab" onclick="setReportPeriod('yearly', this)">This Year</div>
+        <div class="period-tab active" onclick="setReportPeriod('daily',this)">Today</div>
+        <div class="period-tab" onclick="setReportPeriod('weekly',this)">This Week</div>
+        <div class="period-tab" onclick="setReportPeriod('monthly',this)">This Month</div>
+        <div class="period-tab" onclick="setReportPeriod('yearly',this)">This Year</div>
       </div>
-      <div class="summary-grid" id="report-summary">
+      <div class="summary-grid">
         <div class="summary-item"><div class="summary-item-label">Total Orders</div><div class="summary-item-val" id="rpt-orders">—</div></div>
         <div class="summary-item"><div class="summary-item-label">Total Revenue</div><div class="summary-item-val" id="rpt-revenue">—</div></div>
         <div class="summary-item"><div class="summary-item-label">Delivered</div><div class="summary-item-val" id="rpt-delivered">—</div></div>
@@ -552,11 +263,9 @@
         </div>
       </div>
     </div>
-
   </div>
 </div>
 
-<!-- ADD/EDIT MODAL -->
 <div class="modal-overlay" id="order-modal">
   <div class="modal">
     <div class="modal-title" id="modal-title">Add New Order</div>
@@ -579,7 +288,7 @@
         <input type="number" class="form-input" id="f-qty" placeholder="1" min="1"/>
       </div>
       <div class="form-group">
-        <label class="form-label">Price (₦) *</label>
+        <label class="form-label">Price (&#8358;) *</label>
         <input type="number" class="form-input" id="f-price" placeholder="15000" min="0"/>
       </div>
       <div class="form-group">
@@ -614,20 +323,50 @@
   </div>
 </div>
 
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <script>
   const SUPABASE_URL = 'https://pnwljjiehfzmfpajbsbm.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_k7ZEH33SopVTMhGbOhE2UA_sutpYDpU';
-  const ADMIN_PASSWORD = 'nancy2026'; // Change this to your desired password
+  const ADMIN_PASSWORD = 'nancy2026';
 
   let allOrders = [];
   let editingId = null;
   let revenueChart, statusChart, itemsChart, paymentChart;
   let currentReportPeriod = 'daily';
 
-  // ── AUTH ──
+  // Map DB row (UPPERCASE SPACED keys) -> friendly camelCase object
+  function mapRow(o) {
+    return {
+      id: o.id,
+      created_at: o.created_at,
+      date: o['DATE'],
+      customer_name: o['CUSTOMER NAME'],
+      item_ordered: o['ITEM ORDERED'],
+      quantity: o['QUANTITY'],
+      price: o['PRICE'],
+      delivery_status: o['DELIVERY STATUS'],
+      phone_number: o['PHONE NUMBER'],
+      delivery_address: o['DELIVERY ADDRESS'],
+      payment_status: o['PAYMENT STATUS']
+    };
+  }
+
+  // Map friendly object -> DB keys for insert/update
+  function mapToDB(data) {
+    return {
+      'DATE': data.date,
+      'CUSTOMER NAME': data.customer_name,
+      'ITEM ORDERED': data.item_ordered,
+      'QUANTITY': data.quantity,
+      'PRICE': data.price,
+      'DELIVERY STATUS': data.delivery_status,
+      'PHONE NUMBER': data.phone_number,
+      'DELIVERY ADDRESS': data.delivery_address,
+      'PAYMENT STATUS': data.payment_status
+    };
+  }
+
   function doLogin() {
     const pass = document.getElementById('loginPass').value;
     if (pass === ADMIN_PASSWORD) {
@@ -638,93 +377,93 @@
       document.getElementById('loginError').style.display = 'block';
     }
   }
+
   function logout() {
     document.getElementById('login-screen').style.display = 'flex';
     document.getElementById('app').style.display = 'none';
     document.getElementById('loginPass').value = '';
   }
 
-  // ── NAV ──
-  function showPage(name) {
+  function showPage(name, el) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    document.getElementById('page-'+name).classList.add('active');
-    event.currentTarget && event.currentTarget.classList.add('active');
+    document.getElementById('page-' + name).classList.add('active');
+    if (el) el.classList.add('active');
     if (name === 'orders') renderOrdersTable();
     if (name === 'reports') renderReports();
   }
 
-  // ── SUPABASE ──
   async function fetchOrders() {
     const res = await fetch(
       `${SUPABASE_URL}/rest/v1/ORDERS?order=created_at.desc`,
       { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
     );
-    if (!res.ok) throw new Error('Fetch failed');
-    return res.json();
+    if (!res.ok) throw new Error('Fetch failed: ' + res.status);
+    const rows = await res.json();
+    return rows.map(mapRow);
   }
+
   async function insertOrder(data) {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/ORDERS`, {
-      method:'POST',
+      method: 'POST',
       headers: {
-        'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`,
-        'Content-Type':'application/json', 'Prefer':'return=representation'
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation'
       },
-      body: JSON.stringify(data)
+      body: JSON.stringify(mapToDB(data))
     });
     if (!res.ok) { const e = await res.text(); throw new Error(e); }
     return res.json();
   }
+
   async function updateOrder(id, data) {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/ORDERS?id=eq.${id}`, {
-      method:'PATCH',
+      method: 'PATCH',
       headers: {
-        'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`,
-        'Content-Type':'application/json', 'Prefer':'return=representation'
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation'
       },
-      body: JSON.stringify(data)
+      body: JSON.stringify(mapToDB(data))
     });
-    if (!res.ok) throw new Error('Update failed');
+    if (!res.ok) { const e = await res.text(); throw new Error(e); }
     return res.json();
   }
+
   async function deleteOrder(id) {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/ORDERS?id=eq.${id}`, {
-      method:'DELETE',
+      method: 'DELETE',
       headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
     });
     if (!res.ok) throw new Error('Delete failed');
   }
 
-  // ── DASHBOARD ──
   async function initDashboard() {
-    document.getElementById('dash-date').textContent = new Date().toLocaleDateString('en-GB', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+    document.getElementById('dash-date').textContent = new Date().toLocaleDateString('en-GB', {weekday:'long',year:'numeric',month:'long',day:'numeric'});
     try {
       allOrders = await fetchOrders();
       updateStats();
       renderRecentOrders();
       renderCharts();
-    } catch(e) { showToast('Failed to load data', 'error'); }
+    } catch(e) { showToast('Failed to load data: ' + e.message, 'error'); }
   }
 
   function updateStats() {
     const today = new Date().toISOString().split('T')[0];
-    const total = allOrders.length;
-    const delivered = allOrders.filter(o => o.delivery_status === 'Delivered').length;
-    const inProgress = allOrders.filter(o => ['Processing','Pending'].includes(o.delivery_status)).length;
-    const revenue = allOrders.reduce((s,o) => s + (Number(o.price)||0) * (Number(o.quantity)||1), 0);
-    const todayOrders = allOrders.filter(o => o.date === today).length;
-    const unpaid = allOrders.filter(o => o.payment_status === 'Unpaid').length;
-    document.getElementById('s-total').textContent = total;
-    document.getElementById('s-delivered').textContent = delivered;
-    document.getElementById('s-progress').textContent = inProgress;
-    document.getElementById('s-revenue').textContent = '₦' + revenue.toLocaleString();
-    document.getElementById('s-today').textContent = todayOrders;
-    document.getElementById('s-unpaid').textContent = unpaid;
+    document.getElementById('s-total').textContent = allOrders.length;
+    document.getElementById('s-delivered').textContent = allOrders.filter(o => o.delivery_status === 'Delivered').length;
+    document.getElementById('s-progress').textContent = allOrders.filter(o => ['Processing','Pending'].includes(o.delivery_status)).length;
+    document.getElementById('s-revenue').textContent = '\u20a6' + allOrders.reduce((s,o) => s+(Number(o.price)||0)*(Number(o.quantity)||1),0).toLocaleString();
+    document.getElementById('s-today').textContent = allOrders.filter(o => o.date === today).length;
+    document.getElementById('s-unpaid').textContent = allOrders.filter(o => o.payment_status === 'Unpaid').length;
   }
 
   function renderRecentOrders() {
-    const recent = allOrders.slice(0, 5);
-    const html = recent.length ? `
+    const recent = allOrders.slice(0,5);
+    document.getElementById('recent-orders-body').innerHTML = recent.length ? `
       <table>
         <thead><tr><th>Customer</th><th>Item</th><th>Phone</th><th>Status</th><th>Payment</th><th>Price</th></tr></thead>
         <tbody>${recent.map(o => `
@@ -734,48 +473,35 @@
             <td class="td-phone">${o.phone_number||'—'}</td>
             <td>${statusBadge(o.delivery_status)}</td>
             <td>${payBadge(o.payment_status)}</td>
-            <td class="td-amount">₦${Number(o.price||0).toLocaleString()}</td>
+            <td class="td-amount">\u20a6${Number(o.price||0).toLocaleString()}</td>
           </tr>`).join('')}
         </tbody>
       </table>` : '<div class="table-loading">No orders yet</div>';
-    document.getElementById('recent-orders-body').innerHTML = html;
   }
 
   function renderCharts() {
-    // Revenue last 7 days
-    const days = [];
-    const revData = [];
-    for (let i = 6; i >= 0; i--) {
-      const d = new Date(); d.setDate(d.getDate() - i);
+    const days = [], revData = [];
+    for (let i=6; i>=0; i--) {
+      const d = new Date(); d.setDate(d.getDate()-i);
       const key = d.toISOString().split('T')[0];
-      days.push(d.toLocaleDateString('en-GB', {month:'short', day:'numeric'}));
-      const dayRev = allOrders.filter(o => o.date === key).reduce((s,o) => s + (Number(o.price)||0)*(Number(o.quantity)||1), 0);
-      revData.push(dayRev);
+      days.push(d.toLocaleDateString('en-GB',{month:'short',day:'numeric'}));
+      revData.push(allOrders.filter(o=>o.date===key).reduce((s,o)=>s+(Number(o.price)||0)*(Number(o.quantity)||1),0));
     }
     if (revenueChart) revenueChart.destroy();
     revenueChart = new Chart(document.getElementById('revenueChart'), {
       type:'line',
-      data: {
-        labels: days,
-        datasets: [{ label:'Revenue (₦)', data:revData, borderColor:'#E8000D', backgroundColor:'rgba(232,0,13,0.08)', tension:0.4, fill:true, pointBackgroundColor:'#E8000D', pointRadius:4 }]
-      },
-      options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true, ticks:{callback:v=>'₦'+v.toLocaleString()}}} }
+      data:{labels:days,datasets:[{label:'Revenue (\u20a6)',data:revData,borderColor:'#E8000D',backgroundColor:'rgba(232,0,13,0.08)',tension:0.4,fill:true,pointBackgroundColor:'#E8000D',pointRadius:4}]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{callback:v=>'\u20a6'+v.toLocaleString()}}}}
     });
-    // Status donut
-    const statuses = ['Delivered','Processing','Pending','Cancelled'];
-    const statusCounts = statuses.map(s => allOrders.filter(o => o.delivery_status === s).length);
+    const statuses=['Delivered','Processing','Pending','Cancelled'];
     if (statusChart) statusChart.destroy();
     statusChart = new Chart(document.getElementById('statusChart'), {
       type:'doughnut',
-      data: {
-        labels: statuses,
-        datasets: [{ data:statusCounts, backgroundColor:['#16a34a','#ea580c','#E8000D','#9aa0b0'], borderWidth:0 }]
-      },
-      options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'bottom', labels:{font:{size:11}}}} }
+      data:{labels:statuses,datasets:[{data:statuses.map(s=>allOrders.filter(o=>o.delivery_status===s).length),backgroundColor:['#16a34a','#ea580c','#E8000D','#9aa0b0'],borderWidth:0}]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:11}}}}}
     });
   }
 
-  // ── ORDERS TABLE ──
   async function renderOrdersTable() {
     document.getElementById('orders-table-body').innerHTML = '<div class="table-loading"><div class="mini-spinner"></div>Loading...</div>';
     try {
@@ -787,32 +513,25 @@
   function filterOrders() {
     const search = document.getElementById('order-search').value.toLowerCase();
     const status = document.getElementById('status-filter').value;
-    let filtered = allOrders;
-    if (search) filtered = filtered.filter(o =>
-      (o.customer_name||'').toLowerCase().includes(search) ||
-      (o.phone_number||'').includes(search) ||
-      (o.item_ordered||'').toLowerCase().includes(search)
-    );
-    if (status) filtered = filtered.filter(o => o.delivery_status === status);
-    displayFilteredOrders(filtered);
+    let f = allOrders;
+    if (search) f = f.filter(o => (o.customer_name||'').toLowerCase().includes(search)||(o.phone_number||'').includes(search)||(o.item_ordered||'').toLowerCase().includes(search));
+    if (status) f = f.filter(o => o.delivery_status===status);
+    displayFilteredOrders(f);
   }
 
   function displayFilteredOrders(orders) {
-    if (!orders.length) {
-      document.getElementById('orders-table-body').innerHTML = '<div class="table-loading">No orders found</div>';
-      return;
-    }
+    if (!orders.length) { document.getElementById('orders-table-body').innerHTML='<div class="table-loading">No orders found</div>'; return; }
     document.getElementById('orders-table-body').innerHTML = `
       <table>
         <thead><tr><th>Date</th><th>Customer</th><th>Phone</th><th>Item</th><th>Qty</th><th>Price</th><th>Address</th><th>Status</th><th>Payment</th><th>Actions</th></tr></thead>
         <tbody>${orders.map(o => `
           <tr>
-            <td style="white-space:nowrap">${o.date ? new Date(o.date).toLocaleDateString('en-GB') : '—'}</td>
+            <td style="white-space:nowrap">${o.date?new Date(o.date).toLocaleDateString('en-GB'):'—'}</td>
             <td class="td-name">${o.customer_name||'—'}</td>
             <td class="td-phone">${o.phone_number||'—'}</td>
             <td>${o.item_ordered||'—'}</td>
             <td>${o.quantity||1}</td>
-            <td class="td-amount">₦${Number(o.price||0).toLocaleString()}</td>
+            <td class="td-amount">\u20a6${Number(o.price||0).toLocaleString()}</td>
             <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${o.delivery_address||''}">${o.delivery_address||'—'}</td>
             <td>${statusBadge(o.delivery_status)}</td>
             <td>${payBadge(o.payment_status)}</td>
@@ -828,15 +547,13 @@
   }
 
   function statusBadge(s) {
-    const cls = {Delivered:'delivered', Processing:'processing', Pending:'pending', Cancelled:'cancelled'}[s] || 'cancelled';
+    const cls={Delivered:'delivered',Processing:'processing',Pending:'pending',Cancelled:'cancelled'}[s]||'cancelled';
     return `<span class="badge badge-${cls}">${s||'—'}</span>`;
   }
   function payBadge(s) {
-    const cls = s === 'Paid' ? 'paid' : 'unpaid';
-    return `<span class="badge badge-${cls}">${s||'—'}</span>`;
+    return `<span class="badge badge-${s==='Paid'?'paid':'unpaid'}">${s||'—'}</span>`;
   }
 
-  // ── MODAL ──
   function openAddModal() {
     editingId = null;
     document.getElementById('modal-title').textContent = 'Add New Order';
@@ -846,8 +563,9 @@
     document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
     document.getElementById('order-modal').classList.add('open');
   }
+
   function openEditModal(id) {
-    const o = allOrders.find(x => x.id === id);
+    const o = allOrders.find(x => x.id===id);
     if (!o) return;
     editingId = id;
     document.getElementById('modal-title').textContent = 'Edit Order';
@@ -864,109 +582,102 @@
     document.getElementById('f-payment').value = o.payment_status||'Unpaid';
     document.getElementById('order-modal').classList.add('open');
   }
+
   function closeModal() { document.getElementById('order-modal').classList.remove('open'); }
+
   function clearForm() {
-    ['f-name','f-phone','f-item','f-qty','f-price','f-date','f-address'].forEach(id => document.getElementById(id).value = '');
-    document.getElementById('f-status').value = 'Pending';
-    document.getElementById('f-payment').value = 'Unpaid';
+    ['f-name','f-phone','f-item','f-qty','f-price','f-date','f-address'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('f-status').value='Pending';
+    document.getElementById('f-payment').value='Unpaid';
   }
 
   async function saveOrder() {
     const name = document.getElementById('f-name').value.trim();
     const phone = document.getElementById('f-phone').value.trim();
     const item = document.getElementById('f-item').value.trim();
-    const qty = parseInt(document.getElementById('f-qty').value) || 1;
-    const price = parseFloat(document.getElementById('f-price').value) || 0;
+    const qty = parseInt(document.getElementById('f-qty').value)||1;
+    const price = parseFloat(document.getElementById('f-price').value)||0;
     const date = document.getElementById('f-date').value;
     const address = document.getElementById('f-address').value.trim();
     const status = document.getElementById('f-status').value;
     const payment = document.getElementById('f-payment').value;
-    if (!name || !phone || !item || !date) { showToast('Please fill all required fields', 'error'); return; }
-    const data = { customer_name:name, phone_number:phone, item_ordered:item, quantity:qty, price, date, delivery_address:address, delivery_status:status, payment_status:payment };
+    if (!name||!phone||!item||!date) { showToast('Please fill all required fields','error'); return; }
+    const data = {customer_name:name,phone_number:phone,item_ordered:item,quantity:qty,price,date,delivery_address:address,delivery_status:status,payment_status:payment};
     const btn = document.getElementById('modal-save-btn');
-    btn.textContent = 'Saving...'; btn.disabled = true;
+    btn.textContent='Saving...'; btn.disabled=true;
     try {
-      if (editingId) { await updateOrder(editingId, data); showToast('Order updated!', 'success'); }
-      else { await insertOrder(data); showToast('Order added!', 'success'); }
+      if (editingId) { await updateOrder(editingId,data); showToast('Order updated!','success'); }
+      else { await insertOrder(data); showToast('Order added!','success'); }
       closeModal();
       allOrders = await fetchOrders();
-      updateStats();
-      renderRecentOrders();
-      displayFilteredOrders(allOrders);
-    } catch(e) { showToast('Error saving order', 'error'); }
-    finally { btn.textContent = editingId ? 'Update Order' : 'Save Order'; btn.disabled = false; }
+      updateStats(); renderRecentOrders(); displayFilteredOrders(allOrders);
+    } catch(e) { showToast('Error saving order: '+e.message,'error'); }
+    finally { btn.textContent=editingId?'Update Order':'Save Order'; btn.disabled=false; }
   }
 
   async function confirmDelete(id) {
     if (!confirm('Delete this order? This cannot be undone.')) return;
     try {
       await deleteOrder(id);
-      showToast('Order deleted', 'success');
+      showToast('Order deleted','success');
       allOrders = await fetchOrders();
       updateStats(); renderRecentOrders(); displayFilteredOrders(allOrders);
-    } catch(e) { showToast('Error deleting order', 'error'); }
+    } catch(e) { showToast('Error deleting order','error'); }
   }
 
-  // ── REPORTS ──
-  function setReportPeriod(period, el) {
-    currentReportPeriod = period;
-    document.querySelectorAll('.period-tab').forEach(t => t.classList.remove('active'));
+  function setReportPeriod(period,el) {
+    currentReportPeriod=period;
+    document.querySelectorAll('.period-tab').forEach(t=>t.classList.remove('active'));
     el.classList.add('active');
     renderReports();
   }
 
   async function renderReports() {
-    if (!allOrders.length) { try { allOrders = await fetchOrders(); } catch(e) { return; } }
-    const now = new Date();
-    let filtered = allOrders.filter(o => {
-      if (!o.date) return false;
-      const d = new Date(o.date);
-      if (currentReportPeriod === 'daily') return o.date === now.toISOString().split('T')[0];
-      if (currentReportPeriod === 'weekly') { const start = new Date(now); start.setDate(now.getDate() - now.getDay()); return d >= start; }
-      if (currentReportPeriod === 'monthly') return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
-      if (currentReportPeriod === 'yearly') return d.getFullYear() === now.getFullYear();
+    if (!allOrders.length) { try { allOrders=await fetchOrders(); } catch(e){return;} }
+    const now=new Date();
+    let filtered=allOrders.filter(o=>{
+      if(!o.date) return false;
+      const d=new Date(o.date);
+      if(currentReportPeriod==='daily') return o.date===now.toISOString().split('T')[0];
+      if(currentReportPeriod==='weekly'){const s=new Date(now);s.setDate(now.getDate()-now.getDay());return d>=s;}
+      if(currentReportPeriod==='monthly') return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear();
+      if(currentReportPeriod==='yearly') return d.getFullYear()===now.getFullYear();
       return true;
     });
-    const revenue = filtered.reduce((s,o) => s + (Number(o.price)||0)*(Number(o.quantity)||1), 0);
-    document.getElementById('rpt-orders').textContent = filtered.length;
-    document.getElementById('rpt-revenue').textContent = '₦' + revenue.toLocaleString();
-    document.getElementById('rpt-delivered').textContent = filtered.filter(o => o.delivery_status === 'Delivered').length;
-    document.getElementById('rpt-pending').textContent = filtered.filter(o => o.delivery_status === 'Pending').length;
-    document.getElementById('rpt-paid').textContent = filtered.filter(o => o.payment_status === 'Paid').length;
-    document.getElementById('rpt-unpaid').textContent = filtered.filter(o => o.payment_status === 'Unpaid').length;
-    // Top items
-    const itemMap = {};
-    filtered.forEach(o => { if (o.item_ordered) itemMap[o.item_ordered] = (itemMap[o.item_ordered]||0) + (Number(o.quantity)||1); });
-    const sorted = Object.entries(itemMap).sort((a,b) => b[1]-a[1]).slice(0,6);
-    if (itemsChart) itemsChart.destroy();
-    itemsChart = new Chart(document.getElementById('itemsChart'), {
+    const revenue=filtered.reduce((s,o)=>s+(Number(o.price)||0)*(Number(o.quantity)||1),0);
+    document.getElementById('rpt-orders').textContent=filtered.length;
+    document.getElementById('rpt-revenue').textContent='\u20a6'+revenue.toLocaleString();
+    document.getElementById('rpt-delivered').textContent=filtered.filter(o=>o.delivery_status==='Delivered').length;
+    document.getElementById('rpt-pending').textContent=filtered.filter(o=>o.delivery_status==='Pending').length;
+    document.getElementById('rpt-paid').textContent=filtered.filter(o=>o.payment_status==='Paid').length;
+    document.getElementById('rpt-unpaid').textContent=filtered.filter(o=>o.payment_status!=='Paid').length;
+    const itemMap={};
+    filtered.forEach(o=>{if(o.item_ordered) itemMap[o.item_ordered]=(itemMap[o.item_ordered]||0)+(Number(o.quantity)||1);});
+    const sorted=Object.entries(itemMap).sort((a,b)=>b[1]-a[1]).slice(0,6);
+    if(itemsChart) itemsChart.destroy();
+    itemsChart=new Chart(document.getElementById('itemsChart'),{
       type:'bar',
-      data: { labels:sorted.map(x=>x[0]), datasets:[{label:'Qty', data:sorted.map(x=>x[1]), backgroundColor:'#E8000D', borderRadius:6}] },
-      options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}} }
+      data:{labels:sorted.map(x=>x[0]),datasets:[{label:'Qty',data:sorted.map(x=>x[1]),backgroundColor:'#E8000D',borderRadius:6}]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}
     });
-    // Payment pie
-    const paid = filtered.filter(o => o.payment_status === 'Paid').length;
-    const unpaid = filtered.filter(o => o.payment_status !== 'Paid').length;
-    if (paymentChart) paymentChart.destroy();
-    paymentChart = new Chart(document.getElementById('paymentChart'), {
+    const paid=filtered.filter(o=>o.payment_status==='Paid').length;
+    const unpaid=filtered.filter(o=>o.payment_status!=='Paid').length;
+    if(paymentChart) paymentChart.destroy();
+    paymentChart=new Chart(document.getElementById('paymentChart'),{
       type:'doughnut',
-      data: { labels:['Paid','Unpaid'], datasets:[{data:[paid, unpaid], backgroundColor:['#16a34a','#E8000D'], borderWidth:0}] },
-      options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'bottom'}} }
+      data:{labels:['Paid','Unpaid'],datasets:[{data:[paid,unpaid],backgroundColor:['#16a34a','#E8000D'],borderWidth:0}]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}}}
     });
   }
 
-  // ── TOAST ──
-  function showToast(msg, type='') {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.className = 'toast show ' + type;
-    setTimeout(() => t.className = 'toast', 3000);
+  function showToast(msg,type='') {
+    const t=document.getElementById('toast');
+    t.textContent=msg;
+    t.className='toast show '+type;
+    setTimeout(()=>t.className='toast',3500);
   }
 
-  // Close modal on overlay click
-  document.getElementById('order-modal').addEventListener('click', function(e) {
-    if (e.target === this) closeModal();
-  });
+  document.getElementById('order-modal').addEventListener('click',function(e){if(e.target===this)closeModal();});
 </script>
 </body>
 </html>
