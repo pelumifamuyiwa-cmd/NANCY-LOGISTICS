@@ -22,10 +22,8 @@
     --red-dim:  rgba(232,0,13,0.12);
     --red-glow: rgba(232,0,13,0.25);
   }
-
   *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
   html { scroll-behavior: smooth; }
-
   body {
     background: var(--black);
     color: var(--white);
@@ -34,8 +32,6 @@
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
   }
-
-  /* Grain */
   body::before {
     content:'';
     position:fixed; inset:0;
@@ -44,8 +40,6 @@
     background-size:200px;
     pointer-events:none; z-index:999;
   }
-
-  /* Red glow top */
   body::after {
     content:'';
     position:fixed;
@@ -54,15 +48,12 @@
     background: radial-gradient(ellipse, rgba(232,0,13,0.1) 0%, transparent 70%);
     pointer-events:none; z-index:0;
   }
-
   .wrap {
     position:relative; z-index:1;
     max-width:700px;
     margin:0 auto;
     padding:0 24px 60px;
   }
-
-  /* ── TOP BAR ── */
   .topbar {
     display:flex;
     align-items:center;
@@ -71,9 +62,7 @@
     border-bottom:1px solid var(--black-5);
     animation: fadeDown 0.5s ease both;
   }
-
   .logo { display:flex; align-items:center; gap:14px; }
-
   .logo-icon {
     width:46px; height:46px;
     background:var(--red);
@@ -83,7 +72,6 @@
     box-shadow: 0 0 24px var(--red-glow);
     flex-shrink:0;
   }
-
   .logo-name {
     font-family:'Bebas Neue', sans-serif;
     font-size:1.75rem;
@@ -91,7 +79,6 @@
     color:var(--white);
     line-height:1;
   }
-
   .logo-sub {
     font-size:0.62rem;
     color:var(--grey-l);
@@ -99,9 +86,7 @@
     text-transform:uppercase;
     margin-top:4px;
   }
-
   .topbar-right { text-align:right; }
-
   .hours-label {
     font-family:'IBM Plex Mono', monospace;
     font-size:0.62rem;
@@ -110,20 +95,16 @@
     text-transform:uppercase;
     margin-bottom:4px;
   }
-
   .hours-val {
     font-family:'IBM Plex Mono', monospace;
     font-size:0.78rem;
     color:var(--grey-ll);
     font-weight:500;
   }
-
-  /* ── HERO ── */
   .hero {
     padding:64px 0 48px;
     animation: fadeUp 0.6s ease 0.1s both;
   }
-
   .eyebrow {
     font-family:'IBM Plex Mono', monospace;
     font-size:0.68rem;
@@ -133,14 +114,12 @@
     margin-bottom:20px;
     display:flex; align-items:center; gap:10px;
   }
-
   .eyebrow::before {
     content:'';
     display:inline-block;
     width:24px; height:1.5px;
     background:var(--red);
   }
-
   .hero h1 {
     font-family:'Bebas Neue', sans-serif;
     font-size: clamp(3.2rem, 11vw, 6rem);
@@ -149,12 +128,10 @@
     color:var(--white);
     margin-bottom:28px;
   }
-
   .hero h1 .outline {
     -webkit-text-stroke:1.5px var(--red);
     color:transparent;
   }
-
   .hero p {
     font-size:0.95rem;
     color:var(--grey-l);
@@ -162,13 +139,10 @@
     max-width:400px;
     font-weight:400;
   }
-
-  /* ── SEARCH ── */
   .search-section {
     margin-bottom:48px;
     animation: fadeUp 0.6s ease 0.2s both;
   }
-
   .search-box {
     background:var(--black-3);
     border:1px solid var(--black-5);
@@ -177,8 +151,6 @@
     position:relative;
     overflow:hidden;
   }
-
-  /* Red accent top line */
   .search-box::before {
     content:'';
     position:absolute;
@@ -187,7 +159,6 @@
     background: linear-gradient(90deg, transparent, var(--red), transparent);
     opacity:0.6;
   }
-
   .s-label {
     font-family:'IBM Plex Mono', monospace;
     font-size:0.66rem;
@@ -197,13 +168,11 @@
     margin-bottom:20px;
     display:block;
   }
-
   .input-row {
     display:flex;
     gap:12px;
     flex-wrap:wrap;
   }
-
   .phone-field {
     flex:1;
     min-width:200px;
@@ -219,14 +188,11 @@
     outline:none;
     transition:border-color 0.2s, box-shadow 0.2s;
   }
-
   .phone-field::placeholder { color:var(--black-5); font-weight:400; }
-
   .phone-field:focus {
     border-color:var(--red);
     box-shadow:0 0 0 3px var(--red-dim);
   }
-
   .track-btn {
     background:var(--red);
     color:var(--white);
@@ -242,21 +208,16 @@
     white-space:nowrap;
     transition:all 0.2s;
   }
-
   .track-btn:hover {
     background:var(--red-dark);
     transform:translateY(-2px);
     box-shadow:0 8px 28px var(--red-glow);
   }
-
   .track-btn:active { transform:translateY(0); box-shadow:none; }
-
-  /* ── RESULTS ── */
   .result-meta {
     display:flex; align-items:center; justify-content:space-between;
     margin-bottom:20px;
   }
-
   .result-label {
     font-family:'IBM Plex Mono', monospace;
     font-size:0.66rem;
@@ -264,7 +225,6 @@
     text-transform:uppercase;
     color:var(--grey);
   }
-
   .result-count {
     font-family:'IBM Plex Mono', monospace;
     font-size:0.74rem;
@@ -274,8 +234,6 @@
     border-radius:20px;
     padding:4px 14px;
   }
-
-  /* Order Card */
   .order-card {
     background:var(--black-3);
     border:1px solid var(--black-5);
@@ -287,7 +245,6 @@
     position:relative;
     overflow:hidden;
   }
-
   .order-card::before {
     content:'';
     position:absolute;
@@ -297,14 +254,8 @@
     opacity:0;
     transition:opacity 0.2s;
   }
-
-  .order-card:hover {
-    border-color:rgba(232,0,13,0.3);
-    transform:translateY(-2px);
-  }
-
+  .order-card:hover { border-color:rgba(232,0,13,0.3); transform:translateY(-2px); }
   .order-card:hover::before { opacity:1; }
-
   .card-top {
     display:flex;
     align-items:flex-start;
@@ -312,7 +263,6 @@
     gap:12px;
     margin-bottom:24px;
   }
-
   .card-item {
     font-family:'Manrope', sans-serif;
     font-size:1.05rem;
@@ -320,15 +270,12 @@
     color:var(--white);
     margin-bottom:6px;
   }
-
   .card-meta {
     font-family:'IBM Plex Mono', monospace;
     font-size:0.7rem;
     color:var(--grey);
     letter-spacing:0.5px;
   }
-
-  /* Status Pills */
   .pill {
     display:inline-flex;
     align-items:center;
@@ -342,7 +289,6 @@
     white-space:nowrap;
     flex-shrink:0;
   }
-
   .pill::before {
     content:'';
     width:6px; height:6px;
@@ -351,21 +297,13 @@
     flex-shrink:0;
     animation: pulse 2s infinite;
   }
-
   .pill.delivered { background:rgba(34,197,94,0.12); color:#4ade80; }
   .pill.transit   { background:rgba(255,255,255,0.07); color:var(--white-d); }
   .pill.pending   { background:rgba(232,0,13,0.1); color:var(--red); }
   .pill.cancelled { background:rgba(100,100,100,0.15); color:var(--grey-l); }
   .pill.other     { background:var(--black-4); color:var(--grey-ll); border:1px solid var(--black-5); }
-
-  @keyframes pulse {
-    0%,100% { opacity:1; }
-    50% { opacity:0.4; }
-  }
-
-  /* Progress */
+  @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
   .prog-wrap { margin:0 0 24px; }
-
   .prog-track {
     height:3px;
     background:var(--black-5);
@@ -373,19 +311,13 @@
     overflow:hidden;
     margin-bottom:10px;
   }
-
   .prog-bar {
     height:100%;
     background: linear-gradient(90deg, var(--red-dark), var(--red));
     border-radius:3px;
     transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
   }
-
-  .prog-steps {
-    display:flex;
-    justify-content:space-between;
-  }
-
+  .prog-steps { display:flex; justify-content:space-between; }
   .p-step {
     font-family:'IBM Plex Mono', monospace;
     font-size:0.58rem;
@@ -395,11 +327,8 @@
     text-transform:uppercase;
     transition:color 0.3s;
   }
-
   .p-step.done   { color:var(--grey); }
   .p-step.active { color:var(--red); font-weight:600; }
-
-  /* Details Grid */
   .detail-grid {
     display:grid;
     grid-template-columns:1fr 1fr;
@@ -407,7 +336,6 @@
     padding-top:24px;
     border-top:1px solid var(--black-5);
   }
-
   .d-item label {
     font-family:'IBM Plex Mono', monospace;
     font-size:0.6rem;
@@ -417,15 +345,12 @@
     display:block;
     margin-bottom:5px;
   }
-
   .d-item span {
     font-size:0.88rem;
     color:var(--grey-ll);
     font-weight:500;
     line-height:1.4;
   }
-
-  /* State Cards */
   .state-card {
     text-align:center;
     padding:60px 24px;
@@ -434,9 +359,7 @@
     border-radius:18px;
     animation: fadeUp 0.4s ease both;
   }
-
   .state-emoji { font-size:2.5rem; margin-bottom:16px; }
-
   .state-card h3 {
     font-family:'Bebas Neue', sans-serif;
     font-size:1.8rem;
@@ -444,7 +367,6 @@
     color:var(--white);
     margin-bottom:10px;
   }
-
   .state-card p {
     color:var(--grey-l);
     font-size:0.9rem;
@@ -452,10 +374,7 @@
     max-width:320px;
     margin:0 auto;
   }
-
-  /* Loading */
   .loading-wrap { text-align:center; padding:60px 0; }
-
   .spinner {
     width:36px; height:36px;
     border:2px solid var(--black-5);
@@ -464,7 +383,6 @@
     animation:spin 0.7s linear infinite;
     margin:0 auto 18px;
   }
-
   .loading-wrap p {
     font-family:'IBM Plex Mono', monospace;
     font-size:0.72rem;
@@ -472,8 +390,6 @@
     letter-spacing:1px;
     text-transform:uppercase;
   }
-
-  /* ── FOOTER ── */
   footer {
     margin-top:64px;
     padding-top:28px;
@@ -485,22 +401,14 @@
     gap:16px;
     animation: fadeUp 0.6s ease 0.4s both;
   }
-
   .footer-brand {
     font-family:'Bebas Neue', sans-serif;
     font-size:1.1rem;
     letter-spacing:2px;
     color:var(--black-5);
   }
-
   .footer-right { text-align:right; }
-
-  .footer-right p {
-    font-size:0.78rem;
-    color:var(--grey);
-    margin-bottom:4px;
-  }
-
+  .footer-right p { font-size:0.78rem; color:var(--grey); margin-bottom:4px; }
   .footer-right a {
     font-family:'IBM Plex Mono', monospace;
     font-size:0.92rem;
@@ -510,21 +418,10 @@
     letter-spacing:1px;
     transition:color 0.2s;
   }
-
   .footer-right a:hover { color:var(--white); }
-
-  /* ── ANIMATIONS ── */
-  @keyframes fadeDown {
-    from { opacity:0; transform:translateY(-16px); }
-    to   { opacity:1; transform:translateY(0); }
-  }
-  @keyframes fadeUp {
-    from { opacity:0; transform:translateY(20px); }
-    to   { opacity:1; transform:translateY(0); }
-  }
+  @keyframes fadeDown { from { opacity:0; transform:translateY(-16px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
   @keyframes spin { to { transform:rotate(360deg); } }
-
-  /* ── MOBILE ── */
   @media (max-width:520px) {
     .topbar { flex-direction:column; align-items:flex-start; gap:16px; }
     .topbar-right { text-align:left; }
@@ -541,8 +438,6 @@
 </head>
 <body>
 <div class="wrap">
-
-  <!-- TOP BAR -->
   <div class="topbar">
     <div class="logo">
       <div class="logo-icon">🛵</div>
@@ -556,35 +451,21 @@
       <div class="hours-val">Mon – Sat &nbsp;·&nbsp; 09:00 – 18:00</div>
     </div>
   </div>
-
-  <!-- HERO -->
   <div class="hero">
     <div class="eyebrow">Real-time delivery tracking</div>
     <h1>Track Your<br><span class="outline">Delivery.</span></h1>
     <p>Enter the phone number you used when placing your order and we'll show you exactly where your package is.</p>
   </div>
-
-  <!-- SEARCH -->
   <div class="search-section">
     <div class="search-box">
       <span class="s-label">// Enter your phone number</span>
       <div class="input-row">
-        <input
-          type="tel"
-          class="phone-field"
-          id="phoneInput"
-          placeholder="08012345678"
-          maxlength="11"
-        />
+        <input type="tel" class="phone-field" id="phoneInput" placeholder="08012345678" maxlength="11"/>
         <button class="track-btn" onclick="trackOrder()">Track →</button>
       </div>
     </div>
   </div>
-
-  <!-- RESULTS -->
   <div id="result-area"></div>
-
-  <!-- FOOTER -->
   <footer>
     <div class="footer-brand">Nancy Logistics</div>
     <div class="footer-right">
@@ -592,35 +473,10 @@
       <a href="tel:+2349013164449">090 1316 4449</a>
     </div>
   </footer>
-
 </div>
-
 <script>
-  // ── DEMO DATA ──────────────────────────────────────────────
-  // Remove and replace with live Google Sheets API when ready.
-  // Sheet columns needed:
-  // Date | Customer Name | Phone | Item | Pickup Address | Delivery Address | Delivery Fee | Status | Rider
-  // ──────────────────────────────────────────────────────────
-  const DEMO = [
-    {
-      date: '26/02/2026', customerName: 'Adebayo Musa',
-      phone: '08012345678', item: 'Wireless Earbuds',
-      pickup: '12 Station Road, Osogbo', delivery: '5 Oke-Fia Street, Osogbo',
-      fee: '₦1,500', status: 'Delivered', rider: 'Emeka'
-    },
-    {
-      date: '26/02/2026', customerName: 'Chioma Okafor',
-      phone: '08087654321', item: 'Phone Case × 3',
-      pickup: 'Olaiya Junction, Osogbo', delivery: '22 Gbongan Road, Osogbo',
-      fee: '₦1,200', status: 'In Transit', rider: 'Tunde'
-    },
-    {
-      date: '26/02/2026', customerName: 'Fatima Aliyu',
-      phone: '08011112222', item: 'Screen Protector × 5',
-      pickup: 'Ataoja Market, Osogbo', delivery: 'Ede Road, Osogbo',
-      fee: '₦1,000', status: 'Pending', rider: 'Not Assigned'
-    }
-  ];
+  const SUPABASE_URL = 'https://pnwljjiehfzmfpajbsbm.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_k7ZEH33SopVTMhGbOhE2UA_sutpYDpU';
 
   function pillClass(s) {
     const v = (s||'').toLowerCase();
@@ -630,7 +486,6 @@
     if (v === 'cancelled') return 'cancelled';
     return 'other';
   }
-
   function progressFor(s) {
     const v = (s||'').toLowerCase();
     if (v === 'delivered')                        return { w:'100%', step:3 };
@@ -638,10 +493,8 @@
     if (v === 'pending')                          return { w:'15%',  step:0 };
     return { w:'0%', step:-1 };
   }
-
   function buildCards(orders) {
     const area = document.getElementById('result-area');
-
     if (!orders.length) {
       area.innerHTML = `
         <div class="state-card">
@@ -651,31 +504,29 @@
         </div>`;
       return;
     }
-
     const steps = ['Placed','Picked Up','In Transit','Delivered'];
     let html = `
       <div class="result-meta">
         <span class="result-label">Results</span>
         <span class="result-count">${orders.length} order${orders.length>1?'s':''}</span>
       </div>`;
-
     orders.forEach((o, i) => {
-      const prog = progressFor(o.status);
+      const prog = progressFor(o.delivery_status);
       const stepHtml = steps.map((label, idx) => {
         let cls = '';
         if (idx < prog.step) cls = 'done';
         else if (idx === prog.step) cls = 'active';
         return `<span class="p-step ${cls}">${label}</span>`;
       }).join('');
-
+      const displayDate = o.date ? new Date(o.date).toLocaleDateString('en-GB') : '—';
       html += `
         <div class="order-card" style="animation-delay:${i*0.08}s">
           <div class="card-top">
             <div>
-              <div class="card-item">${o.item || 'Package'}</div>
-              <div class="card-meta">📅 ${o.date} &nbsp;·&nbsp; 🛵 Rider: ${o.rider || 'TBA'}</div>
+              <div class="card-item">${o.item_ordered || 'Package'}</div>
+              <div class="card-meta">📅 ${displayDate} &nbsp;·&nbsp; Qty: ${o.quantity || 1}</div>
             </div>
-            <span class="pill ${pillClass(o.status)}">${o.status}</span>
+            <span class="pill ${pillClass(o.delivery_status)}">${o.delivery_status || 'Unknown'}</span>
           </div>
           <div class="prog-wrap">
             <div class="prog-track">
@@ -684,20 +535,17 @@
             <div class="prog-steps">${stepHtml}</div>
           </div>
           <div class="detail-grid">
-            <div class="d-item"><label>Customer</label><span>${o.customerName||'—'}</span></div>
-            <div class="d-item"><label>Delivery Fee</label><span>${o.fee||'—'}</span></div>
-            <div class="d-item"><label>Pickup</label><span>${o.pickup||'—'}</span></div>
-            <div class="d-item"><label>Drop-off</label><span>${o.delivery||'—'}</span></div>
+            <div class="d-item"><label>Customer</label><span>${o.customer_name||'—'}</span></div>
+            <div class="d-item"><label>Price</label><span>₦${Number(o.price||0).toLocaleString()}</span></div>
+            <div class="d-item"><label>Delivery Address</label><span>${o.delivery_address||'—'}</span></div>
+            <div class="d-item"><label>Payment</label><span>${o.payment_status||'—'}</span></div>
           </div>
         </div>`;
     });
-
     area.innerHTML = html;
   }
-
-  function trackOrder() {
+  async function trackOrder() {
     const raw = document.getElementById('phoneInput').value.trim();
-
     if (!raw || raw.length < 10) {
       document.getElementById('result-area').innerHTML = `
         <div class="state-card">
@@ -707,19 +555,34 @@
         </div>`;
       return;
     }
-
     document.getElementById('result-area').innerHTML = `
       <div class="loading-wrap">
         <div class="spinner"></div>
         <p>Searching orders...</p>
       </div>`;
-
-    setTimeout(() => {
-      const found = DEMO.filter(o => o.phone === raw);
-      buildCards(found);
-    }, 900);
+    try {
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/orders?phone_number=eq.${encodeURIComponent(raw)}&order=created_at.desc`,
+        {
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      if (!res.ok) throw new Error('Network error');
+      const orders = await res.json();
+      buildCards(orders);
+    } catch(err) {
+      document.getElementById('result-area').innerHTML = `
+        <div class="state-card">
+          <div class="state-emoji">⚠️</div>
+          <h3>Connection Error</h3>
+          <p>Unable to fetch orders. Please try again or call us on <strong style="color:var(--red)">090 1316 4449</strong>.</p>
+        </div>`;
+    }
   }
-
   document.getElementById('phoneInput').addEventListener('keypress', e => {
     if (e.key === 'Enter') trackOrder();
   });
