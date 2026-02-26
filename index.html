@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nancy Logistics — Track Your Delivery</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black:    #000000;
+    --black-2:  #0d0d0d;
+    --black-3:  #161616;
+    --black-4:  #222222;
+    --black-5:  #2e2e2e;
+    --grey:     #555555;
+    --grey-l:   #888888;
+    --grey-ll:  #bbbbbb;
+    --white:    #ffffff;
+    --white-d:  #e8e8e8;
+    --red:      #E8000D;
+    --red-dark: #a30009;
+    --red-dim:  rgba(232,0,13,0.12);
+    --red-glow: rgba(232,0,13,0.25);
+  }
+
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Manrope', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Grain */
+  body::before {
+    content:'';
+    position:fixed; inset:0;
+    opacity:.025;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size:200px;
+    pointer-events:none; z-index:999;
+  }
+
+  /* Red glow top */
+  body::after {
+    content:'';
+    position:fixed;
+    top:-150px; left:50%; transform:translateX(-50%);
+    width:700px; height:350px;
+    background: radial-gradient(ellipse, rgba(232,0,13,0.1) 0%, transparent 70%);
+    pointer-events:none; z-index:0;
+  }
+
+  .wrap {
+    position:relative; z-index:1;
+    max-width:700px;
+    margin:0 auto;
+    padding:0 24px 60px;
+  }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:28px 0 24px;
+    border-bottom:1px solid var(--black-5);
+    animation: fadeDown 0.5s ease both;
+  }
+
+  .logo { display:flex; align-items:center; gap:14px; }
+
+  .logo-icon {
+    width:46px; height:46px;
+    background:var(--red);
+    border-radius:12px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:22px;
+    box-shadow: 0 0 24px var(--red-glow);
+    flex-shrink:0;
+  }
+
+  .logo-name {
+    font-family:'Bebas Neue', sans-serif;
+    font-size:1.75rem;
+    letter-spacing:2.5px;
+    color:var(--white);
+    line-height:1;
+  }
+
+  .logo-sub {
+    font-size:0.62rem;
+    color:var(--grey-l);
+    letter-spacing:3px;
+    text-transform:uppercase;
+    margin-top:4px;
+  }
+
+  .topbar-right { text-align:right; }
+
+  .hours-label {
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.62rem;
+    color:var(--grey);
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    margin-bottom:4px;
+  }
+
+  .hours-val {
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.78rem;
+    color:var(--grey-ll);
+    font-weight:500;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    padding:64px 0 48px;
+    animation: fadeUp 0.6s ease 0.1s both;
+  }
+
+  .eyebrow {
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.68rem;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    color:var(--red);
+    margin-bottom:20px;
+    display:flex; align-items:center; gap:10px;
+  }
+
+  .eyebrow::before {
+    content:'';
+    display:inline-block;
+    width:24px; height:1.5px;
+    background:var(--red);
+  }
+
+  .hero h1 {
+    font-family:'Bebas Neue', sans-serif;
+    font-size: clamp(3.2rem, 11vw, 6rem);
+    line-height:0.92;
+    letter-spacing:1px;
+    color:var(--white);
+    margin-bottom:28px;
+  }
+
+  .hero h1 .outline {
+    -webkit-text-stroke:1.5px var(--red);
+    color:transparent;
+  }
+
+  .hero p {
+    font-size:0.95rem;
+    color:var(--grey-l);
+    line-height:1.75;
+    max-width:400px;
+    font-weight:400;
+  }
+
+  /* ── SEARCH ── */
+  .search-section {
+    margin-bottom:48px;
+    animation: fadeUp 0.6s ease 0.2s both;
+  }
+
+  .search-box {
+    background:var(--black-3);
+    border:1px solid var(--black-5);
+    border-radius:20px;
+    padding:32px;
+    position:relative;
+    overflow:hidden;
+  }
+
+  /* Red accent top line */
+  .search-box::before {
+    content:'';
+    position:absolute;
+    top:0; left:0; right:0;
+    height:2px;
+    background: linear-gradient(90deg, transparent, var(--red), transparent);
+    opacity:0.6;
+  }
+
+  .s-label {
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.66rem;
+    letter-spacing:2.5px;
+    text-transform:uppercase;
+    color:var(--grey-l);
+    margin-bottom:20px;
+    display:block;
+  }
+
+  .input-row {
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+
+  .phone-field {
+    flex:1;
+    min-width:200px;
+    background:var(--black);
+    border:1px solid var(--black-5);
+    border-radius:12px;
+    padding:15px 18px;
+    color:var(--white);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:1rem;
+    font-weight:500;
+    letter-spacing:1px;
+    outline:none;
+    transition:border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .phone-field::placeholder { color:var(--black-5); font-weight:400; }
+
+  .phone-field:focus {
+    border-color:var(--red);
+    box-shadow:0 0 0 3px var(--red-dim);
+  }
+
+  .track-btn {
+    background:var(--red);
+    color:var(--white);
+    border:none;
+    border-radius:12px;
+    padding:15px 28px;
+    font-family:'Manrope', sans-serif;
+    font-weight:800;
+    font-size:0.88rem;
+    cursor:pointer;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    white-space:nowrap;
+    transition:all 0.2s;
+  }
+
+  .track-btn:hover {
+    background:var(--red-dark);
+    transform:translateY(-2px);
+    box-shadow:0 8px 28px var(--red-glow);
+  }
+
+  .track-btn:active { transform:translateY(0); box-shadow:none; }
+
+  /* ── RESULTS ── */
+  .result-meta {
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom:20px;
+  }
+
+  .result-label {
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.66rem;
+    letter-spacing:2.5px;
+    text-transform:uppercase;
+    color:var(--grey);
+  }
+
+  .result-count {
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.74rem;
+    color:var(--red);
+    background:var(--red-dim);
+    border:1px solid rgba(232,0,13,0.2);
+    border-radius:20px;
+    padding:4px 14px;
+  }
+
+  /* Order Card */
+  .order-card {
+    background:var(--black-3);
+    border:1px solid var(--black-5);
+    border-radius:18px;
+    padding:28px;
+    margin-bottom:16px;
+    animation: fadeUp 0.4s ease both;
+    transition: border-color 0.2s, transform 0.2s;
+    position:relative;
+    overflow:hidden;
+  }
+
+  .order-card::before {
+    content:'';
+    position:absolute;
+    top:0; left:0;
+    width:3px; height:100%;
+    background:var(--red);
+    opacity:0;
+    transition:opacity 0.2s;
+  }
+
+  .order-card:hover {
+    border-color:rgba(232,0,13,0.3);
+    transform:translateY(-2px);
+  }
+
+  .order-card:hover::before { opacity:1; }
+
+  .card-top {
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:24px;
+  }
+
+  .card-item {
+    font-family:'Manrope', sans-serif;
+    font-size:1.05rem;
+    font-weight:700;
+    color:var(--white);
+    margin-bottom:6px;
+  }
+
+  .card-meta {
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.7rem;
+    color:var(--grey);
+    letter-spacing:0.5px;
+  }
+
+  /* Status Pills */
+  .pill {
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:6px 14px;
+    border-radius:30px;
+    font-size:0.72rem;
+    font-weight:700;
+    letter-spacing:0.5px;
+    text-transform:uppercase;
+    white-space:nowrap;
+    flex-shrink:0;
+  }
+
+  .pill::before {
+    content:'';
+    width:6px; height:6px;
+    border-radius:50%;
+    background:currentColor;
+    flex-shrink:0;
+    animation: pulse 2s infinite;
+  }
+
+  .pill.delivered { background:rgba(34,197,94,0.12); color:#4ade80; }
+  .pill.transit   { background:rgba(255,255,255,0.07); color:var(--white-d); }
+  .pill.pending   { background:rgba(232,0,13,0.1); color:var(--red); }
+  .pill.cancelled { background:rgba(100,100,100,0.15); color:var(--grey-l); }
+  .pill.other     { background:var(--black-4); color:var(--grey-ll); border:1px solid var(--black-5); }
+
+  @keyframes pulse {
+    0%,100% { opacity:1; }
+    50% { opacity:0.4; }
+  }
+
+  /* Progress */
+  .prog-wrap { margin:0 0 24px; }
+
+  .prog-track {
+    height:3px;
+    background:var(--black-5);
+    border-radius:3px;
+    overflow:hidden;
+    margin-bottom:10px;
+  }
+
+  .prog-bar {
+    height:100%;
+    background: linear-gradient(90deg, var(--red-dark), var(--red));
+    border-radius:3px;
+    transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .prog-steps {
+    display:flex;
+    justify-content:space-between;
+  }
+
+  .p-step {
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.58rem;
+    color:var(--black-5);
+    text-align:center;
+    letter-spacing:0.5px;
+    text-transform:uppercase;
+    transition:color 0.3s;
+  }
+
+  .p-step.done   { color:var(--grey); }
+  .p-step.active { color:var(--red); font-weight:600; }
+
+  /* Details Grid */
+  .detail-grid {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+    padding-top:24px;
+    border-top:1px solid var(--black-5);
+  }
+
+  .d-item label {
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.6rem;
+    color:var(--grey);
+    letter-spacing:2px;
+    text-transform:uppercase;
+    display:block;
+    margin-bottom:5px;
+  }
+
+  .d-item span {
+    font-size:0.88rem;
+    color:var(--grey-ll);
+    font-weight:500;
+    line-height:1.4;
+  }
+
+  /* State Cards */
+  .state-card {
+    text-align:center;
+    padding:60px 24px;
+    background:var(--black-3);
+    border:1px solid var(--black-5);
+    border-radius:18px;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  .state-emoji { font-size:2.5rem; margin-bottom:16px; }
+
+  .state-card h3 {
+    font-family:'Bebas Neue', sans-serif;
+    font-size:1.8rem;
+    letter-spacing:1px;
+    color:var(--white);
+    margin-bottom:10px;
+  }
+
+  .state-card p {
+    color:var(--grey-l);
+    font-size:0.9rem;
+    line-height:1.7;
+    max-width:320px;
+    margin:0 auto;
+  }
+
+  /* Loading */
+  .loading-wrap { text-align:center; padding:60px 0; }
+
+  .spinner {
+    width:36px; height:36px;
+    border:2px solid var(--black-5);
+    border-top-color:var(--red);
+    border-radius:50%;
+    animation:spin 0.7s linear infinite;
+    margin:0 auto 18px;
+  }
+
+  .loading-wrap p {
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.72rem;
+    color:var(--grey);
+    letter-spacing:1px;
+    text-transform:uppercase;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    margin-top:64px;
+    padding-top:28px;
+    border-top:1px solid var(--black-5);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:16px;
+    animation: fadeUp 0.6s ease 0.4s both;
+  }
+
+  .footer-brand {
+    font-family:'Bebas Neue', sans-serif;
+    font-size:1.1rem;
+    letter-spacing:2px;
+    color:var(--black-5);
+  }
+
+  .footer-right { text-align:right; }
+
+  .footer-right p {
+    font-size:0.78rem;
+    color:var(--grey);
+    margin-bottom:4px;
+  }
+
+  .footer-right a {
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.92rem;
+    font-weight:600;
+    color:var(--red);
+    text-decoration:none;
+    letter-spacing:1px;
+    transition:color 0.2s;
+  }
+
+  .footer-right a:hover { color:var(--white); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeDown {
+    from { opacity:0; transform:translateY(-16px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(20px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+  @keyframes spin { to { transform:rotate(360deg); } }
+
+  /* ── MOBILE ── */
+  @media (max-width:520px) {
+    .topbar { flex-direction:column; align-items:flex-start; gap:16px; }
+    .topbar-right { text-align:left; }
+    .hero h1 { font-size:3.4rem; }
+    .search-box { padding:24px 18px; }
+    .input-row { flex-direction:column; }
+    .track-btn { width:100%; text-align:center; }
+    .detail-grid { grid-template-columns:1fr; gap:14px; }
+    .card-top { flex-direction:column; }
+    footer { flex-direction:column; }
+    .footer-right { text-align:left; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="logo">
+      <div class="logo-icon">🛵</div>
+      <div>
+        <div class="logo-name">Nancy Logistics</div>
+        <div class="logo-sub">Osogbo & Nearby Cities</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="hours-label">Operating Hours</div>
+      <div class="hours-val">Mon – Sat &nbsp;·&nbsp; 09:00 – 18:00</div>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="eyebrow">Real-time delivery tracking</div>
+    <h1>Track Your<br><span class="outline">Delivery.</span></h1>
+    <p>Enter the phone number you used when placing your order and we'll show you exactly where your package is.</p>
+  </div>
+
+  <!-- SEARCH -->
+  <div class="search-section">
+    <div class="search-box">
+      <span class="s-label">// Enter your phone number</span>
+      <div class="input-row">
+        <input
+          type="tel"
+          class="phone-field"
+          id="phoneInput"
+          placeholder="08012345678"
+          maxlength="11"
+        />
+        <button class="track-btn" onclick="trackOrder()">Track →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="result-area"></div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-brand">Nancy Logistics</div>
+    <div class="footer-right">
+      <p>Need help? Call us</p>
+      <a href="tel:+2349013164449">090 1316 4449</a>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  // ── DEMO DATA ──────────────────────────────────────────────
+  // Remove and replace with live Google Sheets API when ready.
+  // Sheet columns needed:
+  // Date | Customer Name | Phone | Item | Pickup Address | Delivery Address | Delivery Fee | Status | Rider
+  // ──────────────────────────────────────────────────────────
+  const DEMO = [
+    {
+      date: '26/02/2026', customerName: 'Adebayo Musa',
+      phone: '08012345678', item: 'Wireless Earbuds',
+      pickup: '12 Station Road, Osogbo', delivery: '5 Oke-Fia Street, Osogbo',
+      fee: '₦1,500', status: 'Delivered', rider: 'Emeka'
+    },
+    {
+      date: '26/02/2026', customerName: 'Chioma Okafor',
+      phone: '08087654321', item: 'Phone Case × 3',
+      pickup: 'Olaiya Junction, Osogbo', delivery: '22 Gbongan Road, Osogbo',
+      fee: '₦1,200', status: 'In Transit', rider: 'Tunde'
+    },
+    {
+      date: '26/02/2026', customerName: 'Fatima Aliyu',
+      phone: '08011112222', item: 'Screen Protector × 5',
+      pickup: 'Ataoja Market, Osogbo', delivery: 'Ede Road, Osogbo',
+      fee: '₦1,000', status: 'Pending', rider: 'Not Assigned'
+    }
+  ];
+
+  function pillClass(s) {
+    const v = (s||'').toLowerCase();
+    if (v === 'delivered') return 'delivered';
+    if (v === 'in transit' || v === 'processing') return 'transit';
+    if (v === 'pending') return 'pending';
+    if (v === 'cancelled') return 'cancelled';
+    return 'other';
+  }
+
+  function progressFor(s) {
+    const v = (s||'').toLowerCase();
+    if (v === 'delivered')                        return { w:'100%', step:3 };
+    if (v === 'in transit' || v === 'processing') return { w:'65%',  step:2 };
+    if (v === 'pending')                          return { w:'15%',  step:0 };
+    return { w:'0%', step:-1 };
+  }
+
+  function buildCards(orders) {
+    const area = document.getElementById('result-area');
+
+    if (!orders.length) {
+      area.innerHTML = `
+        <div class="state-card">
+          <div class="state-emoji">🔍</div>
+          <h3>No Orders Found</h3>
+          <p>We couldn't find any deliveries linked to that number. Double-check and try again, or call us on <strong style="color:var(--red)">090 1316 4449</strong>.</p>
+        </div>`;
+      return;
+    }
+
+    const steps = ['Placed','Picked Up','In Transit','Delivered'];
+    let html = `
+      <div class="result-meta">
+        <span class="result-label">Results</span>
+        <span class="result-count">${orders.length} order${orders.length>1?'s':''}</span>
+      </div>`;
+
+    orders.forEach((o, i) => {
+      const prog = progressFor(o.status);
+      const stepHtml = steps.map((label, idx) => {
+        let cls = '';
+        if (idx < prog.step) cls = 'done';
+        else if (idx === prog.step) cls = 'active';
+        return `<span class="p-step ${cls}">${label}</span>`;
+      }).join('');
+
+      html += `
+        <div class="order-card" style="animation-delay:${i*0.08}s">
+          <div class="card-top">
+            <div>
+              <div class="card-item">${o.item || 'Package'}</div>
+              <div class="card-meta">📅 ${o.date} &nbsp;·&nbsp; 🛵 Rider: ${o.rider || 'TBA'}</div>
+            </div>
+            <span class="pill ${pillClass(o.status)}">${o.status}</span>
+          </div>
+          <div class="prog-wrap">
+            <div class="prog-track">
+              <div class="prog-bar" style="width:${prog.w}"></div>
+            </div>
+            <div class="prog-steps">${stepHtml}</div>
+          </div>
+          <div class="detail-grid">
+            <div class="d-item"><label>Customer</label><span>${o.customerName||'—'}</span></div>
+            <div class="d-item"><label>Delivery Fee</label><span>${o.fee||'—'}</span></div>
+            <div class="d-item"><label>Pickup</label><span>${o.pickup||'—'}</span></div>
+            <div class="d-item"><label>Drop-off</label><span>${o.delivery||'—'}</span></div>
+          </div>
+        </div>`;
+    });
+
+    area.innerHTML = html;
+  }
+
+  function trackOrder() {
+    const raw = document.getElementById('phoneInput').value.trim();
+
+    if (!raw || raw.length < 10) {
+      document.getElementById('result-area').innerHTML = `
+        <div class="state-card">
+          <div class="state-emoji">⚠️</div>
+          <h3>Invalid Number</h3>
+          <p>Please enter a valid 11-digit phone number, e.g. 08012345678</p>
+        </div>`;
+      return;
+    }
+
+    document.getElementById('result-area').innerHTML = `
+      <div class="loading-wrap">
+        <div class="spinner"></div>
+        <p>Searching orders...</p>
+      </div>`;
+
+    setTimeout(() => {
+      const found = DEMO.filter(o => o.phone === raw);
+      buildCards(found);
+    }, 900);
+  }
+
+  document.getElementById('phoneInput').addEventListener('keypress', e => {
+    if (e.key === 'Enter') trackOrder();
+  });
+</script>
+</body>
+</html>
