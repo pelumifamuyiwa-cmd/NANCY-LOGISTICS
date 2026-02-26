@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -562,7 +562,7 @@
       </div>`;
     try {
       const res = await fetch(
-        `${SUPABASE_URL}/rest/v1/orders?phone_number=eq.${encodeURIComponent(raw)}&order=created_at.desc`,
+        `${SUPABASE_URL}/rest/v1/ORDERS?phone_number=eq.${encodeURIComponent(raw)}&order=created_at.desc`,
         {
           headers: {
             'apikey': SUPABASE_KEY,
