@@ -201,6 +201,7 @@
     <div class="nav-section">
       <div class="nav-label">Reports</div>
       <div class="nav-item" onclick="showPage('reports',this)"><span class="nav-icon">&#128200;</span> Reports</div>
+      <div class="nav-item" onclick="showPage('dailysummary',this)"><span class="nav-icon">&#128221;</span> Daily Summary</div>
     </div>
     <div class="sidebar-bottom">
       <div class="logout-btn" onclick="logout()">&#128682; Sign out</div>
@@ -314,6 +315,24 @@
         <div class="period-tab" onclick="setReportPeriod('weekly',this)">This Week</div>
         <div class="period-tab" onclick="setReportPeriod('monthly',this)">This Month</div>
         <div class="period-tab" onclick="setReportPeriod('yearly',this)">This Year</div>
+        <div class="period-tab" onclick="setReportPeriod('custom',this)">&#128197; Custom Range</div>
+      </div>
+      <div id="custom-range-picker" style="display:none;background:var(--white);border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:20px;display:none;gap:16px;align-items:center;flex-wrap:wrap;">
+        <div>
+          <label style="font-size:0.75rem;font-weight:600;color:var(--text2);display:block;margin-bottom:4px;">From</label>
+          <input type="date" class="form-input" id="rpt-from" style="width:auto;" onchange="renderReports()"/>
+        </div>
+        <div>
+          <label style="font-size:0.75rem;font-weight:600;color:var(--text2);display:block;margin-bottom:4px;">To</label>
+          <input type="date" class="form-input" id="rpt-to" style="width:auto;" onchange="renderReports()"/>
+        </div>
+        <div style="margin-top:18px;">
+          <button class="btn btn-outline btn-sm" onclick="setQuickRange('yesterday')">Yesterday</button>
+          <button class="btn btn-outline btn-sm" onclick="setQuickRange('last7')">Last 7 Days</button>
+          <button class="btn btn-outline btn-sm" onclick="setQuickRange('last30')">Last 30 Days</button>
+          <button class="btn btn-outline btn-sm" onclick="setQuickRange('lastmonth')">Last Month</button>
+          <button class="btn btn-outline btn-sm" onclick="setQuickRange('lastyear')">Last Year</button>
+        </div>
       </div>
       <div class="summary-grid">
         <div class="summary-item"><div class="summary-item-label">Total Orders</div><div class="summary-item-val" id="rpt-orders">&#8212;</div></div>
@@ -329,6 +348,24 @@
       </div>
     </div>
 
+
+    <!-- DAILY SUMMARY -->
+    <div class="page" id="page-dailysummary">
+      <div class="page-header"><div class="page-title">Daily Summary Log</div><div class="page-sub">End-of-day summaries recorded each evening</div></div>
+      <div class="stats-grid" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr))">
+        <div class="stat-card blue"><div class="stat-icon">&#128221;</div><div class="stat-label">Total Entries</div><div class="stat-val" id="ds-count">&#8212;</div></div>
+        <div class="stat-card green"><div class="stat-icon">&#128176;</div><div class="stat-label">Total Revenue Logged</div><div class="stat-val" id="ds-revenue">&#8212;</div></div>
+        <div class="stat-card orange"><div class="stat-icon">&#128230;</div><div class="stat-label">Total Orders Logged</div><div class="stat-val" id="ds-orders">&#8212;</div></div>
+        <div class="stat-card green"><div class="stat-icon">&#9989;</div><div class="stat-label">Total Profit</div><div class="stat-val" id="ds-profit-stat">&#8212;</div></div>
+      </div>
+      <div class="table-card">
+        <div class="table-header">
+          <div class="table-title">Summary Records</div>
+          <button class="btn btn-red" onclick="openDailySummaryModal()">+ Add Entry</button>
+        </div>
+        <div id="dailysummary-table-body"><div class="table-loading"><div class="mini-spinner"></div>Loading...</div></div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -468,6 +505,49 @@
   </div>
 </div>
 
+<!-- DAILY SUMMARY MODAL -->
+<div class="modal-overlay" id="dailysummary-modal">
+  <div class="modal">
+    <div class="modal-title" id="ds-modal-title">&#127774; End of Day Summary</div>
+    <div class="modal-sub">How did today go? Log your daily performance.</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">Date *</label>
+        <input type="date" class="form-input" id="ds-date"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Orders Today *</label>
+        <input type="number" class="form-input" id="ds-orders-input" placeholder="e.g. 12" min="0"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Revenue Made (&#8358;) *</label>
+        <input type="number" class="form-input" id="ds-revenue-input" placeholder="e.g. 45000" min="0" oninput="recalcDSProfit()"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Deliveries Completed</label>
+        <input type="number" class="form-input" id="ds-deliveries-input" placeholder="e.g. 10" min="0"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Today's Expenses (auto)</label>
+        <div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:0.9rem;font-weight:600;color:var(--red)" id="ds-expenses-display">&#8358;0</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Profit (Revenue - Expenses)</label>
+        <div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:0.9rem;font-weight:700;" id="ds-profit-display">&#8358;0</div>
+      </div>
+      <div class="form-group full">
+        <label class="form-label">Notes / Highlights</label>
+        <input type="text" class="form-input" id="ds-notes-input" placeholder="e.g. Good day, had 2 returns..."/>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('dailysummary-modal')">Cancel</button>
+      <button class="btn btn-red" id="ds-save-btn" onclick="saveDailySummary()">Save Summary</button>
+    </div>
+  </div>
+</div>
+
+
 <div class="toast" id="toast"></div>
 
 <!-- MOBILE BOTTOM NAV -->
@@ -478,6 +558,7 @@
     <div class="mob-nav-item" id="mob-expenses" onclick="showPage('expenses',this)"><span class="mob-icon">&#128184;</span>Expenses</div>
     <div class="mob-nav-item" id="mob-commissions" onclick="showPage('commissions',this)"><span class="mob-icon">&#128757;</span>Riders</div>
     <div class="mob-nav-item" id="mob-reports" onclick="showPage('reports',this)"><span class="mob-icon">&#128200;</span>Reports</div>
+    <div class="mob-nav-item" id="mob-dailysummary" onclick="showPage('dailysummary',this)"><span class="mob-icon">&#128221;</span>Summary</div>
   </div>
 </div>
 
@@ -526,6 +607,7 @@
     if(name==='reports') renderReports();
     if(name==='expenses') renderExpensesTable();
     if(name==='commissions') renderCommissionsTable();
+    if(name==='dailysummary') renderDailySummaryTable();
   }
 
   async function sbFetch(table){
@@ -938,7 +1020,18 @@
   function setReportPeriod(period,el){
     currentReportPeriod=period;
     document.querySelectorAll('.period-tab').forEach(t=>t.classList.remove('active'));
-    el.classList.add('active');renderReports();
+    if(el) el.classList.add('active');
+    const picker = document.getElementById('custom-range-picker');
+    if(period==='custom'){
+      picker.style.display='flex';
+      if(!document.getElementById('rpt-from').value){
+        setQuickRange('last7');
+        return;
+      }
+    } else {
+      picker.style.display='none';
+    }
+    renderReports();
   }
   async function renderReports(){
     if(!allOrders.length){try{allOrders=await fetchOrders();}catch(e){return;}}
@@ -949,6 +1042,12 @@
       if(currentReportPeriod==='weekly'){const s=new Date(now);s.setDate(now.getDate()-now.getDay());return d>=s;}
       if(currentReportPeriod==='monthly')return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear();
       if(currentReportPeriod==='yearly')return d.getFullYear()===now.getFullYear();
+      if(currentReportPeriod==='custom'){
+        const from=document.getElementById('rpt-from').value;
+        const to=document.getElementById('rpt-to').value;
+        if(!from||!to)return true;
+        return o.date>=from && o.date<=to;
+      }
       return true;
     });
     const revenue=filtered.reduce((s,o)=>s+(Number(o.price)||0)*(Number(o.quantity)||1),0);
@@ -986,9 +1085,160 @@
   }
 
   function closeModal(id){document.getElementById(id).classList.remove('open');}
-  ['order-modal','expense-modal','commission-modal'].forEach(id=>{
+  ['order-modal','expense-modal','commission-modal','dailysummary-modal'].forEach(id=>{
     document.getElementById(id).addEventListener('click',function(e){if(e.target===this)closeModal(id);});
   });
+
+
+
+  // ── 8PM DAILY PROMPT ──
+
+  function recalcDSProfit(){
+    const rev = parseFloat(document.getElementById('ds-revenue-input').value)||0;
+    const expText = document.getElementById('ds-expenses-display').textContent.replace(/[^\d]/g,'');
+    const exp = parseFloat(expText)||0;
+    const profit = rev - exp;
+    document.getElementById('ds-profit-display').textContent = '\u20a6' + profit.toLocaleString();
+    document.getElementById('ds-profit-display').style.color = profit >= 0 ? 'var(--green)' : 'var(--red)';
+  }
+
+  function check8pmPrompt(){
+    const now = new Date();
+    const hour = now.getHours();
+    const today = now.toISOString().split('T')[0];
+    const promptKey = 'nancy_prompt_' + today;
+    if(hour >= 20 && !localStorage.getItem(promptKey)){
+      localStorage.setItem(promptKey, 'shown');
+      setTimeout(() => openDailySummaryModal(true), 2000);
+    }
+  }
+  setInterval(check8pmPrompt, 60000);
+  setTimeout(check8pmPrompt, 3000);
+
+  // ── DAILY SUMMARY ──
+  let allDailySummaries = [];
+  let editingDSId = null;
+
+  function mapDSRow(o){
+    return {id:o.id, created_at:o.created_at, date:o['DATE'], orders:o['ORDERS'],
+      revenue:o['REVENUE'], deliveries:o['DELIVERIES'], notes:o['NOTES'], expenses:o['EXPENSES'], profit:o['PROFIT']};
+  }
+  function mapDSToDB(d){
+    return {'DATE':d.date,'ORDERS':d.orders,'REVENUE':d.revenue,'DELIVERIES':d.deliveries,'NOTES':d.notes,'EXPENSES':d.expenses,'PROFIT':d.profit};
+  }
+  async function fetchDailySummaries(){ const r=await sbFetch('DAILY_SUMMARY'); return r.map(mapDSRow); }
+
+  function openDailySummaryModal(isAutoPrompt=false){
+    editingDSId = null;
+    const title = isAutoPrompt ? '\uD83C\uDF06 Good Evening! End of Day Summary' : 'Add Daily Summary';
+    document.getElementById('ds-modal-title').textContent = title;
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('ds-date').value = today;
+
+    // Auto-fill orders count
+    const todayOrders = allOrders.filter(o => o.date === today);
+    document.getElementById('ds-orders-input').value = todayOrders.length || '';
+
+    // Auto-fill revenue from orders
+    const todayRev = todayOrders.reduce((s,o)=>s+(Number(o.price)||0)*(Number(o.quantity)||1),0);
+    document.getElementById('ds-revenue-input').value = todayRev || '';
+
+    // Auto-fill today's expenses and compute profit
+    const todayExp = allExpenses.filter(e => e.date === today).reduce((s,e)=>s+(Number(e.amount)||0),0);
+    const profit = todayRev - todayExp;
+    document.getElementById('ds-expenses-display').textContent = '\u20a6' + todayExp.toLocaleString();
+    document.getElementById('ds-profit-display').textContent = '\u20a6' + profit.toLocaleString();
+    document.getElementById('ds-profit-display').style.color = profit >= 0 ? 'var(--green)' : 'var(--red)';
+
+    document.getElementById('ds-deliveries-input').value = '';
+    document.getElementById('ds-notes-input').value = '';
+    document.getElementById('dailysummary-modal').classList.add('open');
+  }
+
+  async function saveDailySummary(){
+    const date = document.getElementById('ds-date').value;
+    const orders = parseInt(document.getElementById('ds-orders-input').value)||0;
+    const revenue = parseFloat(document.getElementById('ds-revenue-input').value)||0;
+    const deliveries = parseInt(document.getElementById('ds-deliveries-input').value)||0;
+    const notes = document.getElementById('ds-notes-input').value.trim();
+    if(!date||!orders){showToast('Please fill required fields','error');return;}
+    const expText = document.getElementById('ds-expenses-display').textContent.replace(/[^\d]/g,'');
+    const expenses = parseFloat(expText)||0;
+    const profit = revenue - expenses;
+    const data = {date, orders, revenue, deliveries, notes, expenses, profit};
+    const btn = document.getElementById('ds-save-btn');
+    btn.textContent='Saving...'; btn.disabled=true;
+    try{
+      await sbInsert('DAILY_SUMMARY', mapDSToDB(data));
+      showToast('Summary saved!','success');
+      closeModal('dailysummary-modal');
+      allDailySummaries = await fetchDailySummaries();
+      renderDailySummaryTable();
+    }catch(e){showToast('Error: '+e.message,'error');}
+    finally{btn.textContent='Save Summary'; btn.disabled=false;}
+  }
+
+  async function renderDailySummaryTable(){
+    document.getElementById('dailysummary-table-body').innerHTML='<div class="table-loading"><div class="mini-spinner"></div>Loading...</div>';
+    try{
+      allDailySummaries = await fetchDailySummaries();
+      const total = allDailySummaries.reduce((s,d)=>s+(Number(d.revenue)||0),0);
+      const totalOrders = allDailySummaries.reduce((s,d)=>s+(Number(d.orders)||0),0);
+      const totalProfit = allDailySummaries.reduce((s,d)=>s+(Number(d.profit)||0),0);
+      document.getElementById('ds-count').textContent = allDailySummaries.length;
+      document.getElementById('ds-revenue').textContent = '\u20a6'+total.toLocaleString();
+      document.getElementById('ds-orders').textContent = totalOrders;
+      document.getElementById('ds-profit-stat').textContent = '\u20a6'+totalProfit.toLocaleString();
+      document.getElementById('ds-profit-stat').style.color = totalProfit >= 0 ? 'var(--green)' : 'var(--red)';
+      if(!allDailySummaries.length){
+        document.getElementById('dailysummary-table-body').innerHTML='<div class="table-loading">No summaries yet. They will appear here after your 8pm check-in.</div>';
+        return;
+      }
+      document.getElementById('dailysummary-table-body').innerHTML=`
+        <table><thead><tr><th>Date</th><th>Orders</th><th>Deliveries</th><th>Revenue</th><th>Expenses</th><th>Profit</th><th>Notes</th><th>Actions</th></tr></thead>
+        <tbody>${allDailySummaries.map(d=>`<tr>
+          <td style="white-space:nowrap;font-weight:600">${d.date?new Date(d.date).toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'}):'&#8212;'}</td>
+          <td>${d.orders||0}</td>
+          <td>${d.deliveries||0}</td>
+          <td class="td-amount">\u20a6${Number(d.revenue||0).toLocaleString()}</td>
+          <td style="color:var(--red)">\u20a6${Number(d.expenses||0).toLocaleString()}</td>
+          <td style="font-weight:700;color:${Number(d.profit||0)>=0?'var(--green)':'var(--red)'}">\u20a6${Number(d.profit||0).toLocaleString()}</td>
+          <td style="color:var(--text2);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${d.notes||'&#8212;'}</td>
+          <td><button class="btn btn-sm" style="background:var(--red-light);color:var(--red)" onclick="confirmDeleteDS(${d.id})">Del</button></td>
+        </tr>`).join('')}</tbody></table>`;
+    }catch(e){showToast('Failed to load summaries: '+e.message,'error');}
+  }
+
+  async function confirmDeleteDS(id){
+    if(!confirm('Delete this summary entry?'))return;
+    try{await sbDelete('DAILY_SUMMARY',id);showToast('Deleted','success');allDailySummaries=await fetchDailySummaries();renderDailySummaryTable();}
+    catch(e){showToast('Error deleting','error');}
+  }
+
+  // ── CUSTOM DATE RANGE FOR REPORTS ──
+  function setQuickRange(type){
+    const now = new Date();
+    let from, to = now.toISOString().split('T')[0];
+    if(type==='yesterday'){
+      const y=new Date(now); y.setDate(now.getDate()-1);
+      from=y.toISOString().split('T')[0]; to=from;
+    } else if(type==='last7'){
+      const s=new Date(now); s.setDate(now.getDate()-6);
+      from=s.toISOString().split('T')[0];
+    } else if(type==='last30'){
+      const s=new Date(now); s.setDate(now.getDate()-29);
+      from=s.toISOString().split('T')[0];
+    } else if(type==='lastmonth'){
+      const s=new Date(now.getFullYear(), now.getMonth()-1, 1);
+      const e=new Date(now.getFullYear(), now.getMonth(), 0);
+      from=s.toISOString().split('T')[0]; to=e.toISOString().split('T')[0];
+    } else if(type==='lastyear'){
+      from=`${now.getFullYear()-1}-01-01`; to=`${now.getFullYear()-1}-12-31`;
+    }
+    document.getElementById('rpt-from').value = from;
+    document.getElementById('rpt-to').value = to;
+    renderReports();
+  }
 
 
   // ── DELIVERY ADDRESS AUTOCOMPLETE ──
