@@ -118,6 +118,14 @@
   .table-loading{text-align:center;padding:48px;color:var(--text3);font-size:0.88rem;}
   .mini-spinner{width:24px;height:24px;border:2px solid var(--border);border-top-color:var(--red);border-radius:50%;animation:spin 0.6s linear infinite;margin:0 auto 12px;}
   @keyframes spin{to{transform:rotate(360deg);}}
+  .btn-whatsapp{background:#25D366;color:#fff;display:inline-flex;align-items:center;gap:6px;font-size:0.85rem;font-weight:600;}
+  .btn-whatsapp:hover{background:#1ebe5d;transform:translateY(-1px);}
+  .wa-modal{background:var(--white);border-radius:20px;padding:32px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,0.15);animation:modalIn 0.2s ease;text-align:center;}
+  .wa-icon{font-size:3rem;margin-bottom:12px;}
+  .wa-title{font-size:1.2rem;font-weight:700;margin-bottom:6px;}
+  .wa-sub{font-size:0.85rem;color:var(--text2);margin-bottom:20px;line-height:1.6;}
+  .wa-message-box{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;font-size:0.85rem;color:var(--text);text-align:left;line-height:1.7;margin-bottom:20px;white-space:pre-wrap;}
+  .wa-footer{display:flex;gap:10px;justify-content:center;}
   .toast{position:fixed;bottom:24px;right:24px;background:var(--text);color:#fff;padding:12px 20px;border-radius:10px;font-size:0.88rem;font-weight:500;z-index:9999;transform:translateY(80px);opacity:0;transition:all 0.3s;max-width:320px;}
   .toast.show{transform:translateY(0);opacity:1;}
   .toast.success{background:var(--green);}
@@ -550,6 +558,21 @@
 </div>
 
 
+<!-- WHATSAPP NOTIFICATION MODAL -->
+<div class="modal-overlay" id="wa-modal">
+  <div class="wa-modal">
+    <div class="wa-icon">&#128241;</div>
+    <div class="wa-title">Notify Customer on WhatsApp</div>
+    <div class="wa-sub">The order has been marked as <strong style="color:var(--green)">Delivered</strong>. Send a WhatsApp notification to the customer?</div>
+    <div class="wa-message-box" id="wa-message-preview"></div>
+    <div class="wa-footer">
+      <button class="btn btn-outline" onclick="closeModal('wa-modal')">Skip</button>
+      <button class="btn btn-whatsapp" onclick="sendWhatsApp()">&#128241; Open WhatsApp</button>
+    </div>
+  </div>
+</div>
+
+
 <div class="toast" id="toast"></div>
 
 <!-- MOBILE BOTTOM NAV -->
@@ -759,6 +782,7 @@
         <td>${payBadge(o.payment_status)}</td>
         <td><div class="row-actions">
           <button class="btn btn-outline btn-sm" onclick="openEditOrderModal(${o.id})">Edit</button>
+          ${o.delivery_status==='Delivered'?`<button class="btn btn-sm btn-whatsapp" onclick="triggerWhatsAppPrompt(allOrders.find(x=>x.id===${o.id}))">&#128241;</button>`:''}
           <button class="btn btn-sm" style="background:var(--red-light);color:var(--red)" onclick="confirmDeleteOrder(${o.id})">Del</button>
         </div></td>
       </tr>`).join('')}</tbody></table>`;
@@ -815,6 +839,10 @@
       closeModal('order-modal');
       allOrders=await fetchOrders();
       updateStats();renderRecentOrders();displayFilteredOrders(allOrders);
+      // Trigger WhatsApp prompt if status is Delivered
+      if(status === 'Delivered' && data.phone_number){
+        triggerWhatsAppPrompt(data);
+      }
     }catch(e){showToast('Error saving order: '+e.message,'error');}
     finally{btn.textContent=editingOrderId?'Update Order':'Save Order';btn.disabled=false;}
   }
@@ -1087,7 +1115,7 @@
   }
 
   function closeModal(id){document.getElementById(id).classList.remove('open');}
-  ['order-modal','expense-modal','commission-modal','dailysummary-modal'].forEach(id=>{
+  ['order-modal','expense-modal','commission-modal','dailysummary-modal','wa-modal'].forEach(id=>{
     document.getElementById(id).addEventListener('click',function(e){if(e.target===this)closeModal(id);});
   });
 
@@ -1242,6 +1270,35 @@
     renderReports();
   }
 
+
+
+  // ── WHATSAPP NOTIFICATION ──
+  let waPhone = '', waMessage = '';
+
+  function formatPhone(phone){
+    // Convert Nigerian number to international format
+    let p = (phone || '').replace(/\D/g, '');
+    if(p.startsWith('0')) p = '234' + p.slice(1);
+    if(!p.startsWith('234')) p = '234' + p;
+    return p;
+  }
+
+  function triggerWhatsAppPrompt(order){
+    const name = order.customer_name || 'Customer';
+    const item = order.item_ordered || 'your item';
+    const address = order.delivery_address || 'your address';
+    const phone = order.phone_number || '';
+    waPhone = formatPhone(phone);
+    waMessage = `Hello ${name}! 🎉\n\nGreat news! Your order of *${item}* has been successfully delivered to ${address}.\n\nThank you for choosing *Nancy Logistics*! 🛵\n\nFor any questions, call us: *090 1316 4449*`;
+    document.getElementById('wa-message-preview').textContent = waMessage;
+    document.getElementById('wa-modal').classList.add('open');
+  }
+
+  function sendWhatsApp(){
+    const url = `https://wa.me/${waPhone}?text=${encodeURIComponent(waMessage)}`;
+    window.open(url, '_blank');
+    closeModal('wa-modal');
+  }
 
   // ── DELIVERY ADDRESS AUTOCOMPLETE ──
   const DELIVERY_LOCATIONS = ["Oke-Fia, Osogbo", "Alekuwodo, Osogbo", "Ogo-Oluwa, Osogbo", "Isale-Aro, Osogbo", "Ayetoro, Osogbo", "Igbona, Osogbo", "Orisunmbare, Osogbo", "Oke-Baale, Osogbo", "Ajegunle, Osogbo", "Ita-Olokan, Osogbo", "Iragbiji Road, Osogbo", "Oke-Osun, Osogbo", "Powerline, Osogbo", "Lameco, Osogbo", "Abere, Osogbo", "Oke-Ila, Osogbo", "Gbodofon, Osogbo", "Oke-Onitea, Osogbo", "Dada Estate, Osogbo", "Coca-Cola Area, Osogbo", "Stadium Area, Osogbo", "Ataoja Area, Osogbo", "Oke-Afo, Osogbo", "Bode-Obi, Osogbo", "Dele-Yes Area, Osogbo", "Prison Area, Osogbo", "Oke-Ogbo, Osogbo", "Ilobu Road, Osogbo", "Ede Road, Osogbo", "Ikirun Road, Osogbo", "Gbongan Road, Osogbo", "Ilesa Road, Osogbo", "Iwo Road, Osogbo", "Station Road, Osogbo", "Boundary Road, Osogbo", "Fagbewesa Road, Osogbo", "Alayide Street, Osogbo", "Osogbo Central Mosque Area", "State Secretariat, Osogbo", "UNIOSUN, Osogbo", "Osogbo Stadium Area", "Osogbo General Hospital Area", "LAUTECH Area, Osogbo", "Oja-Oba Market, Osogbo", "Ataoja Palace Area, Osogbo", "Sacred Grove Area, Osogbo", "Ile-Ife Town Centre", "Oke-Ogbo, Ife", "Mayfair, Ife", "Lagere, Ife", "Eleyele, Ife", "Ilare, Ife", "Mokuro Road, Ife", "Opa Road, Ife", "Obafemi Awolowo University (OAU), Ife", "OAU Teaching Hospital, Ife", "Ife Central Market", "Enuwa Square, Ife", "Oke-Mesi, Ife", "Atelewo, Ife", "Ijugbe, Ife", "Parakin, Ife", "Iremo, Ife", "Modakeke, Ife", "Oke-Atan, Ife", "Lagere Junction, Ife", "Ilesha Town Centre", "Oke-Omiru, Ilesha", "Isokun, Ilesha", "Imo, Ilesha", "Ijoka, Ilesha", "Igangan, Ilesha", "Iloro, Ilesha", "Oke-Owa, Ilesha", "Atakunmosa, Ilesha", "Muroko, Ilesha", "Ereja, Ilesha", "Afin Area, Ilesha", "Wesley Guild Hospital, Ilesha", "Ilesha Grammar School Area", "Ilesha Market Area", "Oke-Esa, Ilesha", "Ibokun Road, Ilesha", "Akure Road, Ilesha", "Ijebu-Jesa Road, Ilesha"];
