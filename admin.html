@@ -1295,8 +1295,18 @@
   }
 
   function sendWhatsApp(){
-    const url = `https://wa.me/${waPhone}?text=${encodeURIComponent(waMessage)}`;
-    window.open(url, '_blank');
+    const encoded = encodeURIComponent(waMessage);
+    // On mobile, use intent link to open WhatsApp app directly
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    let url;
+    if(/Android/i.test(navigator.userAgent)){
+      url = `intent://send?phone=${waPhone}&text=${encoded}#Intent;package=com.whatsapp;scheme=whatsapp;end`;
+    } else if(/iPhone|iPad|iPod/i.test(navigator.userAgent)){
+      url = `whatsapp://send?phone=${waPhone}&text=${encoded}`;
+    } else {
+      url = `https://wa.me/${waPhone}?text=${encoded}`;
+    }
+    window.location.href = url;
     closeModal('wa-modal');
   }
 
