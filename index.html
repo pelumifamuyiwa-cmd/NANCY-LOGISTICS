@@ -13,6 +13,7 @@
 <link rel="manifest" id="pwa-manifest">
 <script>
   // Inline manifest as blob URL (works on GitHub Pages without separate file)
+  document.addEventListener('DOMContentLoaded', function() {
   const manifestData = {
     name: "Nancy Logistics",
     short_name: "Nancy Log.",
@@ -40,30 +41,7 @@
   const manifestBlob = new Blob([JSON.stringify(manifestData)], {type: 'application/json'});
   const manifestURL = URL.createObjectURL(manifestBlob);
   document.getElementById('pwa-manifest').setAttribute('href', manifestURL);
-
-  // ── PWA INSTALL PROMPT ──
-  let deferredPrompt = null;
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    // Show banner after 3 seconds
-    setTimeout(() => {
-      document.getElementById('pwaBanner').classList.remove('hidden');
-    }, 3000);
-  });
-
-  document.getElementById('pwaInstallBtn').addEventListener('click', async () => {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    deferredPrompt = null;
-    document.getElementById('pwaBanner').classList.add('hidden');
-  });
-
-  window.addEventListener('appinstalled', () => {
-    document.getElementById('pwaBanner').classList.add('hidden');
-    deferredPrompt = null;
-  });
+  }); // end DOMContentLoaded
 
 </script>
 <title>Nancy Logistics — Track Your Delivery</title>
@@ -1615,6 +1593,34 @@
       });
     } catch(e) {}
   }
+
+
+  // ── PWA INSTALL PROMPT ──
+  let deferredPrompt = null;
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    setTimeout(() => {
+      const b = document.getElementById('pwaBanner');
+      if (b) b.classList.remove('hidden');
+    }, 4000);
+  });
+  const _pwaBtn = document.getElementById('pwaInstallBtn');
+  if (_pwaBtn) {
+    _pwaBtn.addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      const b = document.getElementById('pwaBanner');
+      if (b) b.classList.add('hidden');
+    });
+  }
+  window.addEventListener('appinstalled', () => {
+    const b = document.getElementById('pwaBanner');
+    if (b) b.classList.add('hidden');
+    deferredPrompt = null;
+  });
 
   // ── BIKE LOGO ANIMATION ──
   function runBikeAnimation() {
