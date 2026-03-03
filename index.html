@@ -503,6 +503,18 @@
     .footer-right { text-align:left; }
   }
 
+
+  /* ── CAROUSEL / RESULTS SWAP ── */
+  .carousel-section {
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .carousel-section.hidden {
+    display: none;
+  }
+  #result-area {
+    transition: opacity 0.4s ease;
+  }
+
   /* ── CAROUSEL ── */
   .carousel-section {
     margin-bottom: 48px;
@@ -615,16 +627,16 @@
     width: 45%;
     flex-shrink: 0;
     overflow: hidden;
-    background: #fff;
+    background: #1a0002;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
   }
   .slide-bakehaven .s-img img {
     width: 100%;
-    max-height: 180px;
-    object-fit: contain;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
     display: block;
   }
   .slide-bakehaven .s-body {
@@ -846,6 +858,7 @@
           <div class="state-emoji">&#128269;</div>
           <h3>No Orders Found</h3>
           <p>We couldn't find any deliveries linked to that number. Double-check and try again, or call us on <strong style="color:var(--red)">090 1316 4449</strong>.</p>
+          <button onclick="resetSearch()" style="margin-top:20px;background:var(--red);color:#fff;border:none;border-radius:10px;padding:10px 24px;font-family:'Manrope',sans-serif;font-weight:700;font-size:0.82rem;cursor:pointer;">&#8592; Try Again</button>
         </div>`;
       return;
     }
@@ -898,7 +911,32 @@
           </div>
         </div>`;
     });
+    html += `<div style="text-align:center;margin-top:8px;margin-bottom:4px;">
+      <button onclick="resetSearch()" style="background:transparent;color:var(--grey-l);border:1px solid var(--black-5);border-radius:10px;padding:8px 20px;font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:1px;cursor:pointer;text-transform:uppercase;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'" onmouseout="this.style.borderColor='var(--black-5)';this.style.color='var(--grey-l)'">&#8592; New Search</button>
+    </div>`;
     area.innerHTML = html;
+  }
+
+  function resetSearch() {
+    document.getElementById('phoneInput').value = '';
+    document.getElementById('result-area').innerHTML = '';
+    showCarousel();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function showCarousel() {
+    const c = document.querySelector('.carousel-section');
+    const d = document.querySelector('.carousel-dots');
+    if (c) c.classList.remove('hidden');
+    if (d) d.classList.remove('hidden');
+    startCarouselAuto();
+  }
+  function hideCarousel() {
+    const c = document.querySelector('.carousel-section');
+    const d = document.querySelector('.carousel-dots');
+    if (c) c.classList.add('hidden');
+    if (d) d.classList.add('hidden');
+    stopCarouselAuto();
   }
 
   async function trackOrder() {
@@ -912,6 +950,7 @@
         </div>`;
       return;
     }
+    hideCarousel();
     document.getElementById('result-area').innerHTML = `
       <div class="loading-wrap">
         <div class="spinner"></div>
