@@ -769,13 +769,12 @@
   function displayFilteredOrders(orders){
     if(!orders.length){document.getElementById('orders-table-body').innerHTML='<div class="table-loading">No orders found</div>';return;}
     document.getElementById('orders-table-body').innerHTML=`
-      <table><thead><tr><th>Date</th><th>Customer</th><th>Phone</th><th>Item</th><th>Qty</th><th>Price</th><th>Address</th><th>Status</th><th>Payment</th><th>Actions</th></tr></thead>
+      <table><thead><tr><th>Date</th><th>Customer</th><th>Phone</th><th>Item</th><th>Price</th><th>Address</th><th>Status</th><th>Payment</th><th>Actions</th></tr></thead>
       <tbody>${orders.map(o=>`<tr>
         <td style="white-space:nowrap">${o.date?new Date(o.date).toLocaleDateString('en-GB'):'&#8212;'}</td>
         <td class="td-name">${o.customer_name||'&#8212;'}</td>
         <td class="td-phone">${o.phone_number||'&#8212;'}</td>
         <td>${o.item_ordered||'&#8212;'}</td>
-        <td>${o.quantity||1}</td>
         <td class="td-amount">₦${Number(o.price||0).toLocaleString()}</td>
         <td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${o.delivery_address||''}">${o.delivery_address||'&#8212;'}</td>
         <td>${statusBadge(o.delivery_status)}</td>
