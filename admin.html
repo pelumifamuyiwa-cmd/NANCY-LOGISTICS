@@ -399,10 +399,7 @@
         <label class="form-label">Item Ordered *</label>
         <input type="text" class="form-input" id="f-item" placeholder="e.g. Wireless Earbuds"/>
       </div>
-      <div class="form-group">
-        <label class="form-label">Quantity *</label>
-        <input type="number" class="form-input" id="f-qty" placeholder="1" min="1"/>
-      </div>
+      
       <div class="form-group">
         <label class="form-label">Price (&#8358;) *</label>
         <input type="number" class="form-input" id="f-price" placeholder="15000" min="0"/>
@@ -805,7 +802,7 @@
     document.getElementById('f-name').value=o.customer_name||'';
     document.getElementById('f-phone').value=o.phone_number||'';
     document.getElementById('f-item').value=o.item_ordered||'';
-    document.getElementById('f-qty').value=o.quantity||1;
+    
     document.getElementById('f-price').value=o.price||0;
     document.getElementById('f-date').value=o.date||'';
     document.getElementById('f-address').value=o.delivery_address||'';
@@ -814,7 +811,7 @@
     document.getElementById('order-modal').classList.add('open');
   }
   function clearOrderForm(){
-    ['f-name','f-phone','f-item','f-qty','f-price','f-date','f-address'].forEach(id=>document.getElementById(id).value='');
+    ['f-name','f-phone','f-item','f-price','f-date','f-address'].forEach(id=>document.getElementById(id).value='');
     document.getElementById('f-status').value='Pending';
     document.getElementById('f-payment').value='Unpaid';
   }
@@ -822,7 +819,7 @@
     const name=document.getElementById('f-name').value.trim();
     const phone=document.getElementById('f-phone').value.trim();
     const item=document.getElementById('f-item').value.trim();
-    const qty=parseInt(document.getElementById('f-qty').value)||1;
+    
     const price=parseFloat(document.getElementById('f-price').value)||0;
     const date=document.getElementById('f-date').value;
     const address=document.getElementById('f-address').value.trim();
