@@ -940,6 +940,194 @@
   }
   .pwa-install-btn:hover { background: var(--red-dark); }
 
+
+  /* ── STREAK PROGRESS ── */
+  .streak-wrap {
+    margin-top: 20px;
+    background: var(--black-3);
+    border: 1px solid var(--black-5);
+    border-radius: 14px;
+    padding: 14px 18px;
+    animation: fadeUp 0.4s ease both;
+  }
+  .streak-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .streak-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--grey-l);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .streak-count {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--red);
+  }
+  .streak-track {
+    height: 5px;
+    background: var(--black-5);
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .streak-bar {
+    height: 100%;
+    border-radius: 5px;
+    background: linear-gradient(90deg, var(--red-dark), var(--red));
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 0%;
+  }
+  .streak-msg {
+    font-size: 0.72rem;
+    color: var(--grey-l);
+    font-style: italic;
+  }
+
+  /* ── CONFETTI OVERLAY ── */
+  .confetti-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .confetti-piece {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    top: -10px;
+    opacity: 0;
+    animation: confettiFall linear forwards;
+  }
+
+  @keyframes confettiFall {
+    0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* ── COUPON POPUP ── */
+  .coupon-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    animation: fadeIn 0.3s ease both;
+  }
+  .coupon-overlay.hidden { display: none; }
+  @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+  .coupon-card {
+    background: var(--black-3);
+    border: 1px solid var(--red);
+    border-radius: 24px;
+    padding: 36px 28px;
+    max-width: 360px;
+    width: 100%;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 0 60px rgba(232,0,13,0.25);
+    animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
+  @keyframes popIn { from { transform: scale(0.7); opacity:0; } to { transform: scale(1); opacity:1; } }
+  .coupon-emoji { font-size: 3rem; margin-bottom: 12px; }
+  .coupon-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    color: var(--white);
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    line-height: 1;
+  }
+  .coupon-sub {
+    font-size: 0.85rem;
+    color: var(--grey-l);
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+  .coupon-code-box {
+    background: var(--black-4);
+    border: 1.5px dashed var(--red);
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .coupon-code {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--red);
+    letter-spacing: 2px;
+  }
+  .copy-btn {
+    background: var(--red);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 7px 14px;
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+  .copy-btn:hover { background: var(--red-dark); }
+  .coupon-wa {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #25D366;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 22px;
+    font-family: 'Manrope', sans-serif;
+    font-weight: 800;
+    font-size: 0.85rem;
+    cursor: pointer;
+    text-decoration: none;
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 12px;
+    transition: background 0.2s;
+  }
+  .coupon-wa:hover { background: #1aad54; }
+  .coupon-close {
+    background: none;
+    border: none;
+    color: var(--grey-l);
+    font-size: 0.8rem;
+    cursor: pointer;
+    font-family: 'Manrope', sans-serif;
+    text-decoration: underline;
+  }
+  .coupon-close:hover { color: var(--white); }
+
+  /* small delivered confetti */
+  .mini-confetti-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
 </style>
 </head>
 <body>
@@ -1134,6 +1322,9 @@
       <button onclick="resetSearch()" style="background:transparent;color:var(--grey-l);border:1px solid var(--black-5);border-radius:10px;padding:8px 20px;font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:1px;cursor:pointer;text-transform:uppercase;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'" onmouseout="this.style.borderColor='var(--black-5)';this.style.color='var(--grey-l)'">&#8592; New Search</button>
     </div>`;
     area.innerHTML = html;
+    // Check streak after rendering
+    const phone = document.getElementById('phoneInput').value.trim();
+    if (phone && orders.length) checkStreak(phone, orders);
   }
 
   function resetSearch() {
@@ -1238,6 +1429,192 @@
   })();
 
 
+
+
+  // ── STREAK & COUPON SYSTEM ──
+  const SALT = 'fastdelivery';
+  const WA_NUMBER = '2349013164449';
+
+  function getMonthKey() {
+    const d = new Date();
+    return d.getFullYear() + '-' + (d.getMonth() + 1);
+  }
+
+  function getStreakData(phone) {
+    const key = 'streak_' + phone + '_' + getMonthKey();
+    try {
+      const data = JSON.parse(localStorage.getItem(key) || '{}');
+      return { count: data.count || 0, delivered: data.delivered || [], couponShown: data.couponShown || false };
+    } catch(e) { return { count: 0, delivered: [], couponShown: false }; }
+  }
+
+  function saveStreakData(phone, data) {
+    const key = 'streak_' + phone + '_' + getMonthKey();
+    localStorage.setItem(key, JSON.stringify(data));
+  }
+
+  // Simple hash function for coupon generation
+  async function generateCoupon(phone) {
+    const raw = phone + SALT + getMonthKey();
+    const encoder = new TextEncoder();
+    const hashBuffer = await crypto.subtle.digest('SHA-256', encoder.encode(raw));
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let part1 = '', part2 = '';
+    for (let i = 0; i < 4; i++) part1 += chars[hashArray[i] % chars.length];
+    for (let i = 4; i < 8; i++) part2 += chars[hashArray[i] % chars.length];
+    return 'NL-' + part1 + '-' + part2;
+  }
+
+  function getStreakMsg(count) {
+    if (count >= 10) return '🎊 You unlocked your reward!';
+    if (count >= 7)  return '🔥 So close! Just ' + (10 - count) + ' more to go!';
+    if (count >= 4)  return '💪 Halfway there! Keep it up!';
+    if (count >= 1)  return '🚀 You're on a roll! Keep tracking!';
+    return 'Track delivered orders to build your streak!';
+  }
+
+  function renderStreak(phone, count) {
+    const existing = document.getElementById('streakWrap');
+    if (existing) existing.remove();
+    const pct = Math.min((count / 10) * 100, 100);
+    const html = `
+      <div class="streak-wrap" id="streakWrap">
+        <div class="streak-top">
+          <span class="streak-label">🔥 Delivery Streak</span>
+          <span class="streak-count">${count}/10</span>
+        </div>
+        <div class="streak-track">
+          <div class="streak-bar" id="streakBar" style="width:0%"></div>
+        </div>
+        <div class="streak-msg">${getStreakMsg(count)}</div>
+      </div>`;
+    const resultArea = document.getElementById('result-area');
+    if (resultArea) resultArea.insertAdjacentHTML('beforeend', html);
+    // animate bar after render
+    setTimeout(() => {
+      const bar = document.getElementById('streakBar');
+      if (bar) bar.style.width = pct + '%';
+    }, 100);
+  }
+
+  // Mini confetti for each delivered order
+  function launchMiniConfetti() {
+    const overlay = document.getElementById('miniConfettiOverlay');
+    overlay.innerHTML = '';
+    const colors = ['#E8000D','#fff','#f5c518','#4ade80','#60a5fa'];
+    for (let i = 0; i < 40; i++) {
+      const piece = document.createElement('div');
+      piece.className = 'confetti-piece';
+      piece.style.cssText = `
+        left: ${Math.random() * 100}vw;
+        background: ${colors[Math.floor(Math.random() * colors.length)]};
+        border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
+        width: ${4 + Math.random() * 5}px;
+        height: ${4 + Math.random() * 5}px;
+        animation-duration: ${1.2 + Math.random() * 1}s;
+        animation-delay: ${Math.random() * 0.4}s;
+      `;
+      overlay.appendChild(piece);
+    }
+    setTimeout(() => { overlay.innerHTML = ''; }, 2500);
+  }
+
+  // Big confetti for coupon
+  function launchBigConfetti() {
+    const overlay = document.getElementById('confettiOverlay');
+    overlay.innerHTML = '';
+    const colors = ['#E8000D','#ffffff','#f5c518','#4ade80','#a855f7','#60a5fa','#fb923c'];
+    for (let i = 0; i < 120; i++) {
+      const piece = document.createElement('div');
+      piece.className = 'confetti-piece';
+      piece.style.cssText = `
+        left: ${Math.random() * 100}vw;
+        background: ${colors[Math.floor(Math.random() * colors.length)]};
+        border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
+        width: ${5 + Math.random() * 8}px;
+        height: ${5 + Math.random() * 8}px;
+        animation-duration: ${2 + Math.random() * 2}s;
+        animation-delay: ${Math.random() * 0.8}s;
+      `;
+      overlay.appendChild(piece);
+    }
+    setTimeout(() => { overlay.innerHTML = ''; }, 4500);
+  }
+
+  function copyCoupon() {
+    const code = document.getElementById('couponCode').textContent;
+    navigator.clipboard.writeText(code).then(() => {
+      const btn = document.querySelector('.copy-btn');
+      btn.textContent = 'Copied!';
+      btn.style.background = '#4ade80';
+      setTimeout(() => { btn.textContent = 'Copy'; btn.style.background = ''; }, 2000);
+    });
+  }
+
+  async function checkStreak(phone, orders) {
+    const streak = getStreakData(phone);
+    let updated = false;
+
+    orders.forEach(o => {
+      const status = (o['DELIVERY STATUS'] || '').toLowerCase();
+      const orderId = o['id'] || o['PHONE NUMBER'] + '_' + o['DATE'] + '_' + (o['ITEM ORDERED'] || '');
+
+      if (status === 'delivered' && !streak.delivered.includes(orderId)) {
+        streak.delivered.push(orderId);
+        streak.count = Math.min(streak.count + 1, 10);
+        updated = true;
+
+        // Mini confetti for each new delivered order
+        launchMiniConfetti();
+      }
+    });
+
+    if (updated) saveStreakData(phone, streak);
+
+    // Render streak bar
+    renderStreak(phone, streak.count);
+
+    // Show coupon on 10th
+    if (streak.count >= 10 && !streak.couponShown) {
+      streak.couponShown = true;
+      saveStreakData(phone, streak);
+
+      const code = await generateCoupon(phone);
+      // Save to Supabase
+      saveCouponToSupabase(phone, code);
+
+      document.getElementById('couponCode').textContent = code;
+      const msg = encodeURIComponent('Hi Nancy Logistics! I just unlocked my 50% discount. My coupon code is: ' + code);
+      document.getElementById('couponWaLink').href = 'https://wa.me/' + WA_NUMBER + '?text=' + msg;
+
+      setTimeout(() => {
+        launchBigConfetti();
+        document.getElementById('couponOverlay').classList.remove('hidden');
+      }, 800);
+    }
+  }
+
+  async function saveCouponToSupabase(phone, code) {
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/COUPONS`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({
+          phone_number: phone,
+          coupon_code: code,
+          month_cycle: getMonthKey(),
+          status: 'unused',
+          earned_at: new Date().toISOString()
+        })
+      });
+    } catch(e) {}
+  }
 
   // ── BIKE LOGO ANIMATION ──
   function runBikeAnimation() {
@@ -1399,6 +1776,28 @@
   </div>
   <button class="pwa-install-btn" id="pwaInstallBtn">Install</button>
   <button class="pwa-banner-close" onclick="document.getElementById('pwaBanner').classList.add('hidden')">✕</button>
+</div>
+
+
+<!-- CONFETTI OVERLAY -->
+<div class="confetti-overlay" id="confettiOverlay"></div>
+<div class="mini-confetti-overlay" id="miniConfettiOverlay"></div>
+
+<!-- COUPON POPUP -->
+<div class="coupon-overlay hidden" id="couponOverlay">
+  <div class="coupon-card">
+    <div class="coupon-emoji">🎊</div>
+    <div class="coupon-title">You're a Star!</div>
+    <div class="coupon-sub">Congratulations! You just unlocked a <strong style="color:var(--red)">50% discount</strong> off your next delivery. Use the coupon code below to claim it.</div>
+    <div class="coupon-code-box">
+      <span class="coupon-code" id="couponCode">NL-XXXX-XXXX</span>
+      <button class="copy-btn" onclick="copyCoupon()">Copy</button>
+    </div>
+    <a class="coupon-wa" id="couponWaLink" href="#" target="_blank">
+      💬 Claim on WhatsApp
+    </a>
+    <button class="coupon-close" onclick="document.getElementById('couponOverlay').classList.add('hidden')">Close</button>
+  </div>
 </div>
 
 </body>
