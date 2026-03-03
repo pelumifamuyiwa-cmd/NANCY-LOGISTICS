@@ -951,6 +951,7 @@
       return;
     }
     hideCarousel();
+    logTrackSearch(raw);
     document.getElementById('result-area').innerHTML = `
       <div class="loading-wrap">
         <div class="spinner"></div>
@@ -1043,6 +1044,78 @@
   });
 
   startCarouselAuto();
+
+
+  // ── ANALYTICS TRACKER ──
+  const SUPABASE_URL_T = 'https://pnwljjiehfzmfpajbsbm.supabase.co';
+  const SUPABASE_KEY_T = 'sb_publishable_k7ZEH33SopVTMhGbOhE2UA_sutpYDpU';
+
+  async function getIPInfo() {
+    try {
+      const r = await fetch('https://ipapi.co/json/');
+      if (!r.ok) return {};
+      return await r.json();
+    } catch(e) { return {}; }
+  }
+
+  async function logPageVisit() {
+    try {
+      const ip = await getIPInfo();
+      const data = {
+        event_type: 'PAGE_VISIT',
+        ip_address: ip.ip || 'unknown',
+        city: ip.city || 'unknown',
+        region: ip.region || 'unknown',
+        country: ip.country_name || 'unknown',
+        device: /Mobi|Android/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
+        browser: navigator.userAgent.substring(0, 120),
+        searched_number: null,
+        visited_at: new Date().toISOString()
+      };
+      await fetch(`${SUPABASE_URL_T}/rest/v1/PAGE_ANALYTICS`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_KEY_T,
+          'Authorization': `Bearer ${SUPABASE_KEY_T}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify(data)
+      });
+    } catch(e) {}
+  }
+
+  async function logTrackSearch(phoneNumber) {
+    try {
+      const ip = await getIPInfo();
+      const data = {
+        event_type: 'TRACK_SEARCH',
+        ip_address: ip.ip || 'unknown',
+        city: ip.city || 'unknown',
+        region: ip.region || 'unknown',
+        country: ip.country_name || 'unknown',
+        device: /Mobi|Android/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
+        browser: navigator.userAgent.substring(0, 120),
+        searched_number: phoneNumber,
+        visited_at: new Date().toISOString()
+      };
+      await fetch(`${SUPABASE_URL_T}/rest/v1/PAGE_ANALYTICS`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_KEY_T,
+          'Authorization': `Bearer ${SUPABASE_KEY_T}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify(data)
+      });
+    } catch(e) {}
+  }
+
+  // Log visit on page load
+  window.addEventListener('DOMContentLoaded', () => {
+    logPageVisit();
+  });
 
 </script>
 </body>
