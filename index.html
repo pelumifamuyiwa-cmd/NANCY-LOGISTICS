@@ -13,7 +13,6 @@
 <link rel="manifest" id="pwa-manifest">
 <script>
   // Inline manifest as blob URL (works on GitHub Pages without separate file)
-  document.addEventListener('DOMContentLoaded', function() {
   const manifestData = {
     name: "Nancy Logistics",
     short_name: "Nancy Log.",
@@ -41,7 +40,30 @@
   const manifestBlob = new Blob([JSON.stringify(manifestData)], {type: 'application/json'});
   const manifestURL = URL.createObjectURL(manifestBlob);
   document.getElementById('pwa-manifest').setAttribute('href', manifestURL);
-  }); // end DOMContentLoaded
+
+  // ── PWA INSTALL PROMPT ──
+  let deferredPrompt = null;
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    // Show banner after 3 seconds
+    setTimeout(() => {
+      document.getElementById('pwaBanner').classList.remove('hidden');
+    }, 3000);
+  });
+
+  document.getElementById('pwaInstallBtn').addEventListener('click', async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    document.getElementById('pwaBanner').classList.add('hidden');
+  });
+
+  window.addEventListener('appinstalled', () => {
+    document.getElementById('pwaBanner').classList.add('hidden');
+    deferredPrompt = null;
+  });
 
 </script>
 <title>Nancy Logistics — Track Your Delivery</title>
@@ -1370,11 +1392,9 @@
     }
   }
 
-  document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('phoneInput').addEventListener('keypress', e => {
     if (e.key === 'Enter') trackOrder();
   });
-  }); // end phoneInput DOMContentLoaded
 
   function setTheme(theme, btn) {
     document.body.classList.remove('theme-light', 'theme-warm');
@@ -1536,11 +1556,17 @@
     const streak = getStreakData(phone);
     let updated = false;
 
+    const todayStr = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+
     orders.forEach(o => {
       const status = (o['DELIVERY STATUS'] || '').toLowerCase();
       const orderId = o['id'] || o['PHONE NUMBER'] + '_' + o['DATE'] + '_' + (o['ITEM ORDERED'] || '');
 
-      if (status === 'delivered' && !streak.delivered.includes(orderId)) {
+      // Only count if delivered AND the delivery date is TODAY
+      const deliveryDate = o['DATE'] ? new Date(o['DATE']).toISOString().slice(0, 10) : null;
+      const deliveredToday = deliveryDate === todayStr;
+
+      if (status === 'delivered' && deliveredToday && !streak.delivered.includes(orderId)) {
         streak.delivered.push(orderId);
         streak.count = Math.min(streak.count + 1, 10);
         updated = true;
@@ -1595,34 +1621,6 @@
       });
     } catch(e) {}
   }
-
-
-  // ── PWA INSTALL PROMPT ──
-  let deferredPrompt = null;
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    setTimeout(() => {
-      const b = document.getElementById('pwaBanner');
-      if (b) b.classList.remove('hidden');
-    }, 4000);
-  });
-  const _pwaBtn = document.getElementById('pwaInstallBtn');
-  if (_pwaBtn) {
-    _pwaBtn.addEventListener('click', async () => {
-      if (!deferredPrompt) return;
-      deferredPrompt.prompt();
-      await deferredPrompt.userChoice;
-      deferredPrompt = null;
-      const b = document.getElementById('pwaBanner');
-      if (b) b.classList.add('hidden');
-    });
-  }
-  window.addEventListener('appinstalled', () => {
-    const b = document.getElementById('pwaBanner');
-    if (b) b.classList.add('hidden');
-    deferredPrompt = null;
-  });
 
   // ── BIKE LOGO ANIMATION ──
   function runBikeAnimation() {
@@ -1682,7 +1680,6 @@
     clearInterval(carouselTimer);
   }
 
-  document.addEventListener('DOMContentLoaded', function() {
   const carouselEl = document.getElementById('carousel');
   carouselEl.addEventListener('mouseenter', stopCarouselAuto);
   carouselEl.addEventListener('mouseleave', startCarouselAuto);
@@ -1702,7 +1699,6 @@
 
   startCarouselAuto();
 
-  }); // end carousel DOMContentLoaded
 
   // ── ANALYTICS TRACKER ──
   const SUPABASE_URL_T = 'https://pnwljjiehfzmfpajbsbm.supabase.co';
