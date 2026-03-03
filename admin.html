@@ -347,6 +347,8 @@
       <div class="summary-grid">
         <div class="summary-item"><div class="summary-item-label">Total Orders</div><div class="summary-item-val" id="rpt-orders">&#8212;</div></div>
         <div class="summary-item"><div class="summary-item-label">Total Revenue</div><div class="summary-item-val" id="rpt-revenue">&#8212;</div></div>
+        <div class="summary-item"><div class="summary-item-label">Total Expenses</div><div class="summary-item-val" id="rpt-expenses" style="color:var(--orange)">&#8212;</div></div>
+        <div class="summary-item"><div class="summary-item-label">Net Profit</div><div class="summary-item-val" id="rpt-profit">&#8212;</div></div>
         <div class="summary-item"><div class="summary-item-label">Delivered</div><div class="summary-item-val" id="rpt-delivered">&#8212;</div></div>
         <div class="summary-item"><div class="summary-item-label">Pending</div><div class="summary-item-val" id="rpt-pending">&#8212;</div></div>
         <div class="summary-item"><div class="summary-item-label">Paid</div><div class="summary-item-val" id="rpt-paid">&#8212;</div></div>
@@ -1061,6 +1063,7 @@
   }
   async function renderReports(){
     if(!allOrders.length){try{allOrders=await fetchOrders();}catch(e){return;}}
+    if(!allExpenses.length){try{allExpenses=await fetchExpenses();}catch(e){}}
     const now=new Date();
     let filtered=allOrders.filter(o=>{
       if(!o.date)return false;const d=new Date(o.date);
@@ -1076,9 +1079,29 @@
       }
       return true;
     });
+    let filteredExpenses=allExpenses.filter(e=>{
+      if(!e.date)return false;const d=new Date(e.date);
+      if(currentReportPeriod==='daily')return e.date===now.toISOString().split('T')[0];
+      if(currentReportPeriod==='weekly'){const s=new Date(now);s.setDate(now.getDate()-now.getDay());return d>=s;}
+      if(currentReportPeriod==='monthly')return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear();
+      if(currentReportPeriod==='yearly')return d.getFullYear()===now.getFullYear();
+      if(currentReportPeriod==='custom'){
+        const from=document.getElementById('rpt-from').value;
+        const to=document.getElementById('rpt-to').value;
+        if(!from||!to)return true;
+        return e.date>=from && e.date<=to;
+      }
+      return true;
+    });
     const revenue=filtered.reduce((s,o)=>s+(Number(o.price)||0)*(Number(o.quantity)||1),0);
+    const totalExpenses=filteredExpenses.reduce((s,e)=>s+(Number(e.amount)||0),0);
+    const profit=revenue-totalExpenses;
     document.getElementById('rpt-orders').textContent=filtered.length;
     document.getElementById('rpt-revenue').textContent='₦'+revenue.toLocaleString();
+    document.getElementById('rpt-expenses').textContent='₦'+totalExpenses.toLocaleString();
+    const profitEl=document.getElementById('rpt-profit');
+    profitEl.textContent=(profit>=0?'₦':'−₦')+Math.abs(profit).toLocaleString();
+    profitEl.style.color=profit>=0?'var(--green)':'var(--red)';
     document.getElementById('rpt-delivered').textContent=filtered.filter(o=>o.delivery_status==='Delivered').length;
     document.getElementById('rpt-pending').textContent=filtered.filter(o=>o.delivery_status==='Pending').length;
     document.getElementById('rpt-paid').textContent=filtered.filter(o=>o.payment_status==='Paid').length;
