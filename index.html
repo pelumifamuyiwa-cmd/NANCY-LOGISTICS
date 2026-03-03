@@ -82,36 +82,7 @@
     --white:    #f5e6cc;
     --white-d:  #e8d4b0;
   }
-  .theme-toggle {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    background: var(--black-3);
-    border: 1px solid var(--black-5);
-    border-radius: 999px;
-    padding: 4px 8px 4px 6px;
-    margin-top: 8px;
-  }
-  .theme-label {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.58rem;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--grey-l);
-    margin-right: 2px;
-  }
-  .theme-btn {
-    width: 22px; height: 22px;
-    border-radius: 50%;
-    border: 2px solid transparent;
-    cursor: pointer;
-    transition: border-color 0.2s, transform 0.15s;
-  }
-  .theme-btn:hover { transform: scale(1.15); }
-  .theme-btn.active { border-color: var(--red); }
-  .theme-btn[data-theme="dark"]  { background: #111; }
-  .theme-btn[data-theme="light"] { background: #f0f0f0; box-shadow: inset 0 0 0 1px #ccc; }
-  .theme-btn[data-theme="warm"]  { background: #3a2b14; }
+
   *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
   html { scroll-behavior: smooth; }
   body {
@@ -731,6 +702,72 @@
     .c-arrow { display: none; }
   }
 
+
+  /* ── FLOATING THEME PICKER ── */
+  .theme-fab {
+    position: fixed;
+    bottom: 28px;
+    right: 24px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+  }
+  .theme-fab-btn {
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    background: var(--black-3);
+    border: 1px solid var(--black-5);
+    color: var(--white);
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    transition: all 0.2s;
+    position: relative;
+    z-index: 2;
+  }
+  .theme-fab-btn:hover {
+    border-color: var(--red);
+    transform: scale(1.08);
+    box-shadow: 0 6px 24px rgba(232,0,13,0.25);
+  }
+  .theme-picker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    background: var(--black-3);
+    border: 1px solid var(--black-5);
+    border-radius: 30px;
+    padding: 10px 8px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+  .theme-picker.open {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: all;
+  }
+  .theme-btn {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    border: 2.5px solid transparent;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.15s;
+  }
+  .theme-btn:hover { transform: scale(1.15); }
+  .theme-btn.active { border-color: var(--red); }
+  .theme-btn[data-theme="dark"]  { background: #111; box-shadow: inset 0 0 0 1px #444; }
+  .theme-btn[data-theme="light"] { background: #f0f0f0; box-shadow: inset 0 0 0 1px #ccc; }
+  .theme-btn[data-theme="warm"]  { background: #3a2b14; box-shadow: inset 0 0 0 1px #6b4c20; }
+
 </style>
 </head>
 <body>
@@ -742,12 +779,7 @@
     <div class="topbar-right">
       <div class="hours-label">Operating Hours</div>
       <div class="hours-val">Mon – Sat &nbsp;·&nbsp; 09:00 – 18:00</div>
-      <div class="theme-toggle">
-        <span class="theme-label">Theme</span>
-        <button class="theme-btn active" data-theme="dark" title="Dark" onclick="setTheme('dark',this)"></button>
-        <button class="theme-btn" data-theme="light" title="Light" onclick="setTheme('light',this)"></button>
-        <button class="theme-btn" data-theme="warm" title="Warm" onclick="setTheme('warm',this)"></button>
-      </div>
+
     </div>
   </div>
   <div class="hero">
@@ -829,6 +861,17 @@
     </div>
   </footer>
 </div>
+
+<!-- FLOATING THEME PICKER -->
+<div class="theme-fab" id="themeFab">
+  <div class="theme-picker" id="themePicker">
+    <button class="theme-btn active" data-theme="dark" title="Dark" onclick="setTheme('dark',this)"></button>
+    <button class="theme-btn" data-theme="light" title="Light" onclick="setTheme('light',this)"></button>
+    <button class="theme-btn" data-theme="warm" title="Warm" onclick="setTheme('warm',this)"></button>
+  </div>
+  <button class="theme-fab-btn" id="themeFabBtn" onclick="toggleThemePicker()" title="Change theme">&#127912;</button>
+</div>
+
 <script>
   const SUPABASE_URL = 'https://pnwljjiehfzmfpajbsbm.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_k7ZEH33SopVTMhGbOhE2UA_sutpYDpU';
@@ -991,9 +1034,24 @@
     if (theme === 'light') document.body.classList.add('theme-light');
     if (theme === 'warm') document.body.classList.add('theme-warm');
     document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
-    if (btn) btn.classList.add('active');
+    document.querySelectorAll('.theme-btn[data-theme="'+theme+'"]').forEach(b => b.classList.add('active'));
     localStorage.setItem('nl-theme', theme);
+    // Close picker after selection
+    document.getElementById('themePicker').classList.remove('open');
   }
+
+  function toggleThemePicker() {
+    document.getElementById('themePicker').classList.toggle('open');
+  }
+
+  // Close picker when clicking outside
+  document.addEventListener('click', function(e) {
+    const fab = document.getElementById('themeFab');
+    if (fab && !fab.contains(e.target)) {
+      document.getElementById('themePicker').classList.remove('open');
+    }
+  });
+
   // Restore saved theme on load
   (function() {
     const saved = localStorage.getItem('nl-theme');
