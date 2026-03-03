@@ -1370,9 +1370,11 @@
     }
   }
 
+  document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('phoneInput').addEventListener('keypress', e => {
     if (e.key === 'Enter') trackOrder();
   });
+  }); // end phoneInput DOMContentLoaded
 
   function setTheme(theme, btn) {
     document.body.classList.remove('theme-light', 'theme-warm');
@@ -1680,6 +1682,7 @@
     clearInterval(carouselTimer);
   }
 
+  document.addEventListener('DOMContentLoaded', function() {
   const carouselEl = document.getElementById('carousel');
   carouselEl.addEventListener('mouseenter', stopCarouselAuto);
   carouselEl.addEventListener('mouseleave', startCarouselAuto);
@@ -1699,6 +1702,7 @@
 
   startCarouselAuto();
 
+  }); // end carousel DOMContentLoaded
 
   // ── ANALYTICS TRACKER ──
   const SUPABASE_URL_T = 'https://pnwljjiehfzmfpajbsbm.supabase.co';
