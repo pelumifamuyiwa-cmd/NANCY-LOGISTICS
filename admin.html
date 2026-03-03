@@ -178,7 +178,6 @@
 </style>
 </head>
 <body>
-
 <div id="login-screen">
   <div class="login-card">
     <div class="login-logo">
@@ -192,7 +191,6 @@
     <div class="login-error" id="loginError">Incorrect password. Try again.</div>
   </div>
 </div>
-
 <div id="app">
   <div class="sidebar">
     <div class="sidebar-logo">
@@ -217,9 +215,7 @@
       <div class="logout-btn" onclick="logout()">&#128682; Sign out</div>
     </div>
   </div>
-
   <div class="main">
-
     <!-- DASHBOARD -->
     <div class="page active" id="page-dashboard">
       <div class="page-header">
@@ -246,7 +242,6 @@
         <div id="recent-orders-body"><div class="table-loading"><div class="mini-spinner"></div>Loading...</div></div>
       </div>
     </div>
-
     <!-- ORDERS -->
     <div class="page" id="page-orders">
       <div class="page-header"><div class="page-title">Orders</div><div class="page-sub">Manage all customer orders</div></div>
@@ -268,7 +263,6 @@
         <div id="orders-table-body"><div class="table-loading"><div class="mini-spinner"></div>Loading...</div></div>
       </div>
     </div>
-
     <!-- EXPENSES -->
     <div class="page" id="page-expenses">
       <div class="page-header"><div class="page-title">Expenses</div><div class="page-sub">Track business spending</div></div>
@@ -296,7 +290,6 @@
         <div id="expenses-table-body"><div class="table-loading"><div class="mini-spinner"></div>Loading...</div></div>
       </div>
     </div>
-
     <!-- RIDER COMMISSIONS -->
     <div class="page" id="page-commissions">
       <div class="page-header"><div class="page-title">Rider Commission</div><div class="page-sub">Track daily rider earnings</div></div>
@@ -316,7 +309,6 @@
         <div id="commissions-table-body"><div class="table-loading"><div class="mini-spinner"></div>Loading...</div></div>
       </div>
     </div>
-
     <!-- REPORTS -->
     <div class="page" id="page-reports">
       <div class="page-header"><div class="page-title">Reports</div><div class="page-sub">Business performance overview</div></div>
@@ -347,6 +339,8 @@
       <div class="summary-grid">
         <div class="summary-item"><div class="summary-item-label">Total Orders</div><div class="summary-item-val" id="rpt-orders">&#8212;</div></div>
         <div class="summary-item"><div class="summary-item-label">Total Revenue</div><div class="summary-item-val" id="rpt-revenue">&#8212;</div></div>
+        <div class="summary-item"><div class="summary-item-label">Total Expenses</div><div class="summary-item-val" id="rpt-expenses" style="color:var(--orange)">&#8212;</div></div>
+        <div class="summary-item"><div class="summary-item-label">Net Profit</div><div class="summary-item-val" id="rpt-profit" style="color:var(--green)">&#8212;</div></div>
         <div class="summary-item"><div class="summary-item-label">Delivered</div><div class="summary-item-val" id="rpt-delivered">&#8212;</div></div>
         <div class="summary-item"><div class="summary-item-label">Pending</div><div class="summary-item-val" id="rpt-pending">&#8212;</div></div>
         <div class="summary-item"><div class="summary-item-label">Paid</div><div class="summary-item-val" id="rpt-paid">&#8212;</div></div>
@@ -357,8 +351,6 @@
         <div class="chart-card"><div class="chart-title">Payment Status</div><div class="chart-sub">Paid vs Unpaid</div><div class="chart-wrap"><canvas id="paymentChart"></canvas></div></div>
       </div>
     </div>
-
-
     <!-- DAILY SUMMARY -->
     <div class="page" id="page-dailysummary">
       <div class="page-header"><div class="page-title">Daily Summary Log</div><div class="page-sub">End-of-day summaries recorded each evening</div></div>
@@ -378,7 +370,6 @@
     </div>
   </div>
 </div>
-
 <!-- ORDER MODAL -->
 <div class="modal-overlay" id="order-modal">
   <div class="modal">
@@ -436,7 +427,6 @@
     </div>
   </div>
 </div>
-
 <!-- EXPENSE MODAL -->
 <div class="modal-overlay" id="expense-modal">
   <div class="modal">
@@ -477,7 +467,6 @@
     </div>
   </div>
 </div>
-
 <!-- COMMISSION MODAL -->
 <div class="modal-overlay" id="commission-modal">
   <div class="modal">
@@ -511,7 +500,6 @@
     </div>
   </div>
 </div>
-
 <!-- DAILY SUMMARY MODAL -->
 <div class="modal-overlay" id="dailysummary-modal">
   <div class="modal">
@@ -553,8 +541,6 @@
     </div>
   </div>
 </div>
-
-
 <!-- WHATSAPP NOTIFICATION MODAL -->
 <div class="modal-overlay" id="wa-modal">
   <div class="wa-modal">
@@ -568,10 +554,7 @@
     </div>
   </div>
 </div>
-
-
 <div class="toast" id="toast"></div>
-
 <!-- MOBILE BOTTOM NAV -->
 <div class="mobile-nav">
   <div class="mobile-nav-inner">
@@ -583,22 +566,69 @@
     <div class="mob-nav-item" id="mob-dailysummary" onclick="showPage('dailysummary',this)"><span class="mob-icon">&#128221;</span>Summary</div>
   </div>
 </div>
-
 <script>
   const SUPABASE_URL = 'https://pnwljjiehfzmfpajbsbm.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_k7ZEH33SopVTMhGbOhE2UA_sutpYDpU';
   const ADMIN_PASSWORD = 'nancy2026';
   const SESSION_KEY = 'nancy_admin_session';
-
   let allOrders=[], allExpenses=[], allCommissions=[];
   let editingOrderId=null, editingExpenseId=null, editingCommissionId=null;
   let revenueChart, statusChart, itemsChart, paymentChart;
   let currentReportPeriod='daily';
-
+  function setReportPeriod(period, el){
+    currentReportPeriod=period;
+    document.querySelectorAll('.period-tab').forEach(t=>t.classList.remove('active'));
+    if(el) el.classList.add('active');
+    const customRange=document.getElementById('custom-range');
+    if(customRange) customRange.style.display=(period==='custom'?'flex':'none');
+    renderReports();
+  }
+  async function renderReports(){
+    // Ensure data is loaded
+    if(!allOrders.length && !allExpenses.length){
+      try{
+        allOrders=await fetchOrders();
+        allExpenses=await fetchExpenses();
+      }catch(e){}
+    }
+    const now=new Date();
+    let from, to;
+    if(currentReportPeriod==='daily'){
+      from=to=now.toISOString().split('T')[0];
+    } else if(currentReportPeriod==='weekly'){
+      const d=new Date(now); d.setDate(d.getDate()-d.getDay());
+      from=d.toISOString().split('T')[0];
+      to=now.toISOString().split('T')[0];
+    } else if(currentReportPeriod==='monthly'){
+      from=new Date(now.getFullYear(),now.getMonth(),1).toISOString().split('T')[0];
+      to=now.toISOString().split('T')[0];
+    } else if(currentReportPeriod==='yearly'){
+      from=new Date(now.getFullYear(),0,1).toISOString().split('T')[0];
+      to=now.toISOString().split('T')[0];
+    } else if(currentReportPeriod==='custom'){
+      from=document.getElementById('rpt-from').value;
+      to=document.getElementById('rpt-to').value;
+      if(!from||!to) return;
+    }
+    const orders=allOrders.filter(o=>o.date&&o.date>=from&&o.date<=to);
+    const expenses=allExpenses.filter(e=>e.date&&e.date>=from&&e.date<=to);
+    const revenue=orders.reduce((s,o)=>s+(Number(o.price)||0)*(Number(o.quantity)||1),0);
+    const totalExpenses=expenses.reduce((s,e)=>s+(Number(e.amount)||0),0);
+    const profit=revenue-totalExpenses;
+    document.getElementById('rpt-orders').textContent=orders.length;
+    document.getElementById('rpt-revenue').textContent='₦'+revenue.toLocaleString();
+    document.getElementById('rpt-expenses').textContent='₦'+totalExpenses.toLocaleString();
+    const profitEl=document.getElementById('rpt-profit');
+    profitEl.textContent=(profit>=0?'₦':'−₦')+Math.abs(profit).toLocaleString();
+    profitEl.style.color=profit>=0?'var(--green)':'var(--red)';
+    document.getElementById('rpt-delivered').textContent=orders.filter(o=>o.delivery_status==='Delivered').length;
+    document.getElementById('rpt-pending').textContent=orders.filter(o=>['Pending','Processing'].includes(o.delivery_status)).length;
+    document.getElementById('rpt-paid').textContent=orders.filter(o=>o.payment_status==='Paid').length;
+    document.getElementById('rpt-unpaid').textContent=orders.filter(o=>o.payment_status==='Unpaid').length;
+  }
   function checkSession(){ return localStorage.getItem(SESSION_KEY)==='true'; }
   function setSession(){ localStorage.setItem(SESSION_KEY,'true'); }
   function clearSession(){ localStorage.removeItem(SESSION_KEY); }
-
   function doLogin(){
     const pass=document.getElementById('loginPass').value;
     if(pass===ADMIN_PASSWORD){ setSession(); showApp(); }
@@ -616,7 +646,6 @@
     document.getElementById('loginPass').value='';
   }
   window.addEventListener('DOMContentLoaded',()=>{ if(checkSession()) showApp(); });
-
   function showPage(name,el){
     document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
@@ -631,7 +660,6 @@
     if(name==='commissions') renderCommissionsTable();
     if(name==='dailysummary') renderDailySummaryTable();
   }
-
   async function sbFetch(table){
     const res=await fetch(`${SUPABASE_URL}/rest/v1/${table}?order=created_at.desc`,
       {headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`}});
@@ -663,7 +691,6 @@
     });
     if(!res.ok) throw new Error('Delete failed');
   }
-
   function mapOrderRow(o){
     return{id:o.id,created_at:o.created_at,date:o['DATE'],customer_name:o['CUSTOMER NAME'],
       item_ordered:o['ITEM ORDERED'],quantity:o['QUANTITY'],price:o['PRICE'],
@@ -689,11 +716,9 @@
   function mapCommissionToDB(d){
     return{'DATE':d.date,'RIDER NAME':d.rider_name,'DELIVERIES':d.deliveries,'AMOUNT':d.amount,'NOTE':d.note};
   }
-
   async function fetchOrders(){ const r=await sbFetch('ORDERS'); return r.map(mapOrderRow); }
   async function fetchExpenses(){ const r=await sbFetch('EXPENSES'); return r.map(mapExpenseRow); }
   async function fetchCommissions(){ const r=await sbFetch('COMMISSIONS'); return r.map(mapCommissionRow); }
-
   async function initDashboard(){
     document.getElementById('dash-date').textContent=new Date().toLocaleDateString('en-GB',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
     try{
@@ -701,7 +726,6 @@
       updateStats(); renderRecentOrders(); renderCharts();
     }catch(e){showToast('Failed to load data: '+e.message,'error');}
   }
-
   function updateStats(){
     const today=new Date().toISOString().split('T')[0];
     document.getElementById('s-total').textContent=allOrders.length;
@@ -711,7 +735,6 @@
     document.getElementById('s-today').textContent=allOrders.filter(o=>o.date===today).length;
     document.getElementById('s-unpaid').textContent=allOrders.filter(o=>o.payment_status==='Unpaid').length;
   }
-
   function renderRecentOrders(){
     const recent=allOrders.slice(0,5);
     document.getElementById('recent-orders-body').innerHTML=recent.length?`
@@ -726,7 +749,6 @@
       </tr>`).join('')}</tbody></table>`
     :'<div class="table-loading">No orders yet</div>';
   }
-
   function renderCharts(){
     const days=[],revData=[];
     for(let i=6;i>=0;i--){
@@ -749,7 +771,6 @@
       options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:11}}}}}
     });
   }
-
   async function renderOrdersTable(){
     document.getElementById('orders-table-body').innerHTML='<div class="table-loading"><div class="mini-spinner"></div>Loading...</div>';
     try{allOrders=await fetchOrders();displayFilteredOrders(allOrders);}
@@ -783,7 +804,6 @@
         </div></td>
       </tr>`).join('')}</tbody></table>`;
   }
-
   function openAddModal(){
     editingOrderId=null;
     document.getElementById('modal-title').textContent='Add New Order';
@@ -847,7 +867,6 @@
     try{await sbDelete('ORDERS',id);showToast('Order deleted','success');allOrders=await fetchOrders();updateStats();renderRecentOrders();displayFilteredOrders(allOrders);}
     catch(e){showToast('Error deleting','error');}
   }
-
   function acSearch(field){
     const inputId=field==='name'?'f-name':'f-phone';
     const listId=field==='name'?'ac-name':'ac-phone';
@@ -872,7 +891,7 @@
       const highlight=field==='name'
         ?name.replace(new RegExp(val,'gi'),m=>`<strong>${m}</strong>`)
         :phone.replace(new RegExp(val,'gi'),m=>`<strong>${m}</strong>`);
-      return `<div class="autocomplete-item" onclick="acSelect('${safeN}','${phone}','${safeA}')">${highlight} <span style="color:var(--text3);font-size:0.78rem">&#8212; ${field==='name'?phone:name}</span></div>`;
+      return `<div class="autocomplete-item" onclick="acSelect('${safeN}','${phone}','${safeA}')">${highlight} &#8212; ${field==='name'?phone:name}</div>`;
     }).join('');
     list.classList.add('open');
   }
@@ -887,7 +906,6 @@
     if(!e.target.closest('#f-name')&&!e.target.closest('#ac-name'))document.getElementById('ac-name').classList.remove('open');
     if(!e.target.closest('#f-phone')&&!e.target.closest('#ac-phone'))document.getElementById('ac-phone').classList.remove('open');
   });
-
   async function renderExpensesTable(){
     document.getElementById('expenses-table-body').innerHTML='<div class="table-loading"><div class="mini-spinner"></div>Loading...</div>';
     try{allExpenses=await fetchExpenses();updateExpenseStats();displayFilteredExpenses(allExpenses);}
@@ -912,7 +930,7 @@
       <tbody>${expenses.map(e=>`<tr>
         <td style="white-space:nowrap">${e.date?new Date(e.date).toLocaleDateString('en-GB'):'&#8212;'}</td>
         <td class="td-name">${e.description||'&#8212;'}</td>
-        <td><span class="badge badge-processing">${e.category||'&#8212;'}</span></td>
+        <td>${e.category||'&#8212;'}</td>
         <td class="td-amount">₦${Number(e.amount||0).toLocaleString()}</td>
         <td>${e.paid_by||'&#8212;'}</td>
         <td><div class="row-actions">
@@ -965,7 +983,6 @@
     try{await sbDelete('EXPENSES',id);showToast('Expense deleted','success');allExpenses=await fetchExpenses();updateExpenseStats();displayFilteredExpenses(allExpenses);}
     catch(e){showToast('Error deleting','error');}
   }
-
   async function renderCommissionsTable(){
     document.getElementById('commissions-table-body').innerHTML='<div class="table-loading"><div class="mini-spinner"></div>Loading...</div>';
     try{allCommissions=await fetchCommissions();updateCommissionStats();displayFilteredCommissions(allCommissions);}
@@ -998,345 +1015,3 @@
           <button class="btn btn-sm" style="background:var(--red-light);color:var(--red)" onclick="confirmDeleteCommission(${c.id})">Del</button>
         </div></td>
       </tr>`).join('')}</tbody></table>`;
-  }
-  function openCommissionModal(){
-    editingCommissionId=null;
-    document.getElementById('com-modal-title').textContent='Add Commission Record';
-    document.getElementById('com-save-btn').textContent='Save Record';
-    ['cf-rider','cf-deliveries','cf-amount','cf-note'].forEach(id=>document.getElementById(id).value='');
-    document.getElementById('cf-date').value=new Date().toISOString().split('T')[0];
-    document.getElementById('commission-modal').classList.add('open');
-  }
-  function openEditCommissionModal(id){
-    const c=allCommissions.find(x=>x.id===id);if(!c)return;
-    editingCommissionId=id;
-    document.getElementById('com-modal-title').textContent='Edit Commission Record';
-    document.getElementById('com-save-btn').textContent='Update Record';
-    document.getElementById('cf-rider').value=c.rider_name||'';
-    document.getElementById('cf-date').value=c.date||'';
-    document.getElementById('cf-deliveries').value=c.deliveries||0;
-    document.getElementById('cf-amount').value=c.amount||0;
-    document.getElementById('cf-note').value=c.note||'';
-    document.getElementById('commission-modal').classList.add('open');
-  }
-  async function saveCommission(){
-    const rider=document.getElementById('cf-rider').value.trim();
-    const date=document.getElementById('cf-date').value;
-    const deliveries=parseInt(document.getElementById('cf-deliveries').value)||0;
-    const amount=parseFloat(document.getElementById('cf-amount').value)||0;
-    const note=document.getElementById('cf-note').value.trim();
-    if(!rider||!date||!amount){showToast('Please fill required fields','error');return;}
-    const data={rider_name:rider,date,deliveries,amount,note};
-    const btn=document.getElementById('com-save-btn');
-    btn.textContent='Saving...';btn.disabled=true;
-    try{
-      if(editingCommissionId){await sbUpdate('COMMISSIONS',editingCommissionId,mapCommissionToDB(data));showToast('Record updated!','success');}
-      else{await sbInsert('COMMISSIONS',mapCommissionToDB(data));showToast('Record saved!','success');}
-      closeModal('commission-modal');
-      allCommissions=await fetchCommissions();updateCommissionStats();displayFilteredCommissions(allCommissions);
-    }catch(e){showToast('Error: '+e.message,'error');}
-    finally{btn.textContent=editingCommissionId?'Update Record':'Save Record';btn.disabled=false;}
-  }
-  async function confirmDeleteCommission(id){
-    if(!confirm('Delete this record?'))return;
-    try{await sbDelete('COMMISSIONS',id);showToast('Record deleted','success');allCommissions=await fetchCommissions();updateCommissionStats();displayFilteredCommissions(allCommissions);}
-    catch(e){showToast('Error deleting','error');}
-  }
-
-  function setReportPeriod(period,el){
-    currentReportPeriod=period;
-    document.querySelectorAll('.period-tab').forEach(t=>t.classList.remove('active'));
-    if(el) el.classList.add('active');
-    const picker = document.getElementById('custom-range-picker');
-    if(period==='custom'){
-      picker.style.display='flex';
-      if(!document.getElementById('rpt-from').value){
-        setQuickRange('last7');
-        return;
-      }
-    } else {
-      picker.style.display='none';
-    }
-    renderReports();
-  }
-  async function renderReports(){
-    if(!allOrders.length){try{allOrders=await fetchOrders();}catch(e){return;}}
-    const now=new Date();
-    let filtered=allOrders.filter(o=>{
-      if(!o.date)return false;const d=new Date(o.date);
-      if(currentReportPeriod==='daily')return o.date===now.toISOString().split('T')[0];
-      if(currentReportPeriod==='weekly'){const s=new Date(now);s.setDate(now.getDate()-now.getDay());return d>=s;}
-      if(currentReportPeriod==='monthly')return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear();
-      if(currentReportPeriod==='yearly')return d.getFullYear()===now.getFullYear();
-      if(currentReportPeriod==='custom'){
-        const from=document.getElementById('rpt-from').value;
-        const to=document.getElementById('rpt-to').value;
-        if(!from||!to)return true;
-        return o.date>=from && o.date<=to;
-      }
-      return true;
-    });
-    const revenue=filtered.reduce((s,o)=>s+(Number(o.price)||0)*(Number(o.quantity)||1),0);
-    document.getElementById('rpt-orders').textContent=filtered.length;
-    document.getElementById('rpt-revenue').textContent='₦'+revenue.toLocaleString();
-    document.getElementById('rpt-delivered').textContent=filtered.filter(o=>o.delivery_status==='Delivered').length;
-    document.getElementById('rpt-pending').textContent=filtered.filter(o=>o.delivery_status==='Pending').length;
-    document.getElementById('rpt-paid').textContent=filtered.filter(o=>o.payment_status==='Paid').length;
-    document.getElementById('rpt-unpaid').textContent=filtered.filter(o=>o.payment_status!=='Paid').length;
-    const itemMap={};
-    filtered.forEach(o=>{if(o.item_ordered)itemMap[o.item_ordered]=(itemMap[o.item_ordered]||0)+(Number(o.quantity)||1);});
-    const sorted=Object.entries(itemMap).sort((a,b)=>b[1]-a[1]).slice(0,6);
-    if(itemsChart)itemsChart.destroy();
-    itemsChart=new Chart(document.getElementById('itemsChart'),{
-      type:'bar',
-      data:{labels:sorted.map(x=>x[0]),datasets:[{label:'Qty',data:sorted.map(x=>x[1]),backgroundColor:'#E8000D',borderRadius:6}]},
-      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}
-    });
-    const paid=filtered.filter(o=>o.payment_status==='Paid').length;
-    const unpaid=filtered.filter(o=>o.payment_status!=='Paid').length;
-    if(paymentChart)paymentChart.destroy();
-    paymentChart=new Chart(document.getElementById('paymentChart'),{
-      type:'doughnut',
-      data:{labels:['Paid','Unpaid'],datasets:[{data:[paid,unpaid],backgroundColor:['#16a34a','#E8000D'],borderWidth:0}]},
-      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}}}
-    });
-  }
-
-  function statusBadge(s){
-    const cls={Delivered:'delivered',Processing:'processing',Pending:'pending',Cancelled:'cancelled'}[s]||'cancelled';
-    return `<span class="badge badge-${cls}">${s||'&#8212;'}</span>`;
-  }
-  function payBadge(s){
-    return `<span class="badge badge-${s==='Paid'?'paid':'unpaid'}">${s||'&#8212;'}</span>`;
-  }
-
-  function closeModal(id){document.getElementById(id).classList.remove('open');}
-  ['order-modal','expense-modal','commission-modal','dailysummary-modal','wa-modal'].forEach(id=>{
-    document.getElementById(id).addEventListener('click',function(e){if(e.target===this)closeModal(id);});
-  });
-
-
-
-  // ── 8PM DAILY PROMPT ──
-
-  function recalcDSProfit(){
-    const rev = parseFloat(document.getElementById('ds-revenue-input').value)||0;
-    const expText = document.getElementById('ds-expenses-display').textContent.replace(/[^\d]/g,'');
-    const exp = parseFloat(expText)||0;
-    const profit = rev - exp;
-    document.getElementById('ds-profit-display').textContent = '\u20a6' + profit.toLocaleString();
-    document.getElementById('ds-profit-display').style.color = profit >= 0 ? 'var(--green)' : 'var(--red)';
-  }
-
-  function check8pmPrompt(){
-    const now = new Date();
-    const hour = now.getHours();
-    const today = now.toISOString().split('T')[0];
-    const promptKey = 'nancy_prompt_' + today;
-    if(hour >= 20 && !localStorage.getItem(promptKey)){
-      localStorage.setItem(promptKey, 'shown');
-      setTimeout(() => openDailySummaryModal(true), 2000);
-    }
-  }
-  setInterval(check8pmPrompt, 60000);
-  setTimeout(check8pmPrompt, 3000);
-
-  // ── DAILY SUMMARY ──
-  let allDailySummaries = [];
-  let editingDSId = null;
-
-  function mapDSRow(o){
-    return {id:o.id, created_at:o.created_at, date:o['DATE'], orders:o['ORDERS'],
-      revenue:o['REVENUE'], deliveries:o['DELIVERIES'], notes:o['NOTES'], expenses:o['EXPENSES'], profit:o['PROFIT']};
-  }
-  function mapDSToDB(d){
-    return {'DATE':d.date,'ORDERS':d.orders,'REVENUE':d.revenue,'DELIVERIES':d.deliveries,'NOTES':d.notes,'EXPENSES':d.expenses,'PROFIT':d.profit};
-  }
-  async function fetchDailySummaries(){ const r=await sbFetch('DAILY_SUMMARY'); return r.map(mapDSRow); }
-
-  function openDailySummaryModal(isAutoPrompt=false){
-    editingDSId = null;
-    const title = isAutoPrompt ? '\uD83C\uDF06 Good Evening! End of Day Summary' : 'Add Daily Summary';
-    document.getElementById('ds-modal-title').textContent = title;
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('ds-date').value = today;
-
-    // Auto-fill orders count
-    const todayOrders = allOrders.filter(o => o.date === today);
-    document.getElementById('ds-orders-input').value = todayOrders.length || '';
-
-    // Auto-fill revenue from orders
-    const todayRev = todayOrders.reduce((s,o)=>s+(Number(o.price)||0)*(Number(o.quantity)||1),0);
-    document.getElementById('ds-revenue-input').value = todayRev || '';
-
-    // Auto-fill today's expenses and compute profit
-    const todayExp = allExpenses.filter(e => e.date === today).reduce((s,e)=>s+(Number(e.amount)||0),0);
-    const profit = todayRev - todayExp;
-    document.getElementById('ds-expenses-display').textContent = '\u20a6' + todayExp.toLocaleString();
-    document.getElementById('ds-profit-display').textContent = '\u20a6' + profit.toLocaleString();
-    document.getElementById('ds-profit-display').style.color = profit >= 0 ? 'var(--green)' : 'var(--red)';
-
-    document.getElementById('ds-deliveries-input').value = '';
-    document.getElementById('ds-notes-input').value = '';
-    document.getElementById('dailysummary-modal').classList.add('open');
-  }
-
-  async function saveDailySummary(){
-    const date = document.getElementById('ds-date').value;
-    const orders = parseInt(document.getElementById('ds-orders-input').value)||0;
-    const revenue = parseFloat(document.getElementById('ds-revenue-input').value)||0;
-    const deliveries = parseInt(document.getElementById('ds-deliveries-input').value)||0;
-    const notes = document.getElementById('ds-notes-input').value.trim();
-    if(!date||!orders){showToast('Please fill required fields','error');return;}
-    const expText = document.getElementById('ds-expenses-display').textContent.replace(/[^\d]/g,'');
-    const expenses = parseFloat(expText)||0;
-    const profit = revenue - expenses;
-    const data = {date, orders, revenue, deliveries, notes, expenses, profit};
-    const btn = document.getElementById('ds-save-btn');
-    btn.textContent='Saving...'; btn.disabled=true;
-    try{
-      await sbInsert('DAILY_SUMMARY', mapDSToDB(data));
-      showToast('Summary saved!','success');
-      closeModal('dailysummary-modal');
-      allDailySummaries = await fetchDailySummaries();
-      renderDailySummaryTable();
-    }catch(e){showToast('Error: '+e.message,'error');}
-    finally{btn.textContent='Save Summary'; btn.disabled=false;}
-  }
-
-  async function renderDailySummaryTable(){
-    document.getElementById('dailysummary-table-body').innerHTML='<div class="table-loading"><div class="mini-spinner"></div>Loading...</div>';
-    try{
-      allDailySummaries = await fetchDailySummaries();
-      const total = allDailySummaries.reduce((s,d)=>s+(Number(d.revenue)||0),0);
-      const totalOrders = allDailySummaries.reduce((s,d)=>s+(Number(d.orders)||0),0);
-      const totalProfit = allDailySummaries.reduce((s,d)=>s+(Number(d.profit)||0),0);
-      document.getElementById('ds-count').textContent = allDailySummaries.length;
-      document.getElementById('ds-revenue').textContent = '\u20a6'+total.toLocaleString();
-      document.getElementById('ds-orders').textContent = totalOrders;
-      document.getElementById('ds-profit-stat').textContent = '\u20a6'+totalProfit.toLocaleString();
-      document.getElementById('ds-profit-stat').style.color = totalProfit >= 0 ? 'var(--green)' : 'var(--red)';
-      if(!allDailySummaries.length){
-        document.getElementById('dailysummary-table-body').innerHTML='<div class="table-loading">No summaries yet. They will appear here after your 8pm check-in.</div>';
-        return;
-      }
-      document.getElementById('dailysummary-table-body').innerHTML=`
-        <table><thead><tr><th>Date</th><th>Orders</th><th>Deliveries</th><th>Revenue</th><th>Expenses</th><th>Profit</th><th>Notes</th><th>Actions</th></tr></thead>
-        <tbody>${allDailySummaries.map(d=>`<tr>
-          <td style="white-space:nowrap;font-weight:600">${d.date?new Date(d.date).toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'}):'&#8212;'}</td>
-          <td>${d.orders||0}</td>
-          <td>${d.deliveries||0}</td>
-          <td class="td-amount">\u20a6${Number(d.revenue||0).toLocaleString()}</td>
-          <td style="color:var(--red)">\u20a6${Number(d.expenses||0).toLocaleString()}</td>
-          <td style="font-weight:700;color:${Number(d.profit||0)>=0?'var(--green)':'var(--red)'}">\u20a6${Number(d.profit||0).toLocaleString()}</td>
-          <td style="color:var(--text2);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${d.notes||'&#8212;'}</td>
-          <td><button class="btn btn-sm" style="background:var(--red-light);color:var(--red)" onclick="confirmDeleteDS(${d.id})">Del</button></td>
-        </tr>`).join('')}</tbody></table>`;
-    }catch(e){showToast('Failed to load summaries: '+e.message,'error');}
-  }
-
-  async function confirmDeleteDS(id){
-    if(!confirm('Delete this summary entry?'))return;
-    try{await sbDelete('DAILY_SUMMARY',id);showToast('Deleted','success');allDailySummaries=await fetchDailySummaries();renderDailySummaryTable();}
-    catch(e){showToast('Error deleting','error');}
-  }
-
-  // ── CUSTOM DATE RANGE FOR REPORTS ──
-  function setQuickRange(type){
-    const now = new Date();
-    let from, to = now.toISOString().split('T')[0];
-    if(type==='yesterday'){
-      const y=new Date(now); y.setDate(now.getDate()-1);
-      from=y.toISOString().split('T')[0]; to=from;
-    } else if(type==='last7'){
-      const s=new Date(now); s.setDate(now.getDate()-6);
-      from=s.toISOString().split('T')[0];
-    } else if(type==='last30'){
-      const s=new Date(now); s.setDate(now.getDate()-29);
-      from=s.toISOString().split('T')[0];
-    } else if(type==='lastmonth'){
-      const s=new Date(now.getFullYear(), now.getMonth()-1, 1);
-      const e=new Date(now.getFullYear(), now.getMonth(), 0);
-      from=s.toISOString().split('T')[0]; to=e.toISOString().split('T')[0];
-    } else if(type==='lastyear'){
-      from=`${now.getFullYear()-1}-01-01`; to=`${now.getFullYear()-1}-12-31`;
-    }
-    document.getElementById('rpt-from').value = from;
-    document.getElementById('rpt-to').value = to;
-    renderReports();
-  }
-
-
-
-  // ── WHATSAPP NOTIFICATION ──
-  let waPhone = '', waMessage = '';
-
-  function formatPhone(phone){
-    // Convert Nigerian number to international format
-    let p = (phone || '').replace(/\D/g, '');
-    if(p.startsWith('0')) p = '234' + p.slice(1);
-    if(!p.startsWith('234')) p = '234' + p;
-    return p;
-  }
-
-  function triggerWhatsAppPrompt(order){
-    const name = order.customer_name || 'Customer';
-    const item = order.item_ordered || 'your item';
-    const address = order.delivery_address || 'your address';
-    const phone = order.phone_number || '';
-    waPhone = formatPhone(phone);
-    waMessage = `Hello ${name}! 🎉\n\nGreat news! Your order of *${item}* has been successfully delivered to ${address}.\n\nThank you for choosing *Nancy Logistics*! 🛵\n\nFor any questions, call us: *090 1316 4449*`;
-    document.getElementById('wa-message-preview').textContent = waMessage;
-    document.getElementById('wa-modal').classList.add('open');
-  }
-
-  function sendWhatsApp(){
-    const encoded = encodeURIComponent(waMessage);
-    // On mobile, use intent link to open WhatsApp app directly
-    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-    let url;
-    if(/Android/i.test(navigator.userAgent)){
-      url = `intent://send?phone=${waPhone}&text=${encoded}#Intent;package=com.whatsapp;scheme=whatsapp;end`;
-    } else if(/iPhone|iPad|iPod/i.test(navigator.userAgent)){
-      url = `whatsapp://send?phone=${waPhone}&text=${encoded}`;
-    } else {
-      url = `https://wa.me/${waPhone}?text=${encoded}`;
-    }
-    window.location.href = url;
-    closeModal('wa-modal');
-  }
-
-  // ── DELIVERY ADDRESS AUTOCOMPLETE ──
-  const DELIVERY_LOCATIONS = ["Oke-Fia, Osogbo", "Alekuwodo, Osogbo", "Ogo-Oluwa, Osogbo", "Isale-Aro, Osogbo", "Ayetoro, Osogbo", "Igbona, Osogbo", "Orisunmbare, Osogbo", "Oke-Baale, Osogbo", "Ajegunle, Osogbo", "Ita-Olokan, Osogbo", "Iragbiji Road, Osogbo", "Oke-Osun, Osogbo", "Powerline, Osogbo", "Lameco, Osogbo", "Abere, Osogbo", "Oke-Ila, Osogbo", "Gbodofon, Osogbo", "Oke-Onitea, Osogbo", "Dada Estate, Osogbo", "Coca-Cola Area, Osogbo", "Stadium Area, Osogbo", "Ataoja Area, Osogbo", "Oke-Afo, Osogbo", "Bode-Obi, Osogbo", "Dele-Yes Area, Osogbo", "Prison Area, Osogbo", "Oke-Ogbo, Osogbo", "Ilobu Road, Osogbo", "Ede Road, Osogbo", "Ikirun Road, Osogbo", "Gbongan Road, Osogbo", "Ilesa Road, Osogbo", "Iwo Road, Osogbo", "Station Road, Osogbo", "Boundary Road, Osogbo", "Fagbewesa Road, Osogbo", "Alayide Street, Osogbo", "Osogbo Central Mosque Area", "State Secretariat, Osogbo", "UNIOSUN, Osogbo", "Osogbo Stadium Area", "Osogbo General Hospital Area", "LAUTECH Area, Osogbo", "Oja-Oba Market, Osogbo", "Ataoja Palace Area, Osogbo", "Sacred Grove Area, Osogbo", "Ile-Ife Town Centre", "Oke-Ogbo, Ife", "Mayfair, Ife", "Lagere, Ife", "Eleyele, Ife", "Ilare, Ife", "Mokuro Road, Ife", "Opa Road, Ife", "Obafemi Awolowo University (OAU), Ife", "OAU Teaching Hospital, Ife", "Ife Central Market", "Enuwa Square, Ife", "Oke-Mesi, Ife", "Atelewo, Ife", "Ijugbe, Ife", "Parakin, Ife", "Iremo, Ife", "Modakeke, Ife", "Oke-Atan, Ife", "Lagere Junction, Ife", "Ilesha Town Centre", "Oke-Omiru, Ilesha", "Isokun, Ilesha", "Imo, Ilesha", "Ijoka, Ilesha", "Igangan, Ilesha", "Iloro, Ilesha", "Oke-Owa, Ilesha", "Atakunmosa, Ilesha", "Muroko, Ilesha", "Ereja, Ilesha", "Afin Area, Ilesha", "Wesley Guild Hospital, Ilesha", "Ilesha Grammar School Area", "Ilesha Market Area", "Oke-Esa, Ilesha", "Ibokun Road, Ilesha", "Akure Road, Ilesha", "Ijebu-Jesa Road, Ilesha"];
-
-  function addrSearch(){
-    const val = document.getElementById('f-address').value.toLowerCase().trim();
-    const list = document.getElementById('ac-address');
-    if(!val || val.length < 2){ list.classList.remove('open'); list.innerHTML=''; return; }
-    const matches = DELIVERY_LOCATIONS.filter(l => l.toLowerCase().includes(val)).slice(0, 8);
-    if(!matches.length){ list.classList.remove('open'); return; }
-    list.innerHTML = matches.map(l => {
-      const highlighted = l.replace(new RegExp(val, 'gi'), m => `<strong>${m}</strong>`);
-      return `<div class="autocomplete-item" onclick="selectAddr('${l.replace(/'/g, "\'")}')">${highlighted}</div>`;
-    }).join('');
-    list.classList.add('open');
-  }
-
-  function selectAddr(addr){
-    document.getElementById('f-address').value = addr;
-    document.getElementById('ac-address').classList.remove('open');
-  }
-
-  document.addEventListener('click', e => {
-    if(!e.target.closest('#f-address') && !e.target.closest('#ac-address'))
-      document.getElementById('ac-address').classList.remove('open');
-  });
-
-  function showToast(msg,type=''){
-    const t=document.getElementById('toast');
-    t.textContent=msg;t.className='toast show '+type;
-    setTimeout(()=>t.className='toast',3500);
-  }
-</script>
-</body>
-</html>
