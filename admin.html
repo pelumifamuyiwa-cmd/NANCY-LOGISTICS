@@ -207,6 +207,7 @@
       <div class="nav-label">Finance</div>
       <div class="nav-item" onclick="showPage('expenses',this)"><span class="nav-icon">&#128184;</span> Expenses</div>
       <div class="nav-item" onclick="showPage('commissions',this)"><span class="nav-icon">&#128757;</span> Rider Commission</div>
+      <div class="nav-item" onclick="showPage('ridermgmt',this)"><span class="nav-icon">&#128100;</span> Manage Riders</div>
     </div>
     <div class="nav-section">
       <div class="nav-label">Reports</div>
@@ -409,6 +410,36 @@
     </div>
     <!-- END ANALYTICS PAGE -->
 
+    <!-- RIDER MANAGEMENT PAGE -->
+    <div class="page" id="page-ridermgmt">
+      <div class="page-header"><div class="page-title">Manage Riders</div><div class="page-sub">Set up rider accounts, PINs and deductions visible in the Rider Portal</div></div>
+      <div class="table-card">
+        <div class="table-header">
+          <div class="table-title">Rider Accounts</div>
+          <div class="table-actions">
+            <button class="btn btn-red" onclick="openRiderModal()">+ Add Rider</button>
+          </div>
+        </div>
+        <div id="riders-table-body"><div class="table-loading"><div class="mini-spinner"></div>Loading...</div></div>
+      </div>
+      <div class="table-card" style="margin-top:20px;">
+        <div class="table-header">
+          <div class="table-title">Rider Deductions</div>
+          <div class="table-actions" style="flex-wrap:wrap;gap:8px;">
+            <input type="text" class="search-input" id="ded-search" placeholder="Search rider..." oninput="filterDeductions()" style="width:180px;"/>
+            <select class="filter-select" id="ded-settled-filter" onchange="filterDeductions()">
+              <option value="">All</option>
+              <option value="false">Unsettled</option>
+              <option value="true">Settled</option>
+            </select>
+            <button class="btn btn-red" onclick="openDeductionModal()">+ Add Deduction</button>
+          </div>
+        </div>
+        <div id="deductions-table-body"><div class="table-loading"><div class="mini-spinner"></div>Loading...</div></div>
+      </div>
+    </div>
+    <!-- END RIDER MANAGEMENT PAGE -->
+
   </div>
 </div>
 
@@ -460,6 +491,12 @@
         <select class="form-select" id="f-payment">
           <option value="Unpaid">Unpaid</option>
           <option value="Paid">Paid</option>
+        </select>
+      </div>
+      <div class="form-group full">
+        <label class="form-label">Assign to Rider</label>
+        <select class="form-select" id="f-rider-assign">
+          <option value="">&#8212; Not assigned &#8212;</option>
         </select>
       </div>
     </div>
@@ -603,6 +640,84 @@
 </div>
 
 
+<!-- RIDER MODAL -->
+<div class="modal-overlay" id="rider-modal">
+  <div class="modal">
+    <div class="modal-title" id="rider-modal-title">Add Rider</div>
+    <div class="modal-sub">Create a Rider Portal account. The rider will log in with their name and PIN.</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">Rider Name *</label>
+        <input type="text" class="form-input" id="rm-name" placeholder="e.g. Emeka"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Phone Number</label>
+        <input type="tel" class="form-input" id="rm-phone" placeholder="08012345678" maxlength="11"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">4-Digit PIN *</label>
+        <input type="text" class="form-input" id="rm-pin" placeholder="e.g. 5678" maxlength="4" pattern="[0-9]{4}" inputmode="numeric"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Status</label>
+        <select class="form-select" id="rm-active">
+          <option value="true">Active</option>
+          <option value="false">Inactive</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('rider-modal')">Cancel</button>
+      <button class="btn btn-red" id="rider-save-btn" onclick="saveRider()">Save Rider</button>
+    </div>
+  </div>
+</div>
+
+<!-- DEDUCTION MODAL -->
+<div class="modal-overlay" id="deduction-modal">
+  <div class="modal">
+    <div class="modal-title" id="ded-modal-title">Add Deduction</div>
+    <div class="modal-sub">This will appear in the rider's Earnings &amp; Deductions section</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">Rider *</label>
+        <select class="form-select" id="ded-rider"></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Date *</label>
+        <input type="date" class="form-input" id="ded-date"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Type *</label>
+        <select class="form-select" id="ded-type">
+          <option value="Borrow">Borrow</option>
+          <option value="Penalty">Penalty</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Amount (&#8358;) *</label>
+        <input type="number" class="form-input" id="ded-amount" placeholder="5000" min="0" inputmode="numeric"/>
+      </div>
+      <div class="form-group full">
+        <label class="form-label">Note / Reason</label>
+        <input type="text" class="form-input" id="ded-note" placeholder="e.g. Borrowed for fuel, short on cash"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Settled?</label>
+        <select class="form-select" id="ded-settled">
+          <option value="false">No (Outstanding)</option>
+          <option value="true">Yes (Settled)</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('deduction-modal')">Cancel</button>
+      <button class="btn btn-red" id="ded-save-btn" onclick="saveDeduction()">Save Deduction</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <!-- MOBILE BOTTOM NAV -->
@@ -612,6 +727,7 @@
     <div class="mob-nav-item" id="mob-orders" onclick="showPage('orders',this)"><span class="mob-icon">&#128230;</span>Orders</div>
     <div class="mob-nav-item" id="mob-expenses" onclick="showPage('expenses',this)"><span class="mob-icon">&#128184;</span>Expenses</div>
     <div class="mob-nav-item" id="mob-commissions" onclick="showPage('commissions',this)"><span class="mob-icon">&#128757;</span>Riders</div>
+    <div class="mob-nav-item" id="mob-ridermgmt" onclick="showPage('ridermgmt',this)"><span class="mob-icon">&#128100;</span>Manage</div>
     <div class="mob-nav-item" id="mob-reports" onclick="showPage('reports',this)"><span class="mob-icon">&#128200;</span>Reports</div>
     <div class="mob-nav-item" id="mob-dailysummary" onclick="showPage('dailysummary',this)"><span class="mob-icon">&#128221;</span>Summary</div>
     <div class="mob-nav-item" id="mob-analytics" onclick="showPage('analytics',this)"><span class="mob-icon">&#128065;</span>Analytics</div>
@@ -665,6 +781,7 @@
     if(name==='commissions') renderCommissionsTable();
     if(name==='dailysummary') renderDailySummaryTable();
     if(name==='analytics') renderAnalytics();
+    if(name==='ridermgmt') renderRiderMgmt();
   }
 
   async function sbFetch(table){
@@ -703,12 +820,12 @@
     return{id:o.id,created_at:o.created_at,date:o['DATE'],customer_name:o['CUSTOMER NAME'],
       item_ordered:o['ITEM ORDERED'],quantity:o['QUANTITY'],price:o['PRICE'],
       delivery_status:o['DELIVERY STATUS'],phone_number:o['PHONE NUMBER'],
-      delivery_address:o['DELIVERY ADDRESS'],payment_status:o['PAYMENT STATUS']};
+      delivery_address:o['DELIVERY ADDRESS'],payment_status:o['PAYMENT STATUS'],rider_name:o['RIDER NAME']||''};
   }
   function mapOrderToDB(d){
     return{'DATE':d.date,'CUSTOMER NAME':d.customer_name,'ITEM ORDERED':d.item_ordered,
       'QUANTITY':d.quantity,'PRICE':d.price,'DELIVERY STATUS':d.delivery_status,
-      'PHONE NUMBER':d.phone_number,'DELIVERY ADDRESS':d.delivery_address,'PAYMENT STATUS':d.payment_status};
+      'PHONE NUMBER':d.phone_number,'DELIVERY ADDRESS':d.delivery_address,'PAYMENT STATUS':d.payment_status,'RIDER NAME':d.rider_name||null};
   }
   function mapExpenseRow(o){
     return{id:o.id,created_at:o.created_at,date:o['DATE'],description:o['DESCRIPTION'],
@@ -732,7 +849,7 @@
   async function initDashboard(){
     document.getElementById('dash-date').textContent=new Date().toLocaleDateString('en-GB',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
     try{
-      allOrders=await fetchOrders();
+      [allOrders,allRiders]=await Promise.all([fetchOrders(),fetchRiders()]);
       updateStats(); renderRecentOrders(); renderCharts();
     }catch(e){showToast('Failed to load data: '+e.message,'error');}
   }
@@ -826,6 +943,7 @@
     document.getElementById('modal-save-btn').textContent='Save Order';
     clearOrderForm();
     document.getElementById('f-date').value=new Date().toISOString().split('T')[0];
+    populateOrderRiderSelect('');
     document.getElementById('order-modal').classList.add('open');
   }
   function openEditOrderModal(id){
@@ -837,13 +955,19 @@
     document.getElementById('f-name').value=o.customer_name||'';
     document.getElementById('f-phone').value=o.phone_number||'';
     document.getElementById('f-item').value=o.item_ordered||'';
-    
     document.getElementById('f-price').value=o.price||0;
     document.getElementById('f-date').value=o.date||'';
     document.getElementById('f-address').value=o.delivery_address||'';
     document.getElementById('f-status').value=o.delivery_status||'Pending';
     document.getElementById('f-payment').value=o.payment_status||'Unpaid';
+    populateOrderRiderSelect(o.rider_name||'');
     document.getElementById('order-modal').classList.add('open');
+  }
+  function populateOrderRiderSelect(current){
+    const sel=document.getElementById('f-rider-assign');
+    if(!sel)return;
+    const active=allRiders.filter(r=>r.active);
+    sel.innerHTML='<option value="">— Not assigned —</option>'+active.map(r=>`<option value="${r.name}"${r.name===current?' selected':''}>${r.name}</option>`).join('');
   }
   function clearOrderForm(){
     ['f-name','f-phone','f-item','f-price','f-date','f-address'].forEach(id=>document.getElementById(id).value='');
@@ -861,7 +985,8 @@
     const status=document.getElementById('f-status').value;
     const payment=document.getElementById('f-payment').value;
     if(!name||!phone||!item||!date){showToast('Please fill all required fields','error');return;}
-    const data={customer_name:name,phone_number:phone,item_ordered:item,price,date,delivery_address:address,delivery_status:status,payment_status:payment};
+    const rider_name=(document.getElementById('f-rider-assign').value||'');
+    const data={customer_name:name,phone_number:phone,item_ordered:item,price,date,delivery_address:address,delivery_status:status,payment_status:payment,rider_name};
     const btn=document.getElementById('modal-save-btn');
     btn.textContent='Saving...';btn.disabled=true;
     try{
@@ -1167,7 +1292,7 @@
   }
 
   function closeModal(id){document.getElementById(id).classList.remove('open');}
-  ['order-modal','expense-modal','commission-modal','dailysummary-modal','wa-modal'].forEach(id=>{
+  ['order-modal','expense-modal','commission-modal','dailysummary-modal','wa-modal','rider-modal','deduction-modal'].forEach(id=>{
     document.getElementById(id).addEventListener('click',function(e){if(e.target===this)closeModal(id);});
   });
 
@@ -1474,7 +1599,187 @@
     }
   }
 
-  function showToast(msg,type=''){
+  // ══════════════ RIDER MANAGEMENT ══════════════
+  let allRiders = [], allDeductions = [];
+  let editingRiderId = null, editingDeductionId = null;
+
+  function mapRiderRow(r){ return {id:r.id,name:r['NAME'],pin:r['PIN'],phone:r['PHONE'],active:r['ACTIVE']}; }
+  function mapDeductionRow(d){ return {id:d.id,created_at:d.created_at,date:d['DATE'],rider_name:d['RIDER NAME'],type:d['TYPE'],amount:d['AMOUNT'],note:d['NOTE'],settled:d['SETTLED']}; }
+
+  async function fetchRiders(){ const r=await sbFetch('RIDERS'); return r.map(mapRiderRow); }
+  async function fetchAllDeductions(){ const r=await sbFetch('RIDER_DEDUCTIONS?order=created_at.desc'); return r.map(mapDeductionRow); }
+
+  async function renderRiderMgmt(){
+    document.getElementById('riders-table-body').innerHTML='<div class="table-loading"><div class="mini-spinner"></div>Loading...</div>';
+    document.getElementById('deductions-table-body').innerHTML='<div class="table-loading"><div class="mini-spinner"></div>Loading...</div>';
+    try{
+      allRiders = await fetchRiders();
+      allDeductions = await fetchAllDeductions();
+      renderRidersTable();
+      renderDeductionsTable(allDeductions);
+    }catch(e){showToast('Failed to load rider data: '+e.message,'error');}
+  }
+
+  function renderRidersTable(){
+    if(!allRiders.length){
+      document.getElementById('riders-table-body').innerHTML='<div class="table-loading">No riders yet. Click "+ Add Rider" to create one.</div>';
+      return;
+    }
+    document.getElementById('riders-table-body').innerHTML=`
+      <table><thead><tr><th>Name</th><th>Phone</th><th>PIN</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody>${allRiders.map(r=>`<tr>
+        <td class="td-name">${r.name||'&mdash;'}</td>
+        <td class="td-phone">${r.phone||'&mdash;'}</td>
+        <td style="font-family:'IBM Plex Mono',monospace;letter-spacing:4px;font-weight:700;color:var(--text)">${r.pin||'&mdash;'}</td>
+        <td><span class="badge badge-${r.active?'delivered':'cancelled'}">${r.active?'Active':'Inactive'}</span></td>
+        <td><div class="row-actions">
+          <button class="btn btn-outline btn-sm" onclick="openEditRiderModal(${r.id})">Edit</button>
+          <button class="btn btn-sm" style="background:var(--red-light);color:var(--red)" onclick="confirmDeleteRider(${r.id})">Del</button>
+        </div></td>
+      </tr>`).join('')}</tbody></table>`;
+  }
+
+  function filterDeductions(){
+    const search=(document.getElementById('ded-search').value||'').toLowerCase();
+    const settledF=document.getElementById('ded-settled-filter').value;
+    let r=allDeductions;
+    if(search) r=r.filter(d=>(d.rider_name||'').toLowerCase().includes(search));
+    if(settledF!=='') r=r.filter(d=>String(d.settled)===settledF);
+    renderDeductionsTable(r);
+  }
+
+  function renderDeductionsTable(records){
+    if(!records.length){
+      document.getElementById('deductions-table-body').innerHTML='<div class="table-loading">No deductions found.</div>';
+      return;
+    }
+    document.getElementById('deductions-table-body').innerHTML=`
+      <table><thead><tr><th>Date</th><th>Rider</th><th>Type</th><th>Amount</th><th>Note</th><th>Settled</th><th>Actions</th></tr></thead>
+      <tbody>${records.map(d=>`<tr>
+        <td style="white-space:nowrap">${d.date?new Date(d.date).toLocaleDateString('en-GB'):'&mdash;'}</td>
+        <td class="td-name">${d.rider_name||'&mdash;'}</td>
+        <td><span class="badge badge-${d.type==='Borrow'?'processing':d.type==='Penalty'?'pending':'cancelled'}">${d.type||'&mdash;'}</span></td>
+        <td class="td-amount">&#8358;${Number(d.amount||0).toLocaleString()}</td>
+        <td style="color:var(--text3);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${d.note||'&mdash;'}</td>
+        <td><span class="badge badge-${d.settled?'paid':'unpaid'}">${d.settled?'Settled':'Unsettled'}</span></td>
+        <td><div class="row-actions">
+          <button class="btn btn-outline btn-sm" onclick="openEditDeductionModal(${d.id})">Edit</button>
+          <button class="btn btn-sm" style="background:var(--red-light);color:var(--red)" onclick="confirmDeleteDeduction(${d.id})">Del</button>
+        </div></td>
+      </tr>`).join('')}</tbody></table>`;
+  }
+
+  // ── Rider CRUD ──
+  function openRiderModal(){
+    editingRiderId=null;
+    document.getElementById('rider-modal-title').textContent='Add Rider';
+    document.getElementById('rider-save-btn').textContent='Save Rider';
+    ['rm-name','rm-phone','rm-pin'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('rm-active').value='true';
+    document.getElementById('rider-modal').classList.add('open');
+  }
+  function openEditRiderModal(id){
+    const r=allRiders.find(x=>x.id===id); if(!r)return;
+    editingRiderId=id;
+    document.getElementById('rider-modal-title').textContent='Edit Rider';
+    document.getElementById('rider-save-btn').textContent='Update Rider';
+    document.getElementById('rm-name').value=r.name||'';
+    document.getElementById('rm-phone').value=r.phone||'';
+    document.getElementById('rm-pin').value=r.pin||'';
+    document.getElementById('rm-active').value=r.active?'true':'false';
+    document.getElementById('rider-modal').classList.add('open');
+  }
+  async function saveRider(){
+    const name=document.getElementById('rm-name').value.trim();
+    const phone=document.getElementById('rm-phone').value.trim();
+    const pin=document.getElementById('rm-pin').value.trim();
+    const active=document.getElementById('rm-active').value==='true';
+    if(!name||!pin){showToast('Name and PIN are required','error');return;}
+    if(!/^[0-9]{4}$/.test(pin)){showToast('PIN must be exactly 4 digits','error');return;}
+    const data={'NAME':name,'PIN':pin,'PHONE':phone||null,'ACTIVE':active};
+    const btn=document.getElementById('rider-save-btn');
+    btn.textContent='Saving...'; btn.disabled=true;
+    try{
+      if(editingRiderId){await sbUpdate('RIDERS',editingRiderId,data);showToast('Rider updated!','success');}
+      else{await sbInsert('RIDERS',data);showToast('Rider added! They can now log in.','success');}
+      closeModal('rider-modal');
+      allRiders=await fetchRiders(); renderRidersTable();
+    }catch(e){showToast('Error: '+e.message,'error');}
+    finally{btn.textContent=editingRiderId?'Update Rider':'Save Rider'; btn.disabled=false;}
+  }
+  async function confirmDeleteRider(id){
+    if(!confirm('Delete this rider? They will no longer be able to log into the Rider Portal.'))return;
+    try{
+      await sbDelete('RIDERS',id);
+      showToast('Rider deleted','success');
+      allRiders=await fetchRiders(); renderRidersTable();
+    }catch(e){showToast('Error deleting','error');}
+  }
+
+  // ── Deduction CRUD ──
+  function populateRiderSelect(currentVal){
+    const sel=document.getElementById('ded-rider');
+    const riders=allRiders.filter(r=>r.active);
+    sel.innerHTML=riders.length
+      ?riders.map(r=>`<option value="${r.name}">${r.name}</option>`).join('')
+      :'<option value="">No active riders</option>';
+    if(currentVal) sel.value=currentVal;
+  }
+  function openDeductionModal(){
+    editingDeductionId=null;
+    document.getElementById('ded-modal-title').textContent='Add Deduction';
+    document.getElementById('ded-save-btn').textContent='Save Deduction';
+    populateRiderSelect();
+    document.getElementById('ded-date').value=new Date().toISOString().split('T')[0];
+    document.getElementById('ded-type').value='Borrow';
+    document.getElementById('ded-amount').value='';
+    document.getElementById('ded-note').value='';
+    document.getElementById('ded-settled').value='false';
+    document.getElementById('deduction-modal').classList.add('open');
+  }
+  function openEditDeductionModal(id){
+    const d=allDeductions.find(x=>x.id===id); if(!d)return;
+    editingDeductionId=id;
+    document.getElementById('ded-modal-title').textContent='Edit Deduction';
+    document.getElementById('ded-save-btn').textContent='Update Deduction';
+    populateRiderSelect(d.rider_name);
+    document.getElementById('ded-date').value=d.date||'';
+    document.getElementById('ded-type').value=d.type||'Borrow';
+    document.getElementById('ded-amount').value=d.amount||0;
+    document.getElementById('ded-note').value=d.note||'';
+    document.getElementById('ded-settled').value=d.settled?'true':'false';
+    document.getElementById('deduction-modal').classList.add('open');
+  }
+  async function saveDeduction(){
+    const rider=document.getElementById('ded-rider').value;
+    const date=document.getElementById('ded-date').value;
+    const type=document.getElementById('ded-type').value;
+    const amount=parseFloat(document.getElementById('ded-amount').value)||0;
+    const note=document.getElementById('ded-note').value.trim();
+    const settled=document.getElementById('ded-settled').value==='true';
+    if(!rider||!date||!amount){showToast('Please fill all required fields','error');return;}
+    const data={'DATE':date,'RIDER NAME':rider,'TYPE':type,'AMOUNT':amount,'NOTE':note,'SETTLED':settled};
+    const btn=document.getElementById('ded-save-btn');
+    btn.textContent='Saving...'; btn.disabled=true;
+    try{
+      if(editingDeductionId){await sbUpdate('RIDER_DEDUCTIONS',editingDeductionId,data);showToast('Deduction updated!','success');}
+      else{await sbInsert('RIDER_DEDUCTIONS',data);showToast('Deduction saved! Rider can now see it.','success');}
+      closeModal('deduction-modal');
+      allDeductions=await fetchAllDeductions(); renderDeductionsTable(allDeductions);
+    }catch(e){showToast('Error: '+e.message,'error');}
+    finally{btn.textContent=editingDeductionId?'Update Deduction':'Save Deduction'; btn.disabled=false;}
+  }
+  async function confirmDeleteDeduction(id){
+    if(!confirm('Delete this deduction record?'))return;
+    try{
+      await sbDelete('RIDER_DEDUCTIONS',id);
+      showToast('Deleted','success');
+      allDeductions=await fetchAllDeductions(); renderDeductionsTable(allDeductions);
+    }catch(e){showToast('Error deleting','error');}
+  }
+  // ══════════════ END RIDER MANAGEMENT ══════════════
+
+    function showToast(msg,type=''){
     const t=document.getElementById('toast');
     t.textContent=msg;t.className='toast show '+type;
     setTimeout(()=>t.className='toast',3500);
