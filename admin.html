@@ -216,6 +216,11 @@
       <div class="nav-item" onclick="showPage('analytics',this)"><span class="nav-icon">&#128065;</span> Page Analytics</div>
     </div>
     <div class="sidebar-bottom">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <span style="font-size:0.72rem;color:var(--text3);">Auto-refreshes every 45s</span>
+        <span id="admin-refresh-dot" style="width:7px;height:7px;border-radius:50%;background:var(--green);opacity:0;transition:opacity 0.5s;"></span>
+      </div>
+      <div class="logout-btn" onclick="adminManualRefresh()" style="margin-bottom:6px;">&#8635; Refresh now</div>
       <div class="logout-btn" onclick="logout()">&#128682; Sign out</div>
     </div>
   </div>
@@ -758,9 +763,35 @@
     document.getElementById('login-screen').style.display='none';
     document.getElementById('app').style.display='block';
     initDashboard();
+    // Auto-refresh orders every 45s so admin sees rider status updates live
+    if(window._adminRefresh) clearInterval(window._adminRefresh);
+    window._adminRefresh = setInterval(async ()=>{
+      allOrders=await fetchOrders();
+      updateStats(); renderRecentOrders();
+      // If currently on orders page, refresh that too
+      if(document.getElementById('page-orders').classList.contains('active')) displayFilteredOrders(allOrders);
+      showAdminRefreshPulse();
+    }, 45000);
+  }
+  function showAdminRefreshPulse(){
+    const d=document.getElementById('admin-refresh-dot');
+    if(!d)return; d.style.opacity='1';
+    setTimeout(()=>d.style.opacity='0',1200);
+  }
+  async function adminManualRefresh(){
+    try{
+      [allOrders,allExpenses,allCommissions]=await Promise.all([fetchOrders(),fetchExpenses(),fetchCommissions()]);
+      updateStats(); renderRecentOrders();
+      if(document.getElementById('page-orders').classList.contains('active')) displayFilteredOrders(allOrders);
+      if(document.getElementById('page-expenses').classList.contains('active')) displayFilteredExpenses(allExpenses);
+      if(document.getElementById('page-commissions').classList.contains('active')) displayFilteredCommissions(allCommissions);
+      showAdminRefreshPulse();
+      showToast('Data refreshed ✓','success');
+    }catch(e){showToast('Refresh failed','error');}
   }
   function logout(){
     clearSession();
+    if(window._adminRefresh){clearInterval(window._adminRefresh);window._adminRefresh=null;}
     document.getElementById('login-screen').style.display='flex';
     document.getElementById('app').style.display='none';
     document.getElementById('loginPass').value='';
@@ -785,7 +816,8 @@
   }
 
   async function sbFetch(table){
-    const res=await fetch(`${SUPABASE_URL}/rest/v1/${table}?order=created_at.desc`,
+    const sep=table.includes('?')?'&':'?';
+    const res=await fetch(`${SUPABASE_URL}/rest/v1/${table}${sep}order=created_at.desc`,
       {headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`}});
     if(!res.ok) throw new Error('Fetch failed '+res.status);
     return res.json();
@@ -867,11 +899,12 @@
   function renderRecentOrders(){
     const recent=allOrders.slice(0,5);
     document.getElementById('recent-orders-body').innerHTML=recent.length?`
-      <table><thead><tr><th>Customer</th><th>Item</th><th>Phone</th><th>Status</th><th>Payment</th><th>Price</th></tr></thead>
+      <table><thead><tr><th>Customer</th><th>Item</th><th>Phone</th><th>Rider</th><th>Status</th><th>Payment</th><th>Price</th></tr></thead>
       <tbody>${recent.map(o=>`<tr>
         <td class="td-name">${o.customer_name||'&#8212;'}</td>
         <td>${o.item_ordered||'&#8212;'}</td>
         <td class="td-phone">${o.phone_number||'&#8212;'}</td>
+        <td style="font-size:0.78rem;font-weight:600;color:var(--purple)">${o.rider_name||'<span style="color:var(--text3)">—</span>'}</td>
         <td>${statusBadge(o.delivery_status)}</td>
         <td>${payBadge(o.payment_status)}</td>
         <td class="td-amount">₦${Number(o.price||0).toLocaleString()}</td>
@@ -918,7 +951,7 @@
   function displayFilteredOrders(orders){
     if(!orders.length){document.getElementById('orders-table-body').innerHTML='<div class="table-loading">No orders found</div>';return;}
     document.getElementById('orders-table-body').innerHTML=`
-      <table><thead><tr><th>Date</th><th>Customer</th><th>Phone</th><th>Item</th><th>Price</th><th>Address</th><th>Status</th><th>Payment</th><th>Actions</th></tr></thead>
+      <table><thead><tr><th>Date</th><th>Customer</th><th>Phone</th><th>Item</th><th>Price</th><th>Address</th><th>Rider</th><th>Status</th><th>Payment</th><th>Actions</th></tr></thead>
       <tbody>${orders.map(o=>`<tr>
         <td style="white-space:nowrap">${o.date?new Date(o.date).toLocaleDateString('en-GB'):'&#8212;'}</td>
         <td class="td-name">${o.customer_name||'&#8212;'}</td>
@@ -926,6 +959,7 @@
         <td>${o.item_ordered||'&#8212;'}</td>
         <td class="td-amount">₦${Number(o.price||0).toLocaleString()}</td>
         <td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${o.delivery_address||''}">${o.delivery_address||'&#8212;'}</td>
+        <td style="font-size:0.8rem;font-weight:600;color:var(--purple)">${o.rider_name||'<span style="color:var(--text3)">—</span>'}</td>
         <td>${statusBadge(o.delivery_status)}</td>
         <td>${payBadge(o.payment_status)}</td>
         <td><div class="row-actions">
@@ -1603,7 +1637,7 @@
   let allRiders = [], allDeductions = [];
   let editingRiderId = null, editingDeductionId = null;
 
-  function mapRiderRow(r){ return {id:r.id,name:r['NAME'],pin:r['PIN'],phone:r['PHONE'],active:r['ACTIVE']}; }
+  function mapRiderRow(r){ return {id:r.id,name:r['NAME']||'',pin:r['PIN']||'',phone:r['PHONE']||'',active:r['ACTIVE']===true||r['ACTIVE']==='true'}; }
   function mapDeductionRow(d){ return {id:d.id,created_at:d.created_at,date:d['DATE'],rider_name:d['RIDER NAME'],type:d['TYPE'],amount:d['AMOUNT'],note:d['NOTE'],settled:d['SETTLED']}; }
 
   async function fetchRiders(){ const r=await sbFetch('RIDERS'); return r.map(mapRiderRow); }
