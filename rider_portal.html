@@ -20,20 +20,16 @@
   *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
   body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;}
 
-  /* ── LOGIN ── */
+  /* LOGIN */
   #login-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px;}
   .login-card{background:var(--white);border:1px solid var(--border);border-radius:20px;padding:40px 32px;width:100%;max-width:380px;box-shadow:var(--shadow-md);}
-  .login-logo{margin-bottom:6px;}
-  .login-brand{font-size:1.25rem;font-weight:800;color:var(--red);letter-spacing:-0.3px;}
-  .login-title{font-size:1.35rem;font-weight:700;margin-bottom:4px;margin-top:20px;}
-  .login-sub{font-size:0.85rem;color:var(--text2);margin-bottom:28px;}
+  .login-brand{font-size:1.35rem;font-weight:800;color:var(--red);letter-spacing:-0.5px;margin-bottom:6px;display:block;}
+  .login-title{font-size:1.25rem;font-weight:700;margin-bottom:4px;margin-top:20px;}
+  .login-sub{font-size:0.85rem;color:var(--text2);margin-bottom:24px;}
   .login-label{font-size:0.75rem;font-weight:600;color:var(--text2);display:block;margin-bottom:7px;}
   .login-input{width:100%;border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:16px;font-family:'Inter',sans-serif;outline:none;transition:border-color 0.2s,box-shadow 0.2s;margin-bottom:16px;}
   .login-input:focus{border-color:var(--red);box-shadow:0 0 0 3px var(--red-dim);}
-  .login-btn{width:100%;background:var(--red);color:#fff;border:none;border-radius:10px;padding:13px;font-size:0.95rem;font-weight:700;cursor:pointer;transition:opacity 0.2s,transform 0.2s;font-family:'Inter',sans-serif;}
-  .login-btn:hover{opacity:0.9;transform:translateY(-1px);}
-  .login-error{color:var(--red);font-size:0.8rem;margin-top:10px;text-align:center;display:none;}
-  .pin-dots{display:flex;gap:12px;justify-content:center;margin:18px 0 24px;}
+  .pin-dots{display:flex;gap:12px;justify-content:center;margin:16px 0 22px;}
   .pin-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--border);background:transparent;transition:all 0.2s;}
   .pin-dot.filled{background:var(--red);border-color:var(--red);}
   .numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:280px;margin:0 auto;}
@@ -42,200 +38,169 @@
   .num-btn:active{transform:scale(0.94);}
   .num-btn.del{color:var(--red);font-size:1rem;}
   .num-btn.empty{background:transparent;border:none;cursor:default;}
+  .login-error{color:var(--red);font-size:0.8rem;margin-top:12px;text-align:center;min-height:18px;}
 
-  /* ── APP SHELL ── */
+  /* APP */
   #app{display:none;}
-  .header{position:fixed;top:0;left:0;right:0;background:var(--white);border-bottom:1px solid var(--border);z-index:100;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;}
-  .header-left{display:flex;align-items:center;gap:10px;}
-  .header-logo{font-size:1rem;font-weight:800;color:var(--red);}
-  .header-title{font-size:1rem;font-weight:700;}
-  .header-rider{font-size:0.75rem;color:var(--text3);margin-top:1px;}
-  .header-right{display:flex;align-items:center;gap:10px;}
-  .logout-icon{width:34px;height:34px;border-radius:8px;border:1px solid var(--border);background:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.9rem;transition:all 0.15s;}
-  .logout-icon:hover{background:var(--red-light);border-color:var(--red);color:var(--red);}
-
-  .main{padding:80px 16px 90px;}
+  .header{position:fixed;top:0;left:0;right:0;background:var(--white);border-bottom:1px solid var(--border);z-index:100;padding:13px 18px;display:flex;align-items:center;justify-content:space-between;}
+  .header-left{display:flex;flex-direction:column;}
+  .header-brand{font-size:0.85rem;font-weight:800;color:var(--red);}
+  .header-rider{font-size:0.72rem;color:var(--text3);margin-top:1px;}
+  .logout-btn{padding:7px 13px;border-radius:8px;border:1px solid var(--border);background:var(--white);font-size:0.78rem;font-weight:600;color:var(--text2);cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s;}
+  .logout-btn:hover{border-color:var(--red);color:var(--red);}
+  .main{padding:70px 14px 90px;}
   .page{display:none;}
   .page.active{display:block;}
 
-  /* ── BOTTOM NAV ── */
+  /* BOTTOM NAV */
   .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1px solid var(--border);z-index:100;padding:6px 0 max(6px,env(safe-area-inset-bottom));}
-  .bottom-nav-inner{display:flex;justify-content:space-around;}
-  .nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 10px;cursor:pointer;font-size:0.6rem;font-weight:600;color:var(--text3);transition:color 0.15s;min-width:52px;text-transform:uppercase;letter-spacing:0.3px;}
-  .nav-item .nav-icon{font-size:1.25rem;line-height:1;}
-  .nav-item.active{color:var(--red);}
+  .bnav-inner{display:flex;justify-content:space-around;}
+  .bnav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 12px;cursor:pointer;font-size:0.6rem;font-weight:600;color:var(--text3);transition:color 0.15s;text-transform:uppercase;letter-spacing:0.3px;}
+  .bnav-item .bicon{font-size:1.3rem;line-height:1;}
+  .bnav-item.active{color:var(--red);}
 
-  /* ── CARDS ── */
-  .page-header{margin-bottom:20px;}
-  .page-title{font-size:1.25rem;font-weight:700;margin-bottom:3px;}
+  /* CARDS */
+  .page-header{margin-bottom:18px;}
+  .page-title{font-size:1.2rem;font-weight:700;margin-bottom:3px;}
   .page-sub{font-size:0.82rem;color:var(--text2);}
-  .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
-  .stat-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:16px;box-shadow:var(--shadow);}
+  .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+  .stat-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:14px;box-shadow:var(--shadow);}
   .stat-card.full{grid-column:1/-1;}
-  .stat-icon{font-size:1.2rem;margin-bottom:8px;}
-  .stat-label{font-size:0.68rem;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:5px;}
-  .stat-val{font-size:1.5rem;font-weight:700;}
-  .stat-sub{font-size:0.72rem;color:var(--text3);margin-top:3px;}
+  .stat-icon{font-size:1.1rem;margin-bottom:6px;}
+  .stat-label{font-size:0.66rem;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;}
+  .stat-val{font-size:1.4rem;font-weight:700;}
+  .stat-sub{font-size:0.7rem;color:var(--text3);margin-top:2px;}
   .stat-card.green .stat-val{color:var(--green);}
   .stat-card.red .stat-val{color:var(--red);}
   .stat-card.blue .stat-val{color:var(--blue);}
   .stat-card.orange .stat-val{color:var(--orange);}
-  .stat-card.purple .stat-val{color:var(--purple);}
 
-  /* ── TABLE CARD ── */
-  .table-card{background:var(--white);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:16px;}
-  .table-hdr{display:flex;align-items:center;justify-content:space-between;padding:16px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px;}
-  .table-title{font-size:0.9rem;font-weight:700;}
-  .table-body{overflow-x:auto;-webkit-overflow-scrolling:touch;}
-  table{width:100%;border-collapse:collapse;min-width:420px;}
-  th{text-align:left;font-size:0.65rem;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;padding:10px 14px;background:var(--bg);border-bottom:1px solid var(--border);}
-  td{padding:12px 14px;font-size:0.82rem;border-bottom:1px solid var(--border);color:var(--text);vertical-align:middle;}
-  tr:last-child td{border-bottom:none;}
+  /* EARNINGS HERO */
+  .earn-hero{background:linear-gradient(135deg,#E8000D 0%,#b8000a 100%);color:#fff;border-radius:16px;padding:22px 20px;margin-bottom:14px;box-shadow:0 4px 20px rgba(232,0,13,0.22);}
+  .earn-hero-label{font-size:0.7rem;font-weight:600;opacity:0.8;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:5px;}
+  .earn-hero-amount{font-size:2.2rem;font-weight:700;letter-spacing:-1px;margin-bottom:2px;}
+  .earn-hero-sub{font-size:0.78rem;opacity:0.72;}
+  .earn-hero-row{display:flex;justify-content:space-between;margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.18);}
+  .earn-hero-item{text-align:center;}
+  .earn-hero-item-val{font-size:1.1rem;font-weight:700;}
+  .earn-hero-item-label{font-size:0.65rem;opacity:0.72;margin-top:2px;}
 
-  /* ── BADGES ── */
+  /* ORDER CARD — admin-filled, read+update only */
+  .order-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:10px;box-shadow:var(--shadow);}
+  .order-card.urgent{border-left:3px solid var(--red);}
+  .order-card.done{border-left:3px solid var(--green);opacity:0.85;}
+  .oc-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
+  .oc-customer{font-size:1rem;font-weight:700;}
+  .oc-item{font-size:0.82rem;color:var(--text2);margin-top:2px;}
+  .oc-price{font-size:1rem;font-weight:700;color:var(--red);white-space:nowrap;}
+  .oc-date{font-size:0.7rem;color:var(--text3);font-family:'IBM Plex Mono',monospace;margin-top:2px;text-align:right;}
+  .oc-addr{display:flex;align-items:flex-start;gap:6px;background:var(--bg);border-radius:8px;padding:8px 10px;margin-bottom:10px;font-size:0.82rem;color:var(--text2);}
+  .oc-addr-icon{font-size:0.9rem;flex-shrink:0;margin-top:1px;}
+  .oc-phone{display:flex;align-items:center;gap:6px;font-size:0.82rem;color:var(--text2);margin-bottom:10px;}
+  .oc-foot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+  .oc-badges{display:flex;gap:6px;flex-wrap:wrap;}
   .badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:0.3px;white-space:nowrap;}
   .badge::before{content:'';width:4px;height:4px;border-radius:50%;background:currentColor;}
-  .badge-delivered{background:var(--green-light);color:var(--green);}
-  .badge-pending{background:var(--red-light);color:var(--red);}
-  .badge-processing{background:var(--orange-light);color:var(--orange);}
-  .badge-cancelled{background:var(--bg2);color:var(--text3);}
-  .badge-paid{background:var(--green-light);color:var(--green);}
-  .badge-unpaid{background:var(--red-light);color:var(--red);}
-  .badge-settled{background:var(--green-light);color:var(--green);}
-  .badge-unsettled{background:var(--red-light);color:var(--red);}
-  .badge-borrow{background:var(--orange-light);color:var(--orange);}
-  .badge-penalty{background:var(--red-light);color:var(--red);}
-  .badge-other{background:var(--bg2);color:var(--text3);}
+  .badge-delivered,.badge-settled,.badge-paid{background:var(--green-light);color:var(--green);}
+  .badge-pending,.badge-unsettled,.badge-unpaid{background:var(--red-light);color:var(--red);}
+  .badge-processing,.badge-borrow{background:var(--orange-light);color:var(--orange);}
+  .badge-cancelled,.badge-other{background:var(--bg2);color:var(--text3);}
+  .btn-update{padding:8px 14px;border-radius:8px;background:var(--red);color:#fff;border:none;font-size:0.8rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s;}
+  .btn-update:hover{opacity:0.88;}
+  .btn-update.done{background:var(--green-light);color:var(--green);}
 
-  /* ── BUTTONS ── */
-  .btn{padding:8px 16px;border-radius:8px;font-size:0.82rem;font-weight:600;cursor:pointer;border:none;transition:all 0.15s;font-family:'Inter',sans-serif;}
-  .btn-red{background:var(--red);color:#fff;}
-  .btn-red:hover{opacity:0.88;transform:translateY(-1px);}
-  .btn-outline{background:var(--white);color:var(--text);border:1px solid var(--border);}
-  .btn-outline:hover{background:var(--bg);}
-  .btn-sm{padding:5px 11px;font-size:0.75rem;}
-  .btn-green{background:var(--green);color:#fff;}
-  .btn-green:hover{opacity:0.88;}
+  /* FILTER BAR */
+  .filter-bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+  .filter-chip{padding:6px 14px;border-radius:20px;font-size:0.75rem;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--white);color:var(--text2);transition:all 0.15s;}
+  .filter-chip.active{background:var(--red);color:#fff;border-color:var(--red);}
+  .search-box{width:100%;border:1px solid var(--border);border-radius:10px;padding:10px 14px;font-size:15px;font-family:'Inter',sans-serif;outline:none;background:var(--white);transition:border-color 0.2s;margin-bottom:10px;}
+  .search-box:focus{border-color:var(--red);}
 
-  /* ── SEARCH INPUT ── */
-  .search-input{border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:15px;font-family:'Inter',sans-serif;outline:none;width:100%;transition:border-color 0.2s;margin-bottom:12px;}
-  .search-input:focus{border-color:var(--red);}
-  .filter-select{border:1px solid var(--border);border-radius:8px;padding:7px 10px;font-size:14px;font-family:'Inter',sans-serif;outline:none;background:var(--white);cursor:pointer;}
+  /* PERIOD TABS */
+  .period-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;}
+  .period-tab{padding:6px 13px;border-radius:8px;font-size:0.75rem;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--white);color:var(--text2);transition:all 0.15s;}
+  .period-tab.active{background:var(--red);color:#fff;border-color:var(--red);}
 
-  /* ── MODAL ── */
-  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);display:none;align-items:flex-end;justify-content:center;z-index:1000;padding:0;}
+  /* MODAL */
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;align-items:flex-end;justify-content:center;z-index:1000;}
   .modal-overlay.open{display:flex;}
-  .modal{background:var(--white);border-radius:20px 20px 0 0;padding:24px 20px;width:100%;max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch;animation:slideUp 0.22s ease;}
+  .modal{background:var(--white);border-radius:20px 20px 0 0;padding:22px 18px 30px;width:100%;max-height:90vh;overflow-y:auto;animation:slideUp 0.22s ease;}
   @keyframes slideUp{from{transform:translateY(40px);opacity:0;}to{transform:translateY(0);opacity:1;}}
-  .modal-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 20px;}
-  .modal-title{font-size:1.1rem;font-weight:700;margin-bottom:3px;}
-  .modal-sub{font-size:0.82rem;color:var(--text2);margin-bottom:20px;}
-  .form-group{margin-bottom:14px;}
-  .form-label{font-size:0.75rem;font-weight:600;color:var(--text2);display:block;margin-bottom:6px;}
-  .form-input,.form-select{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 13px;font-size:16px;font-family:'Inter',sans-serif;outline:none;transition:border-color 0.2s,box-shadow 0.2s;background:var(--white);}
-  .form-input:focus,.form-select:focus{border-color:var(--red);box-shadow:0 0 0 3px var(--red-dim);}
-  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-  .modal-footer{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid var(--border);position:sticky;bottom:0;background:var(--white);}
+  .modal-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 18px;}
+  .modal-title{font-size:1.05rem;font-weight:700;margin-bottom:3px;}
+  .modal-sub{font-size:0.82rem;color:var(--text2);margin-bottom:18px;}
+  .modal-info-row{background:var(--bg);border-radius:8px;padding:10px 13px;font-size:0.88rem;margin-bottom:10px;}
+  .modal-info-label{font-size:0.7rem;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:3px;}
+  .modal-info-val{font-weight:600;color:var(--text);}
+  .form-label{font-size:0.75rem;font-weight:600;color:var(--text2);display:block;margin-bottom:6px;margin-top:12px;}
+  .form-select{width:100%;border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:16px;font-family:'Inter',sans-serif;outline:none;background:var(--white);transition:border-color 0.2s;}
+  .form-select:focus{border-color:var(--red);}
+  .modal-footer{display:flex;gap:10px;padding-top:16px;margin-top:4px;}
+  .btn-cancel{flex:1;padding:13px;border-radius:10px;border:1px solid var(--border);background:var(--white);font-size:0.9rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;color:var(--text2);}
+  .btn-save{flex:2;padding:13px;border-radius:10px;border:none;background:var(--red);color:#fff;font-size:0.9rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:opacity 0.2s;}
+  .btn-save:hover{opacity:0.9;}
+  .btn-save.green-btn{background:var(--green);}
 
-  /* ── ORDER ENTRY CARD ── */
-  .order-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:10px;box-shadow:var(--shadow);}
-  .order-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;}
-  .order-customer{font-weight:600;font-size:0.9rem;}
-  .order-item{font-size:0.8rem;color:var(--text2);margin-top:2px;}
-  .order-amount{font-size:1rem;font-weight:700;color:var(--red);}
-  .order-card-bot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;}
-  .order-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
-  .order-date{font-size:0.72rem;color:var(--text3);font-family:'IBM Plex Mono',monospace;}
-  .order-addr{font-size:0.72rem;color:var(--text2);margin-top:4px;display:flex;align-items:center;gap:4px;}
-  .order-actions{display:flex;gap:6px;}
+  /* DEDUCTION CARD */
+  .deduct-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:8px;}
+  .deduct-top{display:flex;justify-content:space-between;align-items:flex-start;}
+  .deduct-type{font-weight:600;font-size:0.88rem;}
+  .deduct-date{font-size:0.7rem;color:var(--text3);font-family:'IBM Plex Mono',monospace;margin-top:2px;}
+  .deduct-amount{font-weight:700;font-size:1rem;color:var(--red);}
+  .deduct-note{font-size:0.78rem;color:var(--text2);margin-top:6px;padding-top:6px;border-top:1px solid var(--border);}
 
-  /* ── EARNINGS SUMMARY CARD ── */
-  .earnings-big{background:linear-gradient(135deg,#E8000D,#c40009);color:#fff;border-radius:16px;padding:24px;margin-bottom:16px;box-shadow:0 4px 20px rgba(232,0,13,0.25);}
-  .earnings-label{font-size:0.75rem;font-weight:600;opacity:0.8;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px;}
-  .earnings-amount{font-size:2.4rem;font-weight:700;letter-spacing:-1px;}
-  .earnings-sub{font-size:0.8rem;opacity:0.75;margin-top:4px;}
-  .earnings-row{display:flex;justify-content:space-between;margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.2);}
-  .earnings-item{text-align:center;}
-  .earnings-item-val{font-size:1.15rem;font-weight:700;}
-  .earnings-item-label{font-size:0.68rem;opacity:0.75;margin-top:2px;}
+  /* TABLE */
+  .table-card{background:var(--white);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:14px;box-shadow:var(--shadow);}
+  .table-card-title{font-size:0.85rem;font-weight:700;padding:13px 15px;border-bottom:1px solid var(--border);}
+  .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  table{width:100%;border-collapse:collapse;min-width:360px;}
+  th{font-size:0.65rem;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;padding:9px 13px;background:var(--bg);border-bottom:1px solid var(--border);text-align:left;}
+  td{padding:11px 13px;font-size:0.82rem;border-bottom:1px solid var(--border);color:var(--text);vertical-align:middle;}
+  tr:last-child td{border-bottom:none;}
 
-  /* ── TOAST ── */
-  .toast{position:fixed;bottom:80px;right:16px;background:var(--text);color:#fff;padding:10px 18px;border-radius:10px;font-size:0.85rem;font-weight:500;z-index:9999;transform:translateY(40px);opacity:0;transition:all 0.3s;max-width:280px;}
-  .toast.show{transform:translateY(0);opacity:1;}
+  /* SECTION LABEL */
+  .section-label{font-size:0.7rem;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;margin:18px 0 10px;}
+
+  /* EMPTY */
+  .empty-state{text-align:center;padding:36px 20px;color:var(--text3);}
+  .empty-icon{font-size:2.2rem;margin-bottom:8px;}
+  .empty-text{font-size:0.85rem;}
+
+  /* LOADING */
+  .loading-box{text-align:center;padding:30px;color:var(--text3);font-size:0.85rem;}
+  .spinner{width:22px;height:22px;border:2px solid var(--border);border-top-color:var(--red);border-radius:50%;animation:spin 0.6s linear infinite;margin:0 auto 10px;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  /* TOAST */
+  .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:#fff;padding:10px 20px;border-radius:10px;font-size:0.85rem;font-weight:500;z-index:9999;opacity:0;transition:all 0.25s;white-space:nowrap;pointer-events:none;}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
   .toast.success{background:var(--green);}
   .toast.error{background:var(--red);}
 
-  /* ── LOADING ── */
-  .table-loading{text-align:center;padding:36px;color:var(--text3);font-size:0.85rem;}
-  .mini-spinner{width:22px;height:22px;border:2px solid var(--border);border-top-color:var(--red);border-radius:50%;animation:spin 0.6s linear infinite;margin:0 auto 10px;}
-  @keyframes spin{to{transform:rotate(360deg);}}
-
-  /* ── EMPTY STATE ── */
-  .empty-state{text-align:center;padding:40px 20px;color:var(--text3);}
-  .empty-state-icon{font-size:2.5rem;margin-bottom:10px;}
-  .empty-state-text{font-size:0.88rem;}
-
-  /* ── DEDUCTION CARD ── */
-  .deduct-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:10px;}
-  .deduct-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;}
-  .deduct-type{font-weight:600;font-size:0.88rem;}
-  .deduct-amount{font-weight:700;font-size:1rem;color:var(--red);}
-  .deduct-date{font-size:0.72rem;color:var(--text3);font-family:'IBM Plex Mono',monospace;}
-  .deduct-note{font-size:0.78rem;color:var(--text2);margin-top:4px;}
-
-  /* ── AUTOCOMPLETE ── */
-  .autocomplete-list{position:absolute;top:100%;left:0;right:0;background:var(--white);border:1px solid var(--border);border-radius:8px;box-shadow:var(--shadow-md);z-index:2000;max-height:160px;overflow-y:auto;display:none;margin-top:2px;}
-  .autocomplete-list.open{display:block;}
-  .autocomplete-item{padding:10px 13px;font-size:0.85rem;cursor:pointer;border-bottom:1px solid var(--border);}
-  .autocomplete-item:last-child{border-bottom:none;}
-  .autocomplete-item:hover{background:var(--bg);}
-  .autocomplete-item strong{color:var(--red);}
-  .ac-wrap{position:relative;}
-
-  /* ── PERIOD FILTER ── */
-  .period-tabs{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;}
-  .period-tab{padding:6px 14px;border-radius:8px;font-size:0.78rem;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--white);color:var(--text2);transition:all 0.15s;}
-  .period-tab.active{background:var(--red);color:#fff;border-color:var(--red);}
-
-  /* ── PHONE DISPLAY ── */
-  .phone-mono{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--text2);}
-
-  /* ── SUMMARY ROW ── */
-  .section-label{font-size:0.7rem;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;margin:20px 0 10px;}
-
-  /* ── NET BALANCE CARD ── */
-  .net-card{border-radius:14px;padding:16px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;}
-  .net-card.positive{background:var(--green-light);border:1px solid #bbf7d0;}
-  .net-card.negative{background:var(--red-light);border:1px solid #fecaca;}
-  .net-label{font-size:0.75rem;font-weight:600;color:var(--text2);}
-  .net-val{font-size:1.4rem;font-weight:700;}
-  .net-card.positive .net-val{color:var(--green);}
-  .net-card.negative .net-val{color:var(--red);}
+  /* PHONE LINK */
+  a.phone-link{color:var(--blue);text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:0.82rem;}
 </style>
 </head>
 <body>
 
-<!-- ═══════════════ LOGIN SCREEN ═══════════════ -->
+<!-- ══════════ LOGIN ══════════ -->
 <div id="login-screen">
   <div class="login-card">
-    <div class="login-logo">
-      <span class="login-brand">Nancy Logistics</span>
-    </div>
-    <div class="login-title">Rider Portal</div>
-    <div class="login-sub">Enter your name and PIN to sign in</div>
+    <span class="login-brand">Nancy Logistics</span>
+    <div class="login-title">Rider Sign In</div>
+    <div class="login-sub">Enter your name then tap your 4-digit PIN</div>
 
-    <label class="login-label">Your Rider Name</label>
-    <input type="text" class="login-input" id="login-name" placeholder="e.g. Emeka" autocomplete="off"/>
+    <label class="login-label">Your Name</label>
+    <input type="text" class="login-input" id="login-name" placeholder="e.g. Emeka" autocomplete="off" autocapitalize="words"/>
 
     <label class="login-label">PIN</label>
-    <div class="pin-dots" id="pin-dots">
+    <div class="pin-dots">
       <div class="pin-dot" id="pd0"></div>
       <div class="pin-dot" id="pd1"></div>
       <div class="pin-dot" id="pd2"></div>
       <div class="pin-dot" id="pd3"></div>
     </div>
-
-    <div class="numpad" id="numpad">
+    <div class="numpad">
       <button class="num-btn" onclick="numPress('1')">1</button>
       <button class="num-btn" onclick="numPress('2')">2</button>
       <button class="num-btn" onclick="numPress('3')">3</button>
@@ -249,39 +214,33 @@
       <button class="num-btn" onclick="numPress('0')">0</button>
       <button class="num-btn del" onclick="numDel()">⌫</button>
     </div>
-
-    <div class="login-error" id="loginError">❌ Incorrect name or PIN. Try again.</div>
+    <div class="login-error" id="loginError"></div>
   </div>
 </div>
 
-<!-- ═══════════════ APP ═══════════════ -->
+<!-- ══════════ APP ══════════ -->
 <div id="app">
-
-  <!-- HEADER -->
   <div class="header">
     <div class="header-left">
-      <div class="header-logo">Nancy Logistics</div>
-      <div>
-        <div class="header-title">Rider Portal</div>
-        <div class="header-rider" id="header-rider-name">Loading...</div>
-      </div>
+      <span class="header-brand">Nancy Logistics</span>
+      <span class="header-rider" id="header-rider-name">—</span>
     </div>
-    <div class="header-right">
-      <div class="logout-icon" onclick="doLogout()" title="Sign out">🚪</div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span id="refresh-dot" style="width:8px;height:8px;border-radius:50%;background:var(--green);opacity:0;transition:opacity 0.5s;" title="Refreshed"></span>
+      <button class="logout-btn" onclick="manualRefresh()" style="padding:6px 10px;font-size:0.75rem;">🔄</button>
+      <button class="logout-btn" onclick="doLogout()">Sign out</button>
     </div>
   </div>
 
-  <!-- MAIN CONTENT -->
   <div class="main">
 
-    <!-- ── HOME / EARNINGS ── -->
+    <!-- HOME -->
     <div class="page active" id="page-home">
       <div class="page-header">
-        <div class="page-title" id="home-greeting">Good day 👋</div>
-        <div class="page-sub">Here's your earnings overview</div>
+        <div class="page-title" id="home-greeting">Hello 👋</div>
+        <div class="page-sub">Your deliveries &amp; earnings at a glance</div>
       </div>
 
-      <!-- Period filter -->
       <div class="period-tabs">
         <div class="period-tab active" onclick="setHomePeriod('today',this)">Today</div>
         <div class="period-tab" onclick="setHomePeriod('week',this)">This Week</div>
@@ -289,92 +248,87 @@
         <div class="period-tab" onclick="setHomePeriod('all',this)">All Time</div>
       </div>
 
-      <!-- Big earnings card -->
-      <div class="earnings-big" id="earnings-big-card">
-        <div class="earnings-label">Total Earnings</div>
-        <div class="earnings-amount" id="earn-total">₦—</div>
-        <div class="earnings-sub" id="earn-period-label">Today</div>
-        <div class="earnings-row">
-          <div class="earnings-item">
-            <div class="earnings-item-val" id="earn-deliveries">—</div>
-            <div class="earnings-item-label">Deliveries</div>
+      <div class="earn-hero">
+        <div class="earn-hero-label">Total Earnings</div>
+        <div class="earn-hero-amount" id="h-earn-total">₦0</div>
+        <div class="earn-hero-sub" id="h-earn-period">Today</div>
+        <div class="earn-hero-row">
+          <div class="earn-hero-item">
+            <div class="earn-hero-item-val" id="h-deliveries">0</div>
+            <div class="earn-hero-item-label">Deliveries</div>
           </div>
-          <div class="earnings-item">
-            <div class="earnings-item-val" id="earn-deductions">₦—</div>
-            <div class="earnings-item-label">Deductions</div>
+          <div class="earn-hero-item">
+            <div class="earn-hero-item-val" id="h-deductions">₦0</div>
+            <div class="earn-hero-item-label">Deductions</div>
           </div>
-          <div class="earnings-item">
-            <div class="earnings-item-val" id="earn-net">₦—</div>
-            <div class="earnings-item-label">Net Pay</div>
+          <div class="earn-hero-item">
+            <div class="earn-hero-item-val" id="h-net">₦0</div>
+            <div class="earn-hero-item-label">Net Pay</div>
           </div>
         </div>
       </div>
 
-      <!-- Stats row -->
       <div class="stats-grid">
         <div class="stat-card blue">
           <div class="stat-icon">📦</div>
-          <div class="stat-label">My Orders</div>
-          <div class="stat-val" id="my-orders-count">—</div>
-          <div class="stat-sub" id="my-orders-period">This period</div>
+          <div class="stat-label">Assigned</div>
+          <div class="stat-val" id="h-assigned">—</div>
+          <div class="stat-sub" id="h-period-label">This period</div>
         </div>
         <div class="stat-card green">
           <div class="stat-icon">✅</div>
           <div class="stat-label">Delivered</div>
-          <div class="stat-val" id="my-delivered-count">—</div>
+          <div class="stat-val" id="h-delivered">—</div>
           <div class="stat-sub">Completed</div>
         </div>
         <div class="stat-card orange">
           <div class="stat-icon">⏳</div>
           <div class="stat-label">Pending</div>
-          <div class="stat-val" id="my-pending-count">—</div>
-          <div class="stat-sub">Awaiting delivery</div>
+          <div class="stat-val" id="h-pending">—</div>
+          <div class="stat-sub">Still to deliver</div>
         </div>
         <div class="stat-card red">
           <div class="stat-icon">💸</div>
-          <div class="stat-label">Total Deducted</div>
-          <div class="stat-val" id="my-deducted-total">₦—</div>
-          <div class="stat-sub">Borrowings & more</div>
+          <div class="stat-label">Deducted</div>
+          <div class="stat-val" id="h-deducted-all">₦0</div>
+          <div class="stat-sub">All time</div>
         </div>
       </div>
 
-      <!-- Pending deductions -->
       <div class="section-label">⚠️ Outstanding Deductions</div>
       <div id="home-deductions-list">
-        <div class="table-loading"><div class="mini-spinner"></div>Loading...</div>
+        <div class="loading-box"><div class="spinner"></div>Loading...</div>
       </div>
     </div>
 
-    <!-- ── ORDERS ── -->
+    <!-- DELIVERIES -->
     <div class="page" id="page-orders">
       <div class="page-header">
-        <div class="page-title">My Orders</div>
-        <div class="page-sub">Log and manage customer orders</div>
+        <div class="page-title">My Deliveries</div>
+        <div class="page-sub">Orders assigned to you by admin — tap to update status</div>
       </div>
 
-      <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center;">
-        <input type="text" class="search-input" id="order-search" placeholder="🔍 Search customer or phone..." oninput="filterMyOrders()" style="flex:1;min-width:180px;margin-bottom:0;"/>
-        <select class="filter-select" id="order-status-filter" onchange="filterMyOrders()">
-          <option value="">All Status</option>
-          <option value="Pending">Pending</option>
-          <option value="Processing">Processing</option>
-          <option value="Delivered">Delivered</option>
-          <option value="Cancelled">Cancelled</option>
-        </select>
-      </div>
+      <button onclick="openLogOrderModal()" style="width:100%;padding:13px;background:var(--red);color:#fff;border:none;border-radius:12px;font-size:0.95rem;font-weight:700;cursor:pointer;margin-bottom:12px;font-family:'Inter',sans-serif;">+ Log New Order</button>
 
-      <button class="btn btn-red" onclick="openOrderModal()" style="width:100%;margin-bottom:14px;">+ Log New Order</button>
+      <input type="text" class="search-box" id="order-search" placeholder="🔍 Search customer name or phone..." oninput="renderOrdersList()"/>
+
+      <div class="filter-bar">
+        <div class="filter-chip active" onclick="setOrderFilter('',this)">All</div>
+        <div class="filter-chip" onclick="setOrderFilter('Pending',this)">Pending</div>
+        <div class="filter-chip" onclick="setOrderFilter('Processing',this)">Processing</div>
+        <div class="filter-chip" onclick="setOrderFilter('Delivered',this)">Delivered</div>
+      </div>
 
       <div id="orders-list">
-        <div class="table-loading"><div class="mini-spinner"></div>Loading...</div>
+        <div class="loading-box"><div class="spinner"></div>Loading...</div>
       </div>
     </div>
 
-    <!-- ── EARNINGS DETAIL ── -->
+    <!-- EARNINGS -->
     <div class="page" id="page-earnings">
       <div class="page-header">
-        <div class="page-title">Earnings & Deductions</div>
-        <div class="page-sub">Commission records and deductions</div>
+        <div class="page-title">Earnings &amp; Deductions</div>
+        <div class="page-sub">Commission records and deductions logged by admin</div>
       </div>
 
       <div class="period-tabs">
@@ -385,19 +339,15 @@
 
       <div class="section-label">Commission Records</div>
       <div class="table-card">
-        <div class="table-body">
-          <div id="commissions-list">
-            <div class="table-loading"><div class="mini-spinner"></div>Loading...</div>
-          </div>
+        <div class="tbl-wrap">
+          <div id="commissions-list"><div class="loading-box"><div class="spinner"></div>Loading...</div></div>
         </div>
       </div>
 
-      <div class="section-label">Deductions (Borrowings & Penalties)</div>
+      <div class="section-label">Deductions (Borrowings &amp; Penalties)</div>
       <div class="table-card">
-        <div class="table-body">
-          <div id="deductions-list">
-            <div class="table-loading"><div class="mini-spinner"></div>Loading...</div>
-          </div>
+        <div class="tbl-wrap">
+          <div id="deductions-list"><div class="loading-box"><div class="spinner"></div>Loading...</div></div>
         </div>
       </div>
     </div>
@@ -406,126 +356,116 @@
 
   <!-- BOTTOM NAV -->
   <div class="bottom-nav">
-    <div class="bottom-nav-inner">
-      <div class="nav-item active" id="nav-home" onclick="showPage('home',this)">
-        <span class="nav-icon">🏠</span>Home
+    <div class="bnav-inner">
+      <div class="bnav-item active" id="nav-home" onclick="showPage('home',this)">
+        <span class="bicon">🏠</span>Home
       </div>
-      <div class="nav-item" id="nav-orders" onclick="showPage('orders',this)">
-        <span class="nav-icon">📦</span>Orders
+      <div class="bnav-item" id="nav-orders" onclick="showPage('orders',this)">
+        <span class="bicon">📦</span>Deliveries
       </div>
-      <div class="nav-item" id="nav-earnings" onclick="showPage('earnings',this)">
-        <span class="nav-icon">💰</span>Earnings
+      <div class="bnav-item" id="nav-earnings" onclick="showPage('earnings',this)">
+        <span class="bicon">💰</span>Earnings
       </div>
-    </div>
-  </div>
-
-</div><!-- /app -->
-
-<!-- ═══════════════ ORDER MODAL ═══════════════ -->
-<div class="modal-overlay" id="order-modal">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <div class="modal-title" id="order-modal-title">Log New Order</div>
-    <div class="modal-sub" id="order-modal-sub">Fill in the customer order details</div>
-
-    <div class="form-group">
-      <label class="form-label">Customer Name *</label>
-      <div class="ac-wrap">
-        <input type="text" class="form-input" id="f-name" placeholder="e.g. Adebayo Musa" autocomplete="off" oninput="acSearch('name')"/>
-        <div class="autocomplete-list" id="ac-name"></div>
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Phone Number *</label>
-      <div class="ac-wrap">
-        <input type="tel" class="form-input" id="f-phone" placeholder="08012345678" maxlength="11" autocomplete="off" oninput="acSearch('phone')"/>
-        <div class="autocomplete-list" id="ac-phone"></div>
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Item Ordered *</label>
-      <input type="text" class="form-input" id="f-item" placeholder="e.g. Wireless Earbuds"/>
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Price (₦) *</label>
-        <input type="number" class="form-input" id="f-price" placeholder="15000" min="0"/>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Order Date *</label>
-        <input type="date" class="form-input" id="f-date"/>
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Delivery Address *</label>
-      <input type="text" class="form-input" id="f-address" placeholder="e.g. Oke-Fia, Osogbo"/>
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Delivery Status</label>
-        <select class="form-select" id="f-status">
-          <option value="Pending">Pending</option>
-          <option value="Processing">Processing</option>
-          <option value="Delivered">Delivered</option>
-          <option value="Cancelled">Cancelled</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Payment Status</label>
-        <select class="form-select" id="f-payment">
-          <option value="Unpaid">Unpaid</option>
-          <option value="Paid">Paid</option>
-        </select>
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Quantity</label>
-      <input type="number" class="form-input" id="f-qty" placeholder="1" min="1" value="1"/>
-    </div>
-
-    <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closeModal('order-modal')">Cancel</button>
-      <button class="btn btn-red" id="order-save-btn" onclick="saveOrder()">Save Order</button>
     </div>
   </div>
 </div>
 
-<!-- ═══════════════ STATUS UPDATE MODAL ═══════════════ -->
-<div class="modal-overlay" id="status-modal">
+<!-- ══════════ LOG ORDER MODAL ══════════ -->
+<div class="modal-overlay" id="log-order-modal">
   <div class="modal">
     <div class="modal-handle"></div>
-    <div class="modal-title">Update Order Status</div>
-    <div class="modal-sub" id="status-modal-sub">Update delivery or payment status</div>
+    <div class="modal-title" id="lo-title">Log New Order</div>
+    <div class="modal-sub">Fill in the customer details you collected</div>
 
-    <div class="form-group">
-      <label class="form-label">Customer</label>
-      <div style="padding:10px 13px;background:var(--bg);border-radius:8px;font-size:0.88rem;font-weight:600;" id="status-customer-name">—</div>
+    <label class="form-label">Customer Name *</label>
+    <input type="text" class="form-select" id="lo-name" placeholder="e.g. Adebayo Musa" style="margin-bottom:12px;"/>
+
+    <label class="form-label">Phone Number *</label>
+    <input type="tel" class="form-select" id="lo-phone" placeholder="08012345678" maxlength="11" style="margin-bottom:12px;" inputmode="numeric"/>
+
+    <label class="form-label">Item Ordered *</label>
+    <input type="text" class="form-select" id="lo-item" placeholder="e.g. Wireless Earbuds" style="margin-bottom:12px;"/>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+      <div>
+        <label class="form-label">Price (₦) *</label>
+        <input type="number" class="form-select" id="lo-price" placeholder="15000" min="0" inputmode="numeric"/>
+      </div>
+      <div>
+        <label class="form-label">Quantity</label>
+        <input type="number" class="form-select" id="lo-qty" placeholder="1" min="1" value="1" inputmode="numeric"/>
+      </div>
     </div>
-    <div class="form-group">
-      <label class="form-label">Item</label>
-      <div style="padding:10px 13px;background:var(--bg);border-radius:8px;font-size:0.85rem;color:var(--text2);" id="status-item-name">—</div>
-    </div>
-    <div class="form-row">
-      <div class="form-group">
+
+    <label class="form-label">Delivery Address *</label>
+    <input type="text" class="form-select" id="lo-address" placeholder="e.g. Oke-Fia, Osogbo" style="margin-bottom:12px;"/>
+
+    <label class="form-label">Order Date *</label>
+    <input type="date" class="form-select" id="lo-date" style="margin-bottom:12px;"/>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:4px;">
+      <div>
         <label class="form-label">Delivery Status</label>
-        <select class="form-select" id="su-status">
+        <select class="form-select" id="lo-status">
           <option value="Pending">Pending</option>
           <option value="Processing">Processing</option>
           <option value="Delivered">Delivered</option>
           <option value="Cancelled">Cancelled</option>
         </select>
       </div>
-      <div class="form-group">
+      <div>
         <label class="form-label">Payment Status</label>
-        <select class="form-select" id="su-payment">
+        <select class="form-select" id="lo-payment">
           <option value="Unpaid">Unpaid</option>
           <option value="Paid">Paid</option>
         </select>
       </div>
     </div>
+
     <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closeModal('status-modal')">Cancel</button>
-      <button class="btn btn-green" onclick="saveStatusUpdate()">✅ Update</button>
+      <button class="btn-cancel" onclick="closeModal('log-order-modal')">Cancel</button>
+      <button class="btn-save" id="lo-save-btn" onclick="saveLoggedOrder()">Save Order</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ STATUS UPDATE MODAL ══════════ -->
+<div class="modal-overlay" id="status-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Update Delivery Status</div>
+    <div class="modal-sub" id="status-modal-sub">Mark this order as delivered or update payment</div>
+
+    <div class="modal-info-row">
+      <div class="modal-info-label">Customer</div>
+      <div class="modal-info-val" id="si-customer">—</div>
+    </div>
+    <div class="modal-info-row">
+      <div class="modal-info-label">Item &amp; Price</div>
+      <div class="modal-info-val" id="si-item">—</div>
+    </div>
+    <div class="modal-info-row">
+      <div class="modal-info-label">Delivery Address</div>
+      <div class="modal-info-val" id="si-address">—</div>
+    </div>
+
+    <label class="form-label">Delivery Status</label>
+    <select class="form-select" id="su-status">
+      <option value="Pending">Pending</option>
+      <option value="Processing">Processing — on the way</option>
+      <option value="Delivered">Delivered ✅</option>
+      <option value="Cancelled">Cancelled</option>
+    </select>
+
+    <label class="form-label">Payment Status</label>
+    <select class="form-select" id="su-payment">
+      <option value="Unpaid">Unpaid</option>
+      <option value="Paid">Paid ✅</option>
+    </select>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('status-modal')">Cancel</button>
+      <button class="btn-save" id="su-save-btn" onclick="saveStatusUpdate()">Save Update</button>
     </div>
   </div>
 </div>
@@ -535,16 +475,16 @@
 <script>
   const SUPABASE_URL = 'https://pnwljjiehfzmfpajbsbm.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_k7ZEH33SopVTMhGbOhE2UA_sutpYDpU';
-  const SESSION_KEY  = 'nancy_rider_session';
+  const SESSION_KEY  = 'nancy_rider_v2';
 
-  let currentRider = null; // { name, id }
-  let allMyOrders  = [];
+  let currentRider   = null;
+  let allMyOrders    = [];
   let allCommissions = [];
   let allDeductions  = [];
-  let editingOrderId = null;
   let statusEditId   = null;
-  let homePeriod = 'today';
-  let earnPeriod = 'week';
+  let homePeriod     = 'today';
+  let earnPeriod     = 'week';
+  let orderFilter    = '';
 
   // ── PIN LOGIN ──
   let pinVal = '';
@@ -552,54 +492,72 @@
     if (pinVal.length >= 4) return;
     pinVal += d;
     updateDots();
-    if (pinVal.length === 4) setTimeout(doLogin, 180);
+    if (pinVal.length === 4) setTimeout(attemptLogin, 200);
   }
-  function numDel() { pinVal = pinVal.slice(0, -1); updateDots(); }
+  function numDel() { pinVal = pinVal.slice(0,-1); updateDots(); }
   function updateDots() {
-    for (let i = 0; i < 4; i++) {
-      document.getElementById('pd' + i).classList.toggle('filled', i < pinVal.length);
-    }
+    for (let i = 0; i < 4; i++)
+      document.getElementById('pd'+i).classList.toggle('filled', i < pinVal.length);
   }
 
-  async function doLogin() {
+  async function attemptLogin() {
     const name = document.getElementById('login-name').value.trim();
-    if (!name) { showErr('Please enter your rider name.'); pinVal=''; updateDots(); return; }
-    const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/RIDERS?NAME=ilike.${encodeURIComponent(name)}&ACTIVE=eq.true&select=*`,
-      { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } }
-    );
-    const riders = await res.json();
-    const match = riders.find(r => r.PIN === pinVal && r.NAME.toLowerCase() === name.toLowerCase());
-    if (!match) {
-      showErr('Incorrect name or PIN. Try again.');
-      pinVal = ''; updateDots(); return;
+    if (!name) { showLoginErr('Please enter your rider name first'); pinVal=''; updateDots(); return; }
+    try {
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/RIDERS?NAME=ilike.${encodeURIComponent(name)}&ACTIVE=eq.true&select=id,NAME,PIN`,
+        { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } }
+      );
+      const riders = await res.json();
+      const match = riders.find(r => r.PIN === pinVal && r.NAME.toLowerCase() === name.toLowerCase());
+      if (!match) {
+        showLoginErr('Incorrect name or PIN. Try again.');
+        pinVal = ''; updateDots(); return;
+      }
+      currentRider = { name: match.NAME, id: match.id };
+      localStorage.setItem(SESSION_KEY, JSON.stringify(currentRider));
+      startApp();
+    } catch(e) {
+      showLoginErr('Connection error. Check your internet.');
+      pinVal = ''; updateDots();
     }
-    currentRider = { name: match.NAME, id: match.id };
-    localStorage.setItem(SESSION_KEY, JSON.stringify(currentRider));
-    startApp();
-  }
-  function showErr(msg) {
-    const el = document.getElementById('loginError');
-    el.textContent = msg; el.style.display = 'block';
-    setTimeout(() => el.style.display = 'none', 3000);
   }
 
-  // ── SESSION CHECK ──
+  function showLoginErr(msg) {
+    const el = document.getElementById('loginError');
+    el.textContent = msg;
+    setTimeout(() => { el.textContent = ''; }, 3500);
+  }
+
+  // ── SESSION ──
   window.addEventListener('DOMContentLoaded', () => {
     const saved = localStorage.getItem(SESSION_KEY);
     if (saved) { try { currentRider = JSON.parse(saved); startApp(); } catch(e){} }
   });
 
+  async function manualRefresh() {
+    const btn = document.querySelector('[onclick="manualRefresh()"]');
+    if (btn) btn.style.opacity = '0.5';
+    await loadAll();
+    renderHome();
+    renderOrdersList();
+    renderEarnings();
+    showRefreshPulse();
+    showToast('Data refreshed ✓', 'success');
+    if (btn) btn.style.opacity = '1';
+  }
+
   function doLogout() {
     localStorage.removeItem(SESSION_KEY);
     currentRider = null;
+    if (window._refreshTimer) { clearInterval(window._refreshTimer); window._refreshTimer = null; }
     document.getElementById('login-screen').style.display = 'flex';
     document.getElementById('app').style.display = 'none';
     document.getElementById('login-name').value = '';
     pinVal = ''; updateDots();
   }
 
-  // ── START APP ──
+  // ── START ──
   async function startApp() {
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('app').style.display = 'block';
@@ -607,79 +565,90 @@
     const hr = new Date().getHours();
     const greet = hr < 12 ? 'Good morning' : hr < 17 ? 'Good afternoon' : 'Good evening';
     document.getElementById('home-greeting').textContent = `${greet}, ${currentRider.name} 👋`;
-    document.getElementById('f-date').value = today();
     await loadAll();
     renderHome();
     renderOrdersList();
     renderEarnings();
+    // Auto-refresh every 30 seconds so rider sees admin updates in real time
+    if (window._refreshTimer) clearInterval(window._refreshTimer);
+    window._refreshTimer = setInterval(async () => {
+      await loadAll();
+      renderHome();
+      renderOrdersList();
+      renderEarnings();
+      showRefreshPulse();
+    }, 30000);
   }
 
-  function today() { return new Date().toISOString().split('T')[0]; }
+  function showRefreshPulse() {
+    const dot = document.getElementById('refresh-dot');
+    if (!dot) return;
+    dot.style.opacity = '1';
+    setTimeout(() => dot.style.opacity = '0', 1200);
+  }
 
-  // ── FETCH ALL DATA ──
+  // ── DATA FETCH ──
   async function loadAll() {
-    const [orders, commissions, deductions] = await Promise.all([
-      sbFetch(`ORDERS?order=created_at.desc`),
-      sbFetch(`COMMISSIONS?%22RIDER%20NAME%22=ilike.${encodeURIComponent(currentRider.name)}&order=created_at.desc`),
-      sbFetch(`RIDER_DEDUCTIONS?%22RIDER%20NAME%22=ilike.${encodeURIComponent(currentRider.name)}&order=created_at.desc`)
-    ]);
-    allMyOrders   = (orders || []).filter(o => (o['RIDER NAME'] || '').toLowerCase() === currentRider.name.toLowerCase());
-    allCommissions = commissions || [];
-    allDeductions  = deductions  || [];
-  }
-
-  async function sbFetch(path) {
     try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
-        headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
-      });
-      return res.json();
-    } catch(e) { return []; }
-  }
+      const name = currentRider.name;
+      const hdrs = { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } };
 
-  async function sbInsert(table, data) {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
-      method: 'POST',
-      headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', Prefer: 'return=representation' },
-      body: JSON.stringify(data)
-    });
-    if (!res.ok) { const e = await res.text(); throw new Error(e); }
-    return res.json();
+      // Use sb helper which handles quoted column names correctly
+      async function sbQuery(table, colFilter, colVal) {
+        // PostgREST: for columns with spaces, encode the double-quoted name as the param key
+        const key = encodeURIComponent('"' + colFilter + '"');
+        const val = encodeURIComponent(name);
+        const url = `${SUPABASE_URL}/rest/v1/${table}?${key}=ilike.${val}&order=created_at.desc`;
+        const r = await fetch(url, hdrs);
+        const data = await r.json();
+        return Array.isArray(data) ? data : [];
+      }
+
+      [allMyOrders, allCommissions, allDeductions] = await Promise.all([
+        sbQuery('ORDERS', 'RIDER NAME', name),
+        sbQuery('COMMISSIONS', 'RIDER NAME', name),
+        sbQuery('RIDER_DEDUCTIONS', 'RIDER NAME', name)
+      ]);
+    } catch(e) {
+      showToast('Failed to load data', 'error');
+    }
   }
 
   async function sbUpdate(table, id, data) {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
       method: 'PATCH',
-      headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', Prefer: 'return=representation' },
+      headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`,
+                 'Content-Type': 'application/json', Prefer: 'return=representation' },
       body: JSON.stringify(data)
     });
     if (!res.ok) { const e = await res.text(); throw new Error(e); }
     return res.json();
   }
 
-  // ── PERIOD HELPERS ──
+  // ── HELPERS ──
+  function today() { return new Date().toISOString().split('T')[0]; }
+
   function inPeriod(dateStr, period) {
     if (!dateStr) return false;
     const d = new Date(dateStr); const now = new Date();
-    const t = today();
-    if (period === 'today') return dateStr.startsWith(t) || (d.toISOString && d.toISOString().startsWith(t));
+    if (period === 'today') {
+      const t = today();
+      return (dateStr + '').startsWith(t) || d.toISOString().startsWith(t);
+    }
     if (period === 'week') {
-      const mon = new Date(now); mon.setDate(now.getDate() - now.getDay() + (now.getDay()===0?-6:1));
+      const mon = new Date(now);
+      mon.setDate(now.getDate() - ((now.getDay()+6)%7));
       mon.setHours(0,0,0,0);
       return d >= mon;
     }
-    if (period === 'month') { return d.getMonth()===now.getMonth() && d.getFullYear()===now.getFullYear(); }
-    return true; // all
+    if (period === 'month') return d.getMonth()===now.getMonth() && d.getFullYear()===now.getFullYear();
+    return true;
   }
 
-  function fmtDate(d) {
-    if (!d) return '—';
-    return new Date(d).toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
-  }
+  function fmt(n)     { return '₦' + Number(n||0).toLocaleString(); }
+  function fmtDate(s) { if (!s) return '—'; return new Date(s).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}); }
 
-  function fmt(n) { return '₦' + Number(n||0).toLocaleString(); }
-
-  // ── HOME PAGE ──
+  // ── HOME ──
   function setHomePeriod(p, el) {
     homePeriod = p;
     document.querySelectorAll('#page-home .period-tab').forEach(t => t.classList.remove('active'));
@@ -688,42 +657,32 @@
   }
 
   function renderHome() {
-    const periodLabels = { today:'Today', week:'This Week', month:'This Month', all:'All Time' };
-    document.getElementById('earn-period-label').textContent = periodLabels[homePeriod];
-    document.getElementById('my-orders-period').textContent = periodLabels[homePeriod];
+    const labels = { today:'Today', week:'This Week', month:'This Month', all:'All Time' };
+    document.getElementById('h-earn-period').textContent  = labels[homePeriod];
+    document.getElementById('h-period-label').textContent = labels[homePeriod];
 
-    // Filter orders by period
-    const pOrders = allMyOrders.filter(o => {
-      const d = o['DATE'] || o.created_at;
-      return inPeriod(d, homePeriod);
-    });
+    const pOrders  = allMyOrders.filter(o => inPeriod(o['DATE'] || o.created_at, homePeriod));
+    const pComms   = allCommissions.filter(c => inPeriod(c['DATE'] || c.created_at, homePeriod));
+    const pDeducts = allDeductions.filter(d => inPeriod(d['DATE'] || d.created_at, homePeriod));
 
-    // Filter commissions
-    const pComm = allCommissions.filter(c => inPeriod(c['DATE'] || c.created_at, homePeriod));
-    const pDeduct = allDeductions.filter(d => inPeriod(d['DATE'] || d.created_at, homePeriod));
+    const totalEarn   = pComms.reduce((s,c)=>s+Number(c['AMOUNT']||0),0);
+    const totalDeduct = pDeducts.reduce((s,d)=>s+Number(d['AMOUNT']||0),0);
+    const allDeductAmt= allDeductions.reduce((s,d)=>s+Number(d['AMOUNT']||0),0);
 
-    const totalEarnings = pComm.reduce((s, c) => s + Number(c['AMOUNT']||0), 0);
-    const totalDeductions = pDeduct.reduce((s, d) => s + Number(d['AMOUNT']||0), 0);
-    const netPay = totalEarnings - totalDeductions;
-
-    const delivered = pOrders.filter(o => o['DELIVERY STATUS']==='Delivered').length;
-    const pending   = pOrders.filter(o => ['Pending','Processing'].includes(o['DELIVERY STATUS'])).length;
-    const totalDeductedAll = allDeductions.reduce((s, d) => s + Number(d['AMOUNT']||0), 0);
-
-    document.getElementById('earn-total').textContent  = fmt(totalEarnings);
-    document.getElementById('earn-deliveries').textContent = pComm.reduce((s,c)=>s+Number(c['DELIVERIES']||0),0);
-    document.getElementById('earn-deductions').textContent = fmt(totalDeductions);
-    document.getElementById('earn-net').textContent    = fmt(netPay);
-    document.getElementById('my-orders-count').textContent    = pOrders.length;
-    document.getElementById('my-delivered-count').textContent = delivered;
-    document.getElementById('my-pending-count').textContent   = pending;
-    document.getElementById('my-deducted-total').textContent  = fmt(totalDeductedAll);
+    document.getElementById('h-earn-total').textContent = fmt(totalEarn);
+    document.getElementById('h-deliveries').textContent = pComms.reduce((s,c)=>s+Number(c['DELIVERIES']||0),0);
+    document.getElementById('h-deductions').textContent = fmt(totalDeduct);
+    document.getElementById('h-net').textContent        = fmt(totalEarn - totalDeduct);
+    document.getElementById('h-assigned').textContent   = pOrders.length;
+    document.getElementById('h-delivered').textContent  = pOrders.filter(o=>o['DELIVERY STATUS']==='Delivered').length;
+    document.getElementById('h-pending').textContent    = pOrders.filter(o=>['Pending','Processing'].includes(o['DELIVERY STATUS'])).length;
+    document.getElementById('h-deducted-all').textContent = fmt(allDeductAmt);
 
     // Outstanding deductions
     const outstanding = allDeductions.filter(d => !d['SETTLED']);
     const el = document.getElementById('home-deductions-list');
     if (!outstanding.length) {
-      el.innerHTML = `<div class="empty-state"><div class="empty-state-icon">✅</div><div class="empty-state-text">No outstanding deductions</div></div>`;
+      el.innerHTML = `<div class="empty-state"><div class="empty-icon">✅</div><div class="empty-text">No outstanding deductions — you're clear!</div></div>`;
       return;
     }
     el.innerHTML = outstanding.map(d => `
@@ -733,9 +692,9 @@
             <div class="deduct-type">${d['TYPE']||'Deduction'}</div>
             <div class="deduct-date">${fmtDate(d['DATE'])}</div>
           </div>
-          <div>
+          <div style="text-align:right">
             <div class="deduct-amount">${fmt(d['AMOUNT'])}</div>
-            <span class="badge badge-unsettled">Unsettled</span>
+            <span class="badge badge-unpaid" style="margin-top:4px;display:inline-flex">Unsettled</span>
           </div>
         </div>
         ${d['NOTE'] ? `<div class="deduct-note">📝 ${d['NOTE']}</div>` : ''}
@@ -743,52 +702,66 @@
     `).join('');
   }
 
-  // ── ORDERS PAGE ──
+  // ── DELIVERIES / ORDERS ──
+  let activeOrderFilter = '';
+  function setOrderFilter(val, el) {
+    activeOrderFilter = val;
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    renderOrdersList();
+  }
+
   function renderOrdersList() {
-    const search = (document.getElementById('order-search')||{}).value?.toLowerCase() || '';
-    const statusF = (document.getElementById('order-status-filter')||{}).value || '';
+    const search  = (document.getElementById('order-search').value||'').toLowerCase();
     let orders = [...allMyOrders];
+
     if (search) orders = orders.filter(o =>
       (o['CUSTOMER NAME']||'').toLowerCase().includes(search) ||
       (o['PHONE NUMBER']||'').includes(search)
     );
-    if (statusF) orders = orders.filter(o => o['DELIVERY STATUS'] === statusF);
+    if (activeOrderFilter) orders = orders.filter(o => o['DELIVERY STATUS'] === activeOrderFilter);
 
     const el = document.getElementById('orders-list');
     if (!orders.length) {
-      el.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📭</div><div class="empty-state-text">No orders found</div></div>`;
+      el.innerHTML = allMyOrders.length
+        ? `<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-text">No orders match your filter</div></div>`
+        : `<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-text" style="font-size:0.88rem;line-height:1.6;">No orders assigned to you yet.<br><span style="color:var(--text3);font-size:0.8rem;">Ask admin to assign orders to <strong>${currentRider.name}</strong></span></div></div>`;
       return;
     }
-    el.innerHTML = orders.map(o => `
-      <div class="order-card">
-        <div class="order-card-top">
-          <div>
-            <div class="order-customer">${o['CUSTOMER NAME']||'—'}</div>
-            <div class="order-item">${o['ITEM ORDERED']||'—'} ${o['QUANTITY']>1?`×${o['QUANTITY']}`:''}
+
+    el.innerHTML = orders.map(o => {
+      const status  = o['DELIVERY STATUS'] || 'Pending';
+      const payment = o['PAYMENT STATUS']  || 'Unpaid';
+      const isDone  = status === 'Delivered';
+      const statusClass = {Delivered:'delivered',Processing:'processing',Pending:'pending',Cancelled:'cancelled'}[status]||'pending';
+      return `
+        <div class="order-card ${isDone?'done':status==='Pending'?'urgent':''}">
+          <div class="oc-header">
+            <div>
+              <div class="oc-customer">${o['CUSTOMER NAME']||'—'}</div>
+              <div class="oc-item">${o['ITEM ORDERED']||'—'}${Number(o['QUANTITY'])>1?' ×'+o['QUANTITY']:''}</div>
             </div>
-            <div class="order-addr">📍 ${o['DELIVERY ADDRESS']||'—'}</div>
+            <div>
+              <div class="oc-price">${fmt(o['PRICE'])}</div>
+              <div class="oc-date">${fmtDate(o['DATE'])}</div>
+            </div>
           </div>
-          <div style="text-align:right;">
-            <div class="order-amount">${fmt(o['PRICE'])}</div>
-            <div class="order-date">${fmtDate(o['DATE'])}</div>
+          ${o['DELIVERY ADDRESS'] ? `<div class="oc-addr"><span class="oc-addr-icon">📍</span>${o['DELIVERY ADDRESS']}</div>` : ''}
+          ${o['PHONE NUMBER'] ? `<div class="oc-phone">📞 <a class="phone-link" href="tel:${o['PHONE NUMBER']}">${o['PHONE NUMBER']}</a></div>` : ''}
+          <div class="oc-foot">
+            <div class="oc-badges">
+              <span class="badge badge-${statusClass}">${status}</span>
+              <span class="badge badge-${payment==='Paid'?'paid':'unpaid'}">${payment}</span>
+            </div>
+            <button class="btn-update ${isDone?'done':''}" onclick="openStatusModal(${o.id})">
+              ${isDone ? '✅ Done' : '✏️ Update'}
+            </button>
           </div>
-        </div>
-        <div class="order-card-bot">
-          <div class="order-meta">
-            <span class="badge badge-${(o['DELIVERY STATUS']||'pending').toLowerCase()}">${o['DELIVERY STATUS']||'Pending'}</span>
-            <span class="badge badge-${(o['PAYMENT STATUS']||'unpaid').toLowerCase()}">${o['PAYMENT STATUS']||'Unpaid'}</span>
-          </div>
-          <div class="order-actions">
-            <button class="btn btn-outline btn-sm" onclick="openStatusModal(${o.id})">✏️ Update</button>
-          </div>
-        </div>
-      </div>
-    `).join('');
+        </div>`;
+    }).join('');
   }
 
-  function filterMyOrders() { renderOrdersList(); }
-
-  // ── EARNINGS PAGE ──
+  // ── EARNINGS ──
   function setEarnPeriod(p, el) {
     earnPeriod = p;
     document.querySelectorAll('#page-earnings .period-tab').forEach(t => t.classList.remove('active'));
@@ -798,120 +771,48 @@
 
   function renderEarnings() {
     // Commissions
-    const comms = allCommissions.filter(c => inPeriod(c['DATE'] || c.created_at, earnPeriod));
+    const comms = allCommissions.filter(c => inPeriod(c['DATE']||c.created_at, earnPeriod));
     const el1 = document.getElementById('commissions-list');
     if (!comms.length) {
-      el1.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📋</div><div class="empty-state-text">No commission records for this period</div></div>`;
+      el1.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">No commission records for this period</div></div>`;
     } else {
+      const total = comms.reduce((s,c)=>s+Number(c['AMOUNT']||0),0);
       el1.innerHTML = `<table><thead><tr><th>Date</th><th>Deliveries</th><th>Amount</th><th>Note</th></tr></thead><tbody>
-        ${comms.map(c => `<tr>
-          <td class="phone-mono">${fmtDate(c['DATE'])}</td>
-          <td style="font-weight:600">${c['DELIVERIES']||0}</td>
+        ${comms.map(c=>`<tr>
+          <td style="white-space:nowrap;font-family:'IBM Plex Mono',monospace;font-size:0.75rem">${fmtDate(c['DATE'])}</td>
+          <td style="font-weight:600;text-align:center">${c['DELIVERIES']||0}</td>
           <td style="font-weight:700;color:var(--green)">${fmt(c['AMOUNT'])}</td>
-          <td style="color:var(--text2);font-size:0.78rem">${c['NOTE']||'—'}</td>
+          <td style="color:var(--text3);font-size:0.75rem">${c['NOTE']||'—'}</td>
         </tr>`).join('')}
         <tr style="background:var(--green-light)">
-          <td colspan="2" style="font-weight:700">Total</td>
-          <td style="font-weight:700;color:var(--green)">${fmt(comms.reduce((s,c)=>s+Number(c['AMOUNT']||0),0))}</td>
+          <td colspan="2" style="font-weight:700;font-size:0.82rem">Total</td>
+          <td style="font-weight:700;color:var(--green)">${fmt(total)}</td>
           <td></td>
         </tr>
       </tbody></table>`;
     }
 
     // Deductions
-    const deducts = allDeductions.filter(d => inPeriod(d['DATE'] || d.created_at, earnPeriod));
+    const deducts = allDeductions.filter(d => inPeriod(d['DATE']||d.created_at, earnPeriod));
     const el2 = document.getElementById('deductions-list');
     if (!deducts.length) {
-      el2.innerHTML = `<div class="empty-state"><div class="empty-state-icon">✅</div><div class="empty-state-text">No deductions for this period</div></div>`;
+      el2.innerHTML = `<div class="empty-state"><div class="empty-icon">✅</div><div class="empty-text">No deductions for this period</div></div>`;
     } else {
+      const total = deducts.reduce((s,d)=>s+Number(d['AMOUNT']||0),0);
       el2.innerHTML = `<table><thead><tr><th>Date</th><th>Type</th><th>Amount</th><th>Status</th><th>Note</th></tr></thead><tbody>
-        ${deducts.map(d => `<tr>
-          <td class="phone-mono">${fmtDate(d['DATE'])}</td>
-          <td><span class="badge badge-${(d['TYPE']||'other').toLowerCase().replace(/\s+/g,'')}">${d['TYPE']||'—'}</span></td>
+        ${deducts.map(d=>`<tr>
+          <td style="white-space:nowrap;font-family:'IBM Plex Mono',monospace;font-size:0.75rem">${fmtDate(d['DATE'])}</td>
+          <td><span class="badge badge-${(d['TYPE']||'other').toLowerCase()}">${d['TYPE']||'—'}</span></td>
           <td style="font-weight:700;color:var(--red)">${fmt(d['AMOUNT'])}</td>
           <td><span class="badge badge-${d['SETTLED']?'settled':'unsettled'}">${d['SETTLED']?'Settled':'Unsettled'}</span></td>
-          <td style="color:var(--text2);font-size:0.78rem">${d['NOTE']||'—'}</td>
+          <td style="color:var(--text3);font-size:0.75rem">${d['NOTE']||'—'}</td>
         </tr>`).join('')}
         <tr style="background:var(--red-light)">
-          <td colspan="2" style="font-weight:700">Total</td>
-          <td style="font-weight:700;color:var(--red)">${fmt(deducts.reduce((s,d)=>s+Number(d['AMOUNT']||0),0))}</td>
+          <td colspan="2" style="font-weight:700;font-size:0.82rem">Total</td>
+          <td style="font-weight:700;color:var(--red)">${fmt(total)}</td>
           <td colspan="2"></td>
         </tr>
       </tbody></table>`;
-    }
-  }
-
-  // ── ORDER MODAL ──
-  let allOrdersForAC = [];
-  async function openOrderModal() {
-    editingOrderId = null;
-    document.getElementById('order-modal-title').textContent = 'Log New Order';
-    document.getElementById('order-modal-sub').textContent   = 'Fill in the customer order details';
-    document.getElementById('order-save-btn').textContent    = 'Save Order';
-    clearOrderForm();
-    // Load all orders for autocomplete
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/ORDERS?select=*&order=created_at.desc&limit=500`, {
-      headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
-    });
-    allOrdersForAC = await res.json();
-    openModal('order-modal');
-  }
-
-  function clearOrderForm() {
-    ['f-name','f-phone','f-item','f-price','f-address'].forEach(id => {
-      const el = document.getElementById(id); if(el) el.value = '';
-    });
-    document.getElementById('f-status').value  = 'Pending';
-    document.getElementById('f-payment').value = 'Unpaid';
-    document.getElementById('f-qty').value     = '1';
-    document.getElementById('f-date').value    = today();
-  }
-
-  async function saveOrder() {
-    const name = document.getElementById('f-name').value.trim();
-    const phone = document.getElementById('f-phone').value.trim();
-    const item  = document.getElementById('f-item').value.trim();
-    const price = document.getElementById('f-price').value;
-    const date  = document.getElementById('f-date').value;
-    const addr  = document.getElementById('f-address').value.trim();
-    const status  = document.getElementById('f-status').value;
-    const payment = document.getElementById('f-payment').value;
-    const qty   = document.getElementById('f-qty').value || '1';
-
-    if (!name || !phone || !item || !price || !date || !addr) {
-      showToast('Please fill all required fields', 'error'); return;
-    }
-    const btn = document.getElementById('order-save-btn');
-    btn.disabled = true; btn.textContent = 'Saving...';
-
-    try {
-      const data = {
-        'DATE': date,
-        'CUSTOMER NAME': name,
-        'PHONE NUMBER': phone,
-        'ITEM ORDERED': item,
-        'QUANTITY': parseInt(qty),
-        'PRICE': parseFloat(price),
-        'DELIVERY ADDRESS': addr,
-        'DELIVERY STATUS': status,
-        'PAYMENT STATUS': payment,
-        'RIDER NAME': currentRider.name
-      };
-      if (editingOrderId) {
-        await sbUpdate('ORDERS', editingOrderId, data);
-        showToast('Order updated!', 'success');
-      } else {
-        await sbInsert('ORDERS', data);
-        showToast('Order logged!', 'success');
-      }
-      closeModal('order-modal');
-      await loadAll();
-      renderOrdersList();
-      renderHome();
-    } catch(e) {
-      showToast('Error: ' + e.message, 'error');
-    } finally {
-      btn.disabled = false; btn.textContent = editingOrderId ? 'Update Order' : 'Save Order';
     }
   }
 
@@ -920,74 +821,111 @@
     statusEditId = orderId;
     const o = allMyOrders.find(x => x.id === orderId);
     if (!o) return;
-    document.getElementById('status-customer-name').textContent = o['CUSTOMER NAME'] || '—';
-    document.getElementById('status-item-name').textContent     = `${o['ITEM ORDERED']||'—'} — ${fmt(o['PRICE'])}`;
-    document.getElementById('su-status').value  = o['DELIVERY STATUS']  || 'Pending';
-    document.getElementById('su-payment').value = o['PAYMENT STATUS']   || 'Unpaid';
-    openModal('status-modal');
+    document.getElementById('si-customer').textContent = o['CUSTOMER NAME'] || '—';
+    document.getElementById('si-item').textContent     = `${o['ITEM ORDERED']||'—'} — ${fmt(o['PRICE'])}`;
+    document.getElementById('si-address').textContent  = o['DELIVERY ADDRESS'] || '—';
+    document.getElementById('su-status').value         = o['DELIVERY STATUS']  || 'Pending';
+    document.getElementById('su-payment').value        = o['PAYMENT STATUS']   || 'Unpaid';
+    document.getElementById('status-modal').classList.add('open');
+    document.getElementById('status-modal').style.display = 'flex';
   }
 
   async function saveStatusUpdate() {
     if (!statusEditId) return;
     const status  = document.getElementById('su-status').value;
     const payment = document.getElementById('su-payment').value;
+    const btn = document.getElementById('su-save-btn');
+    btn.textContent = 'Saving...'; btn.disabled = true;
     try {
       await sbUpdate('ORDERS', statusEditId, {
         'DELIVERY STATUS': status,
         'PAYMENT STATUS': payment
       });
-      showToast('Status updated!', 'success');
+      showToast(status === 'Delivered' ? '✅ Marked as delivered!' : 'Status updated!', 'success');
       closeModal('status-modal');
       await loadAll();
       renderOrdersList();
       renderHome();
     } catch(e) {
       showToast('Error: ' + e.message, 'error');
+    } finally {
+      btn.textContent = 'Save Update'; btn.disabled = false;
     }
   }
 
-  // ── AUTOCOMPLETE ──
-  function acSearch(field) {
-    const fMap = { name: ['f-name','ac-name','CUSTOMER NAME'], phone: ['f-phone','ac-phone','PHONE NUMBER'] };
-    const [inputId, listId, col] = fMap[field];
-    const val = document.getElementById(inputId).value.trim().toLowerCase();
-    const list = document.getElementById(listId);
-    if (!val || val.length < 2) { list.classList.remove('open'); return; }
-    const uniq = [...new Set((allOrdersForAC||[]).map(o => o[col]).filter(v => v && v.toLowerCase().includes(val)))].slice(0,6);
-    if (!uniq.length) { list.classList.remove('open'); return; }
-    list.innerHTML = uniq.map(v => {
-      const hi = v.replace(new RegExp(val.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'), m => `<strong>${m}</strong>`);
-      return `<div class="autocomplete-item" onclick="selectAC('${field}','${v.replace(/'/g,"\\'")}')'">${hi}</div>`;
-    }).join('');
-    list.classList.add('open');
+  // ── LOG NEW ORDER ──
+  function openLogOrderModal() {
+    document.getElementById('lo-name').value    = '';
+    document.getElementById('lo-phone').value   = '';
+    document.getElementById('lo-item').value    = '';
+    document.getElementById('lo-price').value   = '';
+    document.getElementById('lo-qty').value     = '1';
+    document.getElementById('lo-address').value = '';
+    document.getElementById('lo-date').value    = new Date().toISOString().split('T')[0];
+    document.getElementById('lo-status').value  = 'Pending';
+    document.getElementById('lo-payment').value = 'Unpaid';
+    document.getElementById('log-order-modal').classList.add('open');
+    document.getElementById('log-order-modal').style.display = 'flex';
   }
 
-  function selectAC(field, val) {
-    const fMap = { name: ['f-name','ac-name'], phone: ['f-phone','ac-phone'] };
-    const [inputId, listId] = fMap[field];
-    document.getElementById(inputId).value = val;
-    document.getElementById(listId).classList.remove('open');
-    // autofill if name, try to fill phone
-    if (field === 'name') {
-      const match = allOrdersForAC.find(o => o['CUSTOMER NAME'] === val);
-      if (match) document.getElementById('f-phone').value = match['PHONE NUMBER'] || '';
-    } else if (field === 'phone') {
-      const match = allOrdersForAC.find(o => o['PHONE NUMBER'] === val);
-      if (match) document.getElementById('f-name').value = match['CUSTOMER NAME'] || '';
+  async function saveLoggedOrder() {
+    const name    = document.getElementById('lo-name').value.trim();
+    const phone   = document.getElementById('lo-phone').value.trim();
+    const item    = document.getElementById('lo-item').value.trim();
+    const price   = parseFloat(document.getElementById('lo-price').value) || 0;
+    const qty     = parseInt(document.getElementById('lo-qty').value)    || 1;
+    const address = document.getElementById('lo-address').value.trim();
+    const date    = document.getElementById('lo-date').value;
+    const status  = document.getElementById('lo-status').value;
+    const payment = document.getElementById('lo-payment').value;
+
+    if (!name || !phone || !item || !price || !date || !address) {
+      showToast('Please fill all required fields', 'error'); return;
+    }
+
+    const btn = document.getElementById('lo-save-btn');
+    btn.textContent = 'Saving...'; btn.disabled = true;
+
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/ORDERS`, {
+        method: 'POST',
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json',
+          Prefer: 'return=representation'
+        },
+        body: JSON.stringify({
+          'DATE': date,
+          'CUSTOMER NAME': name,
+          'PHONE NUMBER': phone,
+          'ITEM ORDERED': item,
+          'QUANTITY': qty,
+          'PRICE': price,
+          'DELIVERY ADDRESS': address,
+          'DELIVERY STATUS': status,
+          'PAYMENT STATUS': payment,
+          'RIDER NAME': currentRider.name
+        })
+      });
+      if (!res.ok) throw new Error(await res.text());
+      showToast('Order logged! Admin and customer can now see it.', 'success');
+      closeModal('log-order-modal');
+      await loadAll();
+      renderOrdersList();
+      renderHome();
+    } catch(e) {
+      showToast('Error saving: ' + e.message, 'error');
+    } finally {
+      btn.textContent = 'Save Order'; btn.disabled = false;
     }
   }
-
-  document.addEventListener('click', e => {
-    if (!e.target.closest('.ac-wrap')) {
-      document.querySelectorAll('.autocomplete-list').forEach(l => l.classList.remove('open'));
-    }
-  });
 
   // ── PAGE NAV ──
   function showPage(name, el) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    document.getElementById('page-' + name).classList.add('active');
+    document.querySelectorAll('.bnav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('page-'+name).classList.add('active');
     if (el) el.classList.add('active');
     if (name === 'orders')   renderOrdersList();
     if (name === 'earnings') renderEarnings();
@@ -995,20 +933,23 @@
   }
 
   // ── MODAL ──
-  function openModal(id) {
-    document.getElementById(id).style.display = 'flex';
-    document.getElementById(id).classList.add('open');
-  }
   function closeModal(id) {
-    document.getElementById(id).style.display = 'none';
-    document.getElementById(id).classList.remove('open');
+    const el = document.getElementById(id);
+    el.classList.remove('open');
+    el.style.display = 'none';
   }
+  document.getElementById('status-modal').addEventListener('click', function(e){
+    if (e.target === this) closeModal('status-modal');
+  });
+  document.getElementById('log-order-modal').addEventListener('click', function(e){
+    if (e.target === this) closeModal('log-order-modal');
+  });
 
   // ── TOAST ──
-  function showToast(msg, type = '') {
+  function showToast(msg, type='') {
     const t = document.getElementById('toast');
-    t.textContent = msg; t.className = 'toast show ' + type;
-    setTimeout(() => t.className = 'toast', 3500);
+    t.textContent = msg; t.className = 'toast show '+(type||'');
+    setTimeout(() => t.className = 'toast', 3000);
   }
 </script>
 </body>
