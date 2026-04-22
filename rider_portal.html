@@ -305,10 +305,8 @@
     <div class="page" id="page-orders">
       <div class="page-header">
         <div class="page-title">My Deliveries</div>
-        <div class="page-sub">Orders assigned to you by admin — tap to update status</div>
+        <div class="page-sub">Orders filled by admin — update delivery &amp; payment status</div>
       </div>
-
-      <button onclick="openLogOrderModal()" style="width:100%;padding:13px;background:var(--red);color:#fff;border:none;border-radius:12px;font-size:0.95rem;font-weight:700;cursor:pointer;margin-bottom:12px;font-family:'Inter',sans-serif;">+ Log New Order</button>
 
       <input type="text" class="search-box" id="order-search" placeholder="🔍 Search customer name or phone..." oninput="renderOrdersList()"/>
 
@@ -370,64 +368,6 @@
   </div>
 </div>
 
-<!-- ══════════ LOG ORDER MODAL ══════════ -->
-<div class="modal-overlay" id="log-order-modal">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <div class="modal-title" id="lo-title">Log New Order</div>
-    <div class="modal-sub">Fill in the customer details you collected</div>
-
-    <label class="form-label">Customer Name *</label>
-    <input type="text" class="form-select" id="lo-name" placeholder="e.g. Adebayo Musa" style="margin-bottom:12px;"/>
-
-    <label class="form-label">Phone Number *</label>
-    <input type="tel" class="form-select" id="lo-phone" placeholder="08012345678" maxlength="11" style="margin-bottom:12px;" inputmode="numeric"/>
-
-    <label class="form-label">Item Ordered *</label>
-    <input type="text" class="form-select" id="lo-item" placeholder="e.g. Wireless Earbuds" style="margin-bottom:12px;"/>
-
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
-      <div>
-        <label class="form-label">Price (₦) *</label>
-        <input type="number" class="form-select" id="lo-price" placeholder="15000" min="0" inputmode="numeric"/>
-      </div>
-      <div>
-        <label class="form-label">Quantity</label>
-        <input type="number" class="form-select" id="lo-qty" placeholder="1" min="1" value="1" inputmode="numeric"/>
-      </div>
-    </div>
-
-    <label class="form-label">Delivery Address *</label>
-    <input type="text" class="form-select" id="lo-address" placeholder="e.g. Oke-Fia, Osogbo" style="margin-bottom:12px;"/>
-
-    <label class="form-label">Order Date *</label>
-    <input type="date" class="form-select" id="lo-date" style="margin-bottom:12px;"/>
-
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:4px;">
-      <div>
-        <label class="form-label">Delivery Status</label>
-        <select class="form-select" id="lo-status">
-          <option value="Pending">Pending</option>
-          <option value="Processing">Processing</option>
-          <option value="Delivered">Delivered</option>
-          <option value="Cancelled">Cancelled</option>
-        </select>
-      </div>
-      <div>
-        <label class="form-label">Payment Status</label>
-        <select class="form-select" id="lo-payment">
-          <option value="Unpaid">Unpaid</option>
-          <option value="Paid">Paid</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="modal-footer">
-      <button class="btn-cancel" onclick="closeModal('log-order-modal')">Cancel</button>
-      <button class="btn-save" id="lo-save-btn" onclick="saveLoggedOrder()">Save Order</button>
-    </div>
-  </div>
-</div>
 
 <!-- ══════════ STATUS UPDATE MODAL ══════════ -->
 <div class="modal-overlay" id="status-modal">
@@ -725,7 +665,7 @@
     if (!orders.length) {
       el.innerHTML = allMyOrders.length
         ? `<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-text">No orders match your filter</div></div>`
-        : `<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-text" style="font-size:0.88rem;line-height:1.6;">No orders assigned to you yet.<br><span style="color:var(--text3);font-size:0.8rem;">Ask admin to assign orders to <strong>${currentRider.name}</strong></span></div></div>`;
+        : `<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-text" style="font-size:0.88rem;line-height:1.6;">No orders assigned to you yet.<br><span style="color:var(--text3);font-size:0.8rem;">Admin fills orders and assigns them to <strong>${currentRider.name}</strong></span></div></div>`;
       return;
     }
 
@@ -853,74 +793,6 @@
     }
   }
 
-  // ── LOG NEW ORDER ──
-  function openLogOrderModal() {
-    document.getElementById('lo-name').value    = '';
-    document.getElementById('lo-phone').value   = '';
-    document.getElementById('lo-item').value    = '';
-    document.getElementById('lo-price').value   = '';
-    document.getElementById('lo-qty').value     = '1';
-    document.getElementById('lo-address').value = '';
-    document.getElementById('lo-date').value    = new Date().toISOString().split('T')[0];
-    document.getElementById('lo-status').value  = 'Pending';
-    document.getElementById('lo-payment').value = 'Unpaid';
-    document.getElementById('log-order-modal').classList.add('open');
-    document.getElementById('log-order-modal').style.display = 'flex';
-  }
-
-  async function saveLoggedOrder() {
-    const name    = document.getElementById('lo-name').value.trim();
-    const phone   = document.getElementById('lo-phone').value.trim();
-    const item    = document.getElementById('lo-item').value.trim();
-    const price   = parseFloat(document.getElementById('lo-price').value) || 0;
-    const qty     = parseInt(document.getElementById('lo-qty').value)    || 1;
-    const address = document.getElementById('lo-address').value.trim();
-    const date    = document.getElementById('lo-date').value;
-    const status  = document.getElementById('lo-status').value;
-    const payment = document.getElementById('lo-payment').value;
-
-    if (!name || !phone || !item || !price || !date || !address) {
-      showToast('Please fill all required fields', 'error'); return;
-    }
-
-    const btn = document.getElementById('lo-save-btn');
-    btn.textContent = 'Saving...'; btn.disabled = true;
-
-    try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/ORDERS`, {
-        method: 'POST',
-        headers: {
-          apikey: SUPABASE_KEY,
-          Authorization: `Bearer ${SUPABASE_KEY}`,
-          'Content-Type': 'application/json',
-          Prefer: 'return=representation'
-        },
-        body: JSON.stringify({
-          'DATE': date,
-          'CUSTOMER NAME': name,
-          'PHONE NUMBER': phone,
-          'ITEM ORDERED': item,
-          'QUANTITY': qty,
-          'PRICE': price,
-          'DELIVERY ADDRESS': address,
-          'DELIVERY STATUS': status,
-          'PAYMENT STATUS': payment,
-          'RIDER NAME': currentRider.name
-        })
-      });
-      if (!res.ok) throw new Error(await res.text());
-      showToast('Order logged! Admin and customer can now see it.', 'success');
-      closeModal('log-order-modal');
-      await loadAll();
-      renderOrdersList();
-      renderHome();
-    } catch(e) {
-      showToast('Error saving: ' + e.message, 'error');
-    } finally {
-      btn.textContent = 'Save Order'; btn.disabled = false;
-    }
-  }
-
   // ── PAGE NAV ──
   function showPage(name, el) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -941,9 +813,7 @@
   document.getElementById('status-modal').addEventListener('click', function(e){
     if (e.target === this) closeModal('status-modal');
   });
-  document.getElementById('log-order-modal').addEventListener('click', function(e){
-    if (e.target === this) closeModal('log-order-modal');
-  });
+
 
   // ── TOAST ──
   function showToast(msg, type='') {
