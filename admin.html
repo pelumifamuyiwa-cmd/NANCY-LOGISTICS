@@ -452,7 +452,7 @@
 <div class="modal-overlay" id="order-modal">
   <div class="modal">
     <div class="modal-title" id="modal-title">Add New Order</div>
-    <div class="modal-sub" id="modal-sub">Fill in the customer order details below</div>
+    <div class="modal-sub" id="modal-sub">Fill in the customer order details. Assign a rider so they can see and update the delivery.</div>
     <div class="form-grid">
       <div class="form-group">
         <label class="form-label">Customer Name *</label>
@@ -499,7 +499,7 @@
         </select>
       </div>
       <div class="form-group full">
-        <label class="form-label">Assign to Rider</label>
+        <label class="form-label">Assign to Rider <span style="color:var(--text3);font-weight:400">(rider will see &amp; update this order)</span></label>
         <select class="form-select" id="f-rider-assign">
           <option value="">&#8212; Not assigned &#8212;</option>
         </select>
@@ -652,7 +652,7 @@
     <div class="modal-sub">Create a Rider Portal account. The rider will log in with their name and PIN.</div>
     <div class="form-grid">
       <div class="form-group">
-        <label class="form-label">Rider Name *</label>
+        <label class="form-label">Rider Name * <span style="color:var(--text3);font-weight:400;font-size:0.72rem">— must match exactly when logging in</span></label>
         <input type="text" class="form-input" id="rm-name" placeholder="e.g. Emeka"/>
       </div>
       <div class="form-group">
@@ -660,8 +660,11 @@
         <input type="tel" class="form-input" id="rm-phone" placeholder="08012345678" maxlength="11"/>
       </div>
       <div class="form-group">
-        <label class="form-label">4-Digit PIN *</label>
-        <input type="text" class="form-input" id="rm-pin" placeholder="e.g. 5678" maxlength="4" pattern="[0-9]{4}" inputmode="numeric"/>
+        <label class="form-label">4-Digit PIN * <span style="color:var(--text3);font-weight:400;font-size:0.72rem">— rider uses this to log in</span></label>
+        <div style="position:relative;">
+          <input type="text" class="form-input" id="rm-pin" placeholder="e.g. 5678" maxlength="4" pattern="[0-9]{4}" inputmode="numeric" style="letter-spacing:4px;font-family:'IBM Plex Mono',monospace;font-weight:700;"/>
+          <span id="rm-pin-hint" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:0.72rem;color:var(--text3);pointer-events:none;">4 digits</span>
+        </div>
       </div>
       <div class="form-group">
         <label class="form-label">Status</label>
@@ -1664,10 +1667,17 @@
       <tbody>${allRiders.map(r=>`<tr>
         <td class="td-name">${r.name||'&mdash;'}</td>
         <td class="td-phone">${r.phone||'&mdash;'}</td>
-        <td style="font-family:'IBM Plex Mono',monospace;letter-spacing:4px;font-weight:700;color:var(--text)">${r.pin||'&mdash;'}</td>
+        <td>
+            <span style="font-family:'IBM Plex Mono',monospace;letter-spacing:3px;font-weight:700;color:var(--text3);cursor:pointer;user-select:none;"
+              title="Click to reveal PIN"
+              onclick="this.textContent=this.textContent==='••••'?'${r.pin||'—'}':'••••';this.style.color=this.style.color==='var(--text)'?'var(--text3)':'var(--text)'">
+              ••••
+            </span>
+          </td>
         <td><span class="badge badge-${r.active?'delivered':'cancelled'}">${r.active?'Active':'Inactive'}</span></td>
         <td><div class="row-actions">
-          <button class="btn btn-outline btn-sm" onclick="openEditRiderModal(${r.id})">Edit</button>
+          <button class="btn btn-outline btn-sm" onclick="openEditRiderModal(${r.id})">✏️ Edit</button>
+          <button class="btn btn-sm" style="background:var(--purple-light);color:var(--purple)" onclick="quickResetPIN(${r.id},'${r.name}')">🔑 PIN</button>
           <button class="btn btn-sm" style="background:var(--red-light);color:var(--red)" onclick="confirmDeleteRider(${r.id})">Del</button>
         </div></td>
       </tr>`).join('')}</tbody></table>`;
@@ -1704,9 +1714,23 @@
   }
 
   // ── Rider CRUD ──
+  function quickResetPIN(id, name){
+    const newPin = prompt(`Reset PIN for ${name}\nEnter new 4-digit PIN:`);
+    if(newPin === null) return; // cancelled
+    if(!/^[0-9]{4}$/.test(newPin)){showToast('PIN must be exactly 4 digits (numbers only)','error');return;}
+    sbUpdate('RIDERS',id,{'PIN':newPin})
+      .then(()=>{
+        showToast(`PIN for ${name} updated to ${newPin}`,'success');
+        return fetchRiders();
+      })
+      .then(riders=>{ allRiders=riders; renderRidersTable(); })
+      .catch(e=>showToast('Error updating PIN: '+e.message,'error'));
+  }
+
   function openRiderModal(){
     editingRiderId=null;
     document.getElementById('rider-modal-title').textContent='Add Rider';
+    document.getElementById('rider-modal').querySelector('.modal-sub').textContent='Create a Rider Portal account. The rider will log in with their name and PIN.';
     document.getElementById('rider-save-btn').textContent='Save Rider';
     ['rm-name','rm-phone','rm-pin'].forEach(id=>document.getElementById(id).value='');
     document.getElementById('rm-active').value='true';
@@ -1715,7 +1739,8 @@
   function openEditRiderModal(id){
     const r=allRiders.find(x=>x.id===id); if(!r)return;
     editingRiderId=id;
-    document.getElementById('rider-modal-title').textContent='Edit Rider';
+    document.getElementById('rider-modal-title').textContent='Edit Rider — '+r.name;
+    document.getElementById('rider-modal').querySelector('.modal-sub').textContent='Update name, phone, PIN or status. Changes take effect immediately.';
     document.getElementById('rider-save-btn').textContent='Update Rider';
     document.getElementById('rm-name').value=r.name||'';
     document.getElementById('rm-phone').value=r.phone||'';
@@ -1734,7 +1759,7 @@
     const btn=document.getElementById('rider-save-btn');
     btn.textContent='Saving...'; btn.disabled=true;
     try{
-      if(editingRiderId){await sbUpdate('RIDERS',editingRiderId,data);showToast('Rider updated!','success');}
+      if(editingRiderId){await sbUpdate('RIDERS',editingRiderId,data);showToast(`${name} updated successfully!`,'success');}
       else{await sbInsert('RIDERS',data);showToast('Rider added! They can now log in.','success');}
       closeModal('rider-modal');
       allRiders=await fetchRiders(); renderRidersTable();
